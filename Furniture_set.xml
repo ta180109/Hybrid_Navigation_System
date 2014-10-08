@@ -1,0 +1,18 @@
+<Config>
+  <DirectionObject>
+    <LivingRM_Sofa x="4" y="410" Width="80" Height="140" Angle="0" />
+    <LivingRM_Table x="132" y="434" Width="60" Height="90" Angle="0" />
+    <LivingRM_Cabinet x="258" y="413" Width="40" Height="140" Angle="0" />
+    <DiningRM_Table x="18" y="117" Width="80" Height="160" Angle="90" />
+    <DiningRM_Chair x="77" y="126" Width="45" Height="45" Angle="0" />
+    <Library_Desk x="301" y="516" Width="60" Height="120" Angle="180" />
+    <Library_Chair x="333" y="447" Width="45" Height="45" Angle="0" />
+    <Library_Cabinet x="476" y="556" Width="120" Height="40" Angle="0" />
+    <BedRM_Bed x="376" y="199" Width="180" Height="130" Angle="90" />
+    <DiningRM_door x="0" y="0" Width="0" Height="0" Angle="0" />
+    <BedRM_door x="0" y="0" Width="0" Height="0" Angle="0" />
+    <Trashcan x="464" y="311" Width="30" Height="30" Angle="0" />
+    <ChargeArea x="341" y="4" Width="50" Height="50" Angle="0" />
+    <EndArea x="75" y="308" Width="50" Height="50" Angle="0" />
+  </DirectionObject>
+</Config>

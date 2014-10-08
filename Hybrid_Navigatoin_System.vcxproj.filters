@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="原始程式檔">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{6b7e45a0-2357-43c9-9a70-567f79c0b3f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Furniture">
+      <UniqueIdentifier>{becf1446-e63a-4a25-8688-cce55e1098f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapEditer">
+      <UniqueIdentifier>{6004340a-1776-4b0b-a646-8576bbb67327}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Laser">
+      <UniqueIdentifier>{4d5f079d-32af-4447-bd0d-22b41f94937e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Laser\LaserForm">
+      <UniqueIdentifier>{51b57d8b-334e-4e72-9c21-0b525d697812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Laser\TLaser_UTM_30LX">
+      <UniqueIdentifier>{17eb3b5f-2696-40b4-8eae-7b717a1c46bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Motor">
+      <UniqueIdentifier>{553f7ded-8c2b-41af-a1e2-dbc9f9960790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4a9d1a99-fa2c-4d24-b5d1-fdd9e33d88bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\NavigationSystem">
+      <UniqueIdentifier>{09a62b59-cc9f-4aae-baaa-ed00b05f9e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\VelocityControl">
+      <UniqueIdentifier>{8b3d0a47-1285-455d-a86b-d96d1e9d2ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Motion">
+      <UniqueIdentifier>{69167198-9c1b-4c59-b8eb-88d69d6369f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCoordiante">
+      <UniqueIdentifier>{a36670db-5a27-4895-a38a-b23de47cc234}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="app.ico">
+      <Filter>資源檔</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>標頭檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Furniture\Furniture.cpp">
+      <Filter>Furniture</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditer\MapEditer.cpp">
+      <Filter>MapEditer</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>標頭檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Hybrid_Navigatoin_System.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="TLaserForm.cpp">
+      <Filter>Laser\LaserForm</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor\TMotorControl.cpp">
+      <Filter>Motor</Filter>
+    </ClCompile>
+    <ClCompile Include="TLaser_UTM_30LX\TLaser_UTM_30LX.cpp">
+      <Filter>Laser\TLaser_UTM_30LX</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Motion\TMotion.cpp">
+      <Filter>Core\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\VelocityControl\TVelocityControl.cpp">
+      <Filter>Core\VelocityControl</Filter>
+    </ClCompile>
+    <ClCompile Include="TCoordinate\TCoordinate.cpp">
+      <Filter>TCoordiante</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Form1.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\UtilityTool.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Furniture\Furniture.h">
+      <Filter>Furniture</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEditer\MapEditer.h">
+      <Filter>MapEditer</Filter>
+    </ClInclude>
+    <ClInclude Include="TLaserForm.h">
+      <Filter>Laser\LaserForm</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor\TMotorControl.h">
+      <Filter>Motor</Filter>
+    </ClInclude>
+    <ClInclude Include="TLaser_UTM_30LX\TLaser_UTM_30LX.h">
+      <Filter>Laser\TLaser_UTM_30LX</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Motion\TMotion.h">
+      <Filter>Core\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\VelocityControl\TVelocityControl.h">
+      <Filter>Core\VelocityControl</Filter>
+    </ClInclude>
+    <ClInclude Include="TCoordinate\TCoordinate.h">
+      <Filter>TCoordiante</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc">
+      <Filter>資源檔</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resX">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Furniture\Furniture.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapEditer\MapEditer.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TLaserForm.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

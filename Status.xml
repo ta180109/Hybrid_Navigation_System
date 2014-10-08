@@ -1,0 +1,17 @@
+<Status>
+	<ColorModel>
+		<Yellow HueMax="0.5" HueMin="0" SaturationMax="0.6" SaturationMin="0" BrightnessMax="1" BrightnessMin="0" />
+		<Green HueMax="0.8" HueMin="0" SaturationMax="0.4" SaturationMin="0" BrightnessMax="0.7" BrightnessMin="0" />
+		<Red HueMax="0.8" HueMin="0" SaturationMax="0.4" SaturationMin="0" BrightnessMax="0.7" BrightnessMin="0" />		
+		
+	</ColorModel>
+	
+	<ParameterModel>
+		<Ball x="5" y="5"/>
+	</ParameterModel>
+
+</Status>
+
+
+
+

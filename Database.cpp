@@ -1,6 +1,9 @@
 #include <string>
 #include "Database.h"
 // 預設建構函式
+
+#define LASER_SCAN_NUM 73
+
 using namespace System::Xml;
 using namespace System::IO;
 
@@ -21,7 +24,9 @@ data7 *D_Range = new data7();
 
 data8 *D_Furniture = new data8();
 
-Laser_information *R_Laser = new Laser_information[73];
+Laser_information *Real_Laser = new Laser_information[LASER_SCAN_NUM];
+Laser_information *Sim_Laser = new Laser_information[LASER_SCAN_NUM];
+
 
 data9 *R_Position = new data9();
 

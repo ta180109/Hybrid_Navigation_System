@@ -10,6 +10,10 @@
 #include "Furniture/Furniture.h"
 #include "MapEditer/MapEditer.h"
 
+#include "Core/VelocityControl/TVelocityControl.h"
+#include "Core/NavigationSystem/NavigationSystem.h"
+#include "Core/Motion/TMotion.h"
+
 namespace SKS_VC2013 {
 
 	using namespace System;
@@ -52,12 +56,12 @@ namespace SKS_VC2013 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Label^  IP;
+
 	protected: 
-	private: System::Windows::Forms::TextBox^  IP_box;
-	private: System::Windows::Forms::TextBox^  Client_box;
-	private: System::Windows::Forms::Label^  Client;
-	private: System::Windows::Forms::Button^  Client_set;
+
+
+
+
 	private: System::ComponentModel::IContainer^  components;
 
 
@@ -101,7 +105,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::HScrollBar^  Speed_Bar;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  Speed_lab;
-	private: System::ComponentModel::BackgroundWorker^  backgroundWorker2;
+
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::Button^  R_b;
 	private: System::Windows::Forms::Button^  L_b;
@@ -114,11 +118,14 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::ToolStripMenuItem^  furnitureToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  mapEditerToolStripMenuItem;
 	private: System::Windows::Forms::CheckBox^  Auto_check;
-	private: System::Windows::Forms::Timer^  timer3;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  mapToolStripMenuItem1;
+	private: System::Windows::Forms::Button^  Btn_SysStart;
+	private: System::Windows::Forms::Button^  btn_SysStop;
+
 
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
-	private: System::Windows::Forms::Button^  Send_Config;
+
 
 
 #pragma region Windows Form Designer generated code
@@ -128,13 +135,7 @@ namespace SKS_VC2013 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			this->IP = (gcnew System::Windows::Forms::Label());
-			this->IP_box = (gcnew System::Windows::Forms::TextBox());
-			this->Client_box = (gcnew System::Windows::Forms::TextBox());
-			this->Client = (gcnew System::Windows::Forms::Label());
-			this->Client_set = (gcnew System::Windows::Forms::Button());
 			this->MSG_list = (gcnew System::Windows::Forms::ListBox());
 			this->Up_sd = (gcnew System::Windows::Forms::Button());
 			this->Left_sd = (gcnew System::Windows::Forms::Button());
@@ -153,78 +154,29 @@ namespace SKS_VC2013 {
 			this->Speed_Bar = (gcnew System::Windows::Forms::HScrollBar());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->Speed_lab = (gcnew System::Windows::Forms::Label());
-			this->backgroundWorker2 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->Auto_check = (gcnew System::Windows::Forms::CheckBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->Ctrl_check = (gcnew System::Windows::Forms::CheckBox());
 			this->R_b = (gcnew System::Windows::Forms::Button());
 			this->L_b = (gcnew System::Windows::Forms::Button());
-			this->Send_Config = (gcnew System::Windows::Forms::Button());
-			this->timer3 = (gcnew System::Windows::Forms::Timer(this->components));
+			this->Btn_SysStart = (gcnew System::Windows::Forms::Button());
+			this->btn_SysStop = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawPB))->BeginInit();
 			this->menuStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// IP
-			// 
-			this->IP->AutoSize = true;
-			this->IP->BackColor = System::Drawing::Color::Transparent;
-			this->IP->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->IP->Location = System::Drawing::Point(10, 37);
-			this->IP->Name = L"IP";
-			this->IP->Size = System::Drawing::Size(15, 12);
-			this->IP->TabIndex = 0;
-			this->IP->Text = L"IP";
-			// 
-			// IP_box
-			// 
-			this->IP_box->Location = System::Drawing::Point(25, 32);
-			this->IP_box->Name = L"IP_box";
-			this->IP_box->Size = System::Drawing::Size(87, 22);
-			this->IP_box->TabIndex = 1;
-			this->IP_box->Text = L"192.168.137.75";
-			// 
-			// Client_box
-			// 
-			this->Client_box->Location = System::Drawing::Point(146, 32);
-			this->Client_box->Name = L"Client_box";
-			this->Client_box->Size = System::Drawing::Size(40, 22);
-			this->Client_box->TabIndex = 2;
-			this->Client_box->Text = L"10373";
-			// 
-			// Client
-			// 
-			this->Client->AutoSize = true;
-			this->Client->BackColor = System::Drawing::Color::Transparent;
-			this->Client->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->Client->Location = System::Drawing::Point(113, 37);
-			this->Client->Name = L"Client";
-			this->Client->Size = System::Drawing::Size(33, 12);
-			this->Client->TabIndex = 4;
-			this->Client->Text = L"Client";
-			// 
-			// Client_set
-			// 
-			this->Client_set->Location = System::Drawing::Point(189, 31);
-			this->Client_set->Name = L"Client_set";
-			this->Client_set->Size = System::Drawing::Size(39, 23);
-			this->Client_set->TabIndex = 6;
-			this->Client_set->Text = L"Set";
-			this->Client_set->UseVisualStyleBackColor = true;
-			this->Client_set->Click += gcnew System::EventHandler(this, &Form1::Client_set_Click);
-			// 
 			// MSG_list
 			// 
 			this->MSG_list->FormattingEnabled = true;
 			this->MSG_list->HorizontalScrollbar = true;
 			this->MSG_list->ItemHeight = 12;
-			this->MSG_list->Location = System::Drawing::Point(8, 399);
+			this->MSG_list->Location = System::Drawing::Point(12, 401);
 			this->MSG_list->Name = L"MSG_list";
 			this->MSG_list->ScrollAlwaysVisible = true;
-			this->MSG_list->Size = System::Drawing::Size(218, 112);
+			this->MSG_list->Size = System::Drawing::Size(220, 148);
 			this->MSG_list->TabIndex = 8;
 			// 
 			// Up_sd
@@ -232,7 +184,7 @@ namespace SKS_VC2013 {
 			this->Up_sd->BackColor = System::Drawing::Color::Transparent;
 			this->Up_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
-			this->Up_sd->Location = System::Drawing::Point(81, 206);
+			this->Up_sd->Location = System::Drawing::Point(80, 215);
 			this->Up_sd->Name = L"Up_sd";
 			this->Up_sd->Size = System::Drawing::Size(50, 50);
 			this->Up_sd->TabIndex = 11;
@@ -244,7 +196,7 @@ namespace SKS_VC2013 {
 			// 
 			this->Left_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
-			this->Left_sd->Location = System::Drawing::Point(9, 261);
+			this->Left_sd->Location = System::Drawing::Point(30, 265);
 			this->Left_sd->Name = L"Left_sd";
 			this->Left_sd->Size = System::Drawing::Size(50, 50);
 			this->Left_sd->TabIndex = 12;
@@ -256,7 +208,7 @@ namespace SKS_VC2013 {
 			// 
 			this->Right_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
-			this->Right_sd->Location = System::Drawing::Point(153, 261);
+			this->Right_sd->Location = System::Drawing::Point(130, 265);
 			this->Right_sd->Name = L"Right_sd";
 			this->Right_sd->Size = System::Drawing::Size(50, 50);
 			this->Right_sd->TabIndex = 13;
@@ -268,7 +220,7 @@ namespace SKS_VC2013 {
 			// 
 			this->Down_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
-			this->Down_sd->Location = System::Drawing::Point(81, 261);
+			this->Down_sd->Location = System::Drawing::Point(80, 265);
 			this->Down_sd->Name = L"Down_sd";
 			this->Down_sd->Size = System::Drawing::Size(50, 50);
 			this->Down_sd->TabIndex = 14;
@@ -279,7 +231,7 @@ namespace SKS_VC2013 {
 			// drawPB
 			// 
 			this->drawPB->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPB.Image")));
-			this->drawPB->Location = System::Drawing::Point(34, 60);
+			this->drawPB->Location = System::Drawing::Point(32, 66);
 			this->drawPB->Name = L"drawPB";
 			this->drawPB->Size = System::Drawing::Size(144, 149);
 			this->drawPB->TabIndex = 15;
@@ -294,7 +246,7 @@ namespace SKS_VC2013 {
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->Setup_set, this->View_set});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(240, 24);
+			this->menuStrip1->Size = System::Drawing::Size(246, 24);
 			this->menuStrip1->TabIndex = 16;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -380,10 +332,6 @@ namespace SKS_VC2013 {
 			this->Speed_lab->TabIndex = 19;
 			this->Speed_lab->Text = L"100";
 			// 
-			// backgroundWorker2
-			// 
-			this->backgroundWorker2->DoWork += gcnew System::ComponentModel::DoWorkEventHandler(this, &Form1::backgroundWorker2_DoWork);
-			// 
 			// groupBox1
 			// 
 			this->groupBox1->BackColor = System::Drawing::Color::DimGray;
@@ -400,7 +348,7 @@ namespace SKS_VC2013 {
 			this->groupBox1->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->groupBox1->Location = System::Drawing::Point(12, 75);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(212, 318);
+			this->groupBox1->Size = System::Drawing::Size(220, 320);
 			this->groupBox1->TabIndex = 20;
 			this->groupBox1->TabStop = false;
 			// 
@@ -443,38 +391,55 @@ namespace SKS_VC2013 {
 			// 
 			// R_b
 			// 
-			this->R_b->Location = System::Drawing::Point(153, 231);
+			this->R_b->Font = (gcnew System::Drawing::Font(L"Times New Roman", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->R_b->Location = System::Drawing::Point(130, 215);
 			this->R_b->Name = L"R_b";
-			this->R_b->Size = System::Drawing::Size(25, 25);
-			this->R_b->TabIndex = 21;
+			this->R_b->Size = System::Drawing::Size(50, 50);
+			this->R_b->TabIndex = 11;
 			this->R_b->Text = L"R";
 			this->R_b->UseVisualStyleBackColor = true;
 			this->R_b->Click += gcnew System::EventHandler(this, &Form1::R_b_Click);
 			// 
 			// L_b
 			// 
-			this->L_b->Location = System::Drawing::Point(34, 231);
+			this->L_b->Font = (gcnew System::Drawing::Font(L"Times New Roman", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->L_b->Location = System::Drawing::Point(30, 215);
 			this->L_b->Name = L"L_b";
-			this->L_b->Size = System::Drawing::Size(25, 25);
-			this->L_b->TabIndex = 22;
+			this->L_b->Size = System::Drawing::Size(50, 50);
+			this->L_b->TabIndex = 11;
 			this->L_b->Text = L"L";
 			this->L_b->UseVisualStyleBackColor = true;
 			this->L_b->Click += gcnew System::EventHandler(this, &Form1::L_b_Click);
 			// 
-			// Send_Config
+			// Btn_SysStart
 			// 
-			this->Send_Config->Location = System::Drawing::Point(177, 0);
-			this->Send_Config->Name = L"Send_Config";
-			this->Send_Config->Size = System::Drawing::Size(51, 23);
-			this->Send_Config->TabIndex = 30;
-			this->Send_Config->Text = L"Config";
-			this->Send_Config->UseVisualStyleBackColor = true;
-			this->Send_Config->Click += gcnew System::EventHandler(this, &Form1::Send_Config_Click);
+			this->Btn_SysStart->BackColor = System::Drawing::SystemColors::Control;
+			this->Btn_SysStart->Font = (gcnew System::Drawing::Font(L"Times New Roman", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->Btn_SysStart->ForeColor = System::Drawing::Color::LimeGreen;
+			this->Btn_SysStart->Location = System::Drawing::Point(12, 27);
+			this->Btn_SysStart->Name = L"Btn_SysStart";
+			this->Btn_SysStart->Size = System::Drawing::Size(110, 45);
+			this->Btn_SysStart->TabIndex = 21;
+			this->Btn_SysStart->Text = L"START";
+			this->Btn_SysStart->UseVisualStyleBackColor = false;
+			this->Btn_SysStart->Click += gcnew System::EventHandler(this, &Form1::Btn_SysStart_Click);
 			// 
-			// timer3
+			// btn_SysStop
 			// 
-			this->timer3->Interval = 500;
-			this->timer3->Tick += gcnew System::EventHandler(this, &Form1::timer3_Tick);
+			this->btn_SysStop->BackColor = System::Drawing::SystemColors::Control;
+			this->btn_SysStop->Font = (gcnew System::Drawing::Font(L"Times New Roman", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->btn_SysStop->ForeColor = System::Drawing::Color::Red;
+			this->btn_SysStop->Location = System::Drawing::Point(122, 27);
+			this->btn_SysStop->Name = L"btn_SysStop";
+			this->btn_SysStop->Size = System::Drawing::Size(110, 45);
+			this->btn_SysStop->TabIndex = 22;
+			this->btn_SysStop->Text = L"STOP";
+			this->btn_SysStop->UseVisualStyleBackColor = false;
+			this->btn_SysStop->Click += gcnew System::EventHandler(this, &Form1::btn_SysStop_Click);
 			// 
 			// Form1
 			// 
@@ -483,15 +448,11 @@ namespace SKS_VC2013 {
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::Gray;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-			this->ClientSize = System::Drawing::Size(240, 518);
-			this->Controls->Add(this->Send_Config);
+			this->ClientSize = System::Drawing::Size(246, 563);
+			this->Controls->Add(this->btn_SysStop);
+			this->Controls->Add(this->Btn_SysStart);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->MSG_list);
-			this->Controls->Add(this->Client_set);
-			this->Controls->Add(this->Client);
-			this->Controls->Add(this->Client_box);
-			this->Controls->Add(this->IP_box);
-			this->Controls->Add(this->IP);
 			this->Controls->Add(this->menuStrip1);
 			this->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->MainMenuStrip = this->menuStrip1;
@@ -527,6 +488,7 @@ namespace SKS_VC2013 {
 
 //! Connection Set.
 /**<Client Code. */
+/*
 	void waitAcceptSocket(){
 		while(true)
 		{
@@ -545,7 +507,7 @@ namespace SKS_VC2013 {
 				}
 
 				try{
-					byteNum =ClientSocket->Receive(recvBytes,recvBytes->Length,static_cast<SocketFlags>(0)); /**< Wait Message. */
+					byteNum =ClientSocket->Receive(recvBytes,recvBytes->Length,static_cast<SocketFlags>(0)); /**< Wait Message. *//*
 				}
 				catch (SocketException^){
 					ClientSocket->Close();
@@ -605,6 +567,8 @@ namespace SKS_VC2013 {
 	private: System::Void backgroundWorker2_DoWork(System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e) {
 				 waitAcceptSocket();
 			 }
+*/
+
 
 //!Ladar Drawing.
 	void Radar_Basic(double x , double y){
@@ -766,8 +730,8 @@ public:	void Read_Status(){
 							XmlNode^ b = element->ChildNodes[i];
 							XmlElement^ a = (XmlElement^) b;
 
-							R_Laser[i].Angle = 90-(2.5*i);	//! 90 to -90.
-							R_Laser[i].Distance = System::Convert::ToDouble(a->GetAttribute("d")) / 10;	//! mm to cm.
+							Real_Laser[i].Angle = 90-(2.5*i);	//! 90 to -90.
+							Real_Laser[i].Distance = System::Convert::ToDouble(a->GetAttribute("d")) / 10;	//! mm to cm.
 						}
 					}else if(element->Name == "Position"){
 						R_Position->x= System::Convert::ToDouble(element->GetAttribute("x"));
@@ -865,7 +829,7 @@ public:	void Read_Robot(){
 		}
 
 //! Control and Send.
-public:	void send(){
+/*public:	void send(){
 			if(Ctrl_check->Checked && Client_already && ClientSocket->Connected){
 				fileName = "Robot_Command.xml";
 				ClientSocket->SendFile(fileName);
@@ -881,6 +845,7 @@ public:	void send(){
 			MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //¸òÀH¨÷¶b©¹¤U
 			//MSG_list->TopIndex = MSG_list->Items->Count-1;		//¸òÀH¨÷¶b©¹¤U(2)
 		}
+*/
 	private: System::Void Down_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
 			 D_Touch->Y = Rader_Radius/-10;
@@ -888,7 +853,7 @@ public:	void send(){
 			 D_mos->Right = 0;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void Up_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
@@ -897,7 +862,7 @@ public:	void send(){
 			 D_mos->Right = 0;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void Left_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = Rader_Radius/-10;
@@ -906,7 +871,7 @@ public:	void send(){
 			 D_mos->Right = 0;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void Right_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = Rader_Radius/10;
@@ -915,7 +880,7 @@ public:	void send(){
 			 D_mos->Right = 0;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void R_b_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
@@ -924,7 +889,7 @@ public:	void send(){
 			 D_mos->Right = 1;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void L_b_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
@@ -933,7 +898,7 @@ public:	void send(){
 			 D_mos->Right = 1;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	void drawPB_mos(System::Windows::Forms::MouseEventArgs^  e){
 		D_mos->X = e->X;
@@ -979,7 +944,7 @@ public:	void send(){
 			}
 			Write_Robot();
 			Read_Robot();
-			send();
+			//send();
 		}
 	}
 	private: System::Void drawPB_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
@@ -998,7 +963,7 @@ public:	void send(){
 			 D_Touch->Radian = 0;
 			 Write_Robot();
 			 Read_Robot();
-			 send();
+			 //send();
 		 }
 	private: System::Void Speed_Bar_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
 			 Speed_lab->Text = System::Convert::ToString(Speed_Bar->Value);
@@ -1026,6 +991,7 @@ private: System::Void lasertestToolStripMenuItem_Click(System::Object^  sender, 
 			 mLaserForm = gcnew TLaserForm();
 			 mLaserForm->Show();
 		 }
+/*
 private: System::Void timer3_Tick(System::Object^  sender, System::EventArgs^  e) {
 			 try{
 				 if(Client_already){
@@ -1044,7 +1010,7 @@ private: System::Void timer3_Tick(System::Object^  sender, System::EventArgs^  e
 				 }
 			 }catch(SocketException^){}
 		 }
-
+*/
 private: System::Void Auto_check_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Write_Robot();
 			 if(Ctrl_check->Checked){
@@ -1056,15 +1022,14 @@ private: System::Void Ctrl_check_CheckedChanged(System::Object^  sender, System:
 				 Auto_check->Checked = false;
 			 }
 		 }
-private: System::Void Send_Config_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if(Client_already && ClientSocket->Connected){
-				 fileName = "Robot_ReloadConfig.xml";
-				 ClientSocket->SendFile(fileName);
-			 }
+
+private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //motor stop command
+
 		 }
-
-
-
+private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //start algorithm
+		 }
 };
 }
 

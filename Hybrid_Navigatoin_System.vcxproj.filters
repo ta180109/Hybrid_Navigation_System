@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Tools">
-      <UniqueIdentifier>{6b7e45a0-2357-43c9-9a70-567f79c0b3f4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Furniture">
       <UniqueIdentifier>{becf1446-e63a-4a25-8688-cce55e1098f2}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,9 @@
     <ClCompile Include="TCoordinate\TCoordinate.cpp">
       <Filter>TCoordiante</Filter>
     </ClCompile>
+    <ClCompile Include="Core\NavigationSystem\NavigationSystem.cpp">
+      <Filter>Core\NavigationSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -106,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="Tools\UtilityTool.h">
-      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="Database.h">
       <Filter>標頭檔</Filter>
@@ -142,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="TCoordinate\TCoordinate.h">
       <Filter>TCoordiante</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NavigationSystem\NavigationSystem.h">
+      <Filter>Core\NavigationSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

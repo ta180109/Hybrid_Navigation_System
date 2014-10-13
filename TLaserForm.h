@@ -272,7 +272,7 @@ namespace SKS_VC2013{
 			// labTmpLength
 			// 
 			this->labTmpLength->AutoSize = true;
-			this->labTmpLength->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->labTmpLength->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->labTmpLength->Location = System::Drawing::Point(11, 194);
 			this->labTmpLength->Name = L"labTmpLength";
@@ -283,7 +283,7 @@ namespace SKS_VC2013{
 			// label9
 			// 
 			this->label9->AutoSize = true;
-			this->label9->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->label9->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->label9->Location = System::Drawing::Point(11, 172);
 			this->label9->Name = L"label9";
@@ -314,7 +314,7 @@ namespace SKS_VC2013{
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->label7->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->label7->Location = System::Drawing::Point(65, 143);
 			this->label7->Name = L"label7";
@@ -363,7 +363,7 @@ namespace SKS_VC2013{
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->label8->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->label8->Location = System::Drawing::Point(65, 90);
 			this->label8->Name = L"label8";
@@ -495,7 +495,7 @@ namespace SKS_VC2013{
 			// 
 			// updownNumOfScans
 			// 
-			this->updownNumOfScans->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->updownNumOfScans->Font = (gcnew System::Drawing::Font(L"新細明體", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->updownNumOfScans->Location = System::Drawing::Point(177, 171);
 			this->updownNumOfScans->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {99, 0, 0, 0});
@@ -1650,6 +1650,5 @@ namespace SKS_VC2013{
 				 this->labScale->Text = "Scale: " + Convert::ToString(this->trackbarScale->Value / 10.0);
 			 }
 
-
-	};
+};
 }

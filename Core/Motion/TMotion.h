@@ -1,10 +1,3 @@
-/*
- *   Motion.h
- *
- *   Author: Wu Chih-En
- *
- */
-
 #ifndef _MOTION_H_
 #define _MOTION_H_
 

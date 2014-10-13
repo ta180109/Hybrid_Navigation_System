@@ -140,7 +140,9 @@
 		double Angle;
 		double Distance;
 	};
-	extern Laser_information *R_Laser;
+	extern Laser_information *Real_Laser;
+	extern Laser_information *Sim_Laser;
+
 
 	class data9
 	{
@@ -198,6 +200,7 @@
 			TCoordinate GoalPos;
 			int PCnt;
 		} tsAStarPath;
+
 	};
 	extern Database *D_Database;	
 

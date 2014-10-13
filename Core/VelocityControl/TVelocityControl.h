@@ -1,5 +1,5 @@
 //=============================================
-//File name: Stra_VelocityControl
+//File name: VelocityControl
 //
 //Author   :Hsieh Ming-Hua
 //          Transplant form 2012 SKS project

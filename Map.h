@@ -40,6 +40,8 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::ComboBox^  Spa_CB;
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::CheckBox^  Re_Position;
+	private: System::Windows::Forms::ListBox^  SimLaserShow;
+
 
 
 
@@ -102,6 +104,7 @@ namespace SKS_VC2013 {
 			this->Map_Save = (gcnew System::Windows::Forms::Button());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->Re_Position = (gcnew System::Windows::Forms::CheckBox());
+			this->SimLaserShow = (gcnew System::Windows::Forms::ListBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -266,12 +269,22 @@ namespace SKS_VC2013 {
 			this->Re_Position->UseVisualStyleBackColor = true;
 			this->Re_Position->CheckedChanged += gcnew System::EventHandler(this, &Map::Re_Position_CheckedChanged);
 			// 
+			// SimLaserShow
+			// 
+			this->SimLaserShow->FormattingEnabled = true;
+			this->SimLaserShow->ItemHeight = 12;
+			this->SimLaserShow->Location = System::Drawing::Point(608, 46);
+			this->SimLaserShow->Name = L"SimLaserShow";
+			this->SimLaserShow->Size = System::Drawing::Size(259, 592);
+			this->SimLaserShow->TabIndex = 10;
+			// 
 			// Map
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
-			this->ClientSize = System::Drawing::Size(608, 651);
+			this->ClientSize = System::Drawing::Size(897, 651);
+			this->Controls->Add(this->SimLaserShow);
 			this->Controls->Add(this->Re_Position);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->Map_Save);
@@ -446,9 +459,10 @@ namespace SKS_VC2013 {
 		}
 
 	private: void scanning(){
-				 int num = D_Range->Angle/D_Range->Spa + 1;
 
+				 int num =  D_Range->Angle/D_Range->Spa + 1;
 				 array<double> ^Laser_dis = gcnew array<double>(num); 
+	
 
 				 double fmap_x,fmap_y;
 				 double map_x,map_y;
@@ -476,11 +490,18 @@ namespace SKS_VC2013 {
 					 }
 					 if(Laser_box->Checked)
 						 mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
-
-					 Laser_dis[i]= sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
+					 
+					 Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
+					 
 					 i++;
 					 tar = tar + (D_Range->Spa*PI/180);
 				 }
+				 
+				 for(int k = i; k--; k>0)
+					 this->SimLaserShow->Items->Add("Linenum " + k + " : " + Sim_Laser[k].Distance );
+					 
+				 
+
 				 drawMap->Image = mBMP;
 			 }
 //»ÙÃªª«§P©w
@@ -581,5 +602,6 @@ private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System
 private: System::Void Re_Movement_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Movement");
 		 }
+
 };
 }

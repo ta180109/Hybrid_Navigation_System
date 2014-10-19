@@ -41,6 +41,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::CheckBox^  Re_Position;
 	private: System::Windows::Forms::ListBox^  SimLaserShow;
+	private: System::Windows::Forms::GroupBox^  groupBox2;
 
 
 
@@ -105,15 +106,17 @@ namespace SKS_VC2013 {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->Re_Position = (gcnew System::Windows::Forms::CheckBox());
 			this->SimLaserShow = (gcnew System::Windows::Forms::ListBox());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->BeginInit();
 			this->groupBox1->SuspendLayout();
+			this->groupBox2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// drawMap
 			// 
 			this->drawMap->ErrorImage = nullptr;
 			this->drawMap->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawMap.Image")));
-			this->drawMap->Location = System::Drawing::Point(2, 46);
+			this->drawMap->Location = System::Drawing::Point(2, 52);
 			this->drawMap->Name = L"drawMap";
 			this->drawMap->Size = System::Drawing::Size(600, 600);
 			this->drawMap->TabIndex = 0;
@@ -125,7 +128,7 @@ namespace SKS_VC2013 {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(82, 14);
+			this->label1->Location = System::Drawing::Point(77, 21);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(33, 12);
 			this->label1->TabIndex = 3;
@@ -134,7 +137,7 @@ namespace SKS_VC2013 {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(161, 14);
+			this->label2->Location = System::Drawing::Point(163, 21);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(42, 12);
 			this->label2->TabIndex = 4;
@@ -149,14 +152,15 @@ namespace SKS_VC2013 {
 			this->groupBox1->Controls->Add(this->Laser_box);
 			this->groupBox1->Location = System::Drawing::Point(173, -1);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(250, 38);
+			this->groupBox1->Size = System::Drawing::Size(250, 47);
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"S_Laser";
 			// 
 			// Spa_CB
 			// 
 			this->Spa_CB->FormattingEnabled = true;
-			this->Spa_CB->Location = System::Drawing::Point(204, 11);
+			this->Spa_CB->Location = System::Drawing::Point(208, 20);
 			this->Spa_CB->Name = L"Spa_CB";
 			this->Spa_CB->Size = System::Drawing::Size(42, 20);
 			this->Spa_CB->TabIndex = 8;
@@ -166,7 +170,7 @@ namespace SKS_VC2013 {
 			// Ang_CB
 			// 
 			this->Ang_CB->FormattingEnabled = true;
-			this->Ang_CB->Location = System::Drawing::Point(116, 11);
+			this->Ang_CB->Location = System::Drawing::Point(116, 21);
 			this->Ang_CB->Name = L"Ang_CB";
 			this->Ang_CB->Size = System::Drawing::Size(41, 20);
 			this->Ang_CB->TabIndex = 11;
@@ -176,7 +180,7 @@ namespace SKS_VC2013 {
 			// Laser_box
 			// 
 			this->Laser_box->AutoSize = true;
-			this->Laser_box->Location = System::Drawing::Point(6, 12);
+			this->Laser_box->Location = System::Drawing::Point(2, 21);
 			this->Laser_box->Name = L"Laser_box";
 			this->Laser_box->Size = System::Drawing::Size(76, 16);
 			this->Laser_box->TabIndex = 10;
@@ -187,7 +191,7 @@ namespace SKS_VC2013 {
 			// Re_Movement
 			// 
 			this->Re_Movement->AutoSize = true;
-			this->Re_Movement->Location = System::Drawing::Point(431, 6);
+			this->Re_Movement->Location = System::Drawing::Point(6, 14);
 			this->Re_Movement->Name = L"Re_Movement";
 			this->Re_Movement->Size = System::Drawing::Size(74, 16);
 			this->Re_Movement->TabIndex = 5;
@@ -203,7 +207,7 @@ namespace SKS_VC2013 {
 			// Sim_X
 			// 
 			this->Sim_X->AutoSize = true;
-			this->Sim_X->Location = System::Drawing::Point(512, 7);
+			this->Sim_X->Location = System::Drawing::Point(86, 15);
 			this->Sim_X->Name = L"Sim_X";
 			this->Sim_X->Size = System::Drawing::Size(25, 12);
 			this->Sim_X->TabIndex = 2;
@@ -212,7 +216,7 @@ namespace SKS_VC2013 {
 			// Sim_Y
 			// 
 			this->Sim_Y->AutoSize = true;
-			this->Sim_Y->Location = System::Drawing::Point(560, 7);
+			this->Sim_Y->Location = System::Drawing::Point(86, 32);
 			this->Sim_Y->Name = L"Sim_Y";
 			this->Sim_Y->Size = System::Drawing::Size(25, 12);
 			this->Sim_Y->TabIndex = 3;
@@ -221,7 +225,7 @@ namespace SKS_VC2013 {
 			// Sim_Sita
 			// 
 			this->Sim_Sita->AutoSize = true;
-			this->Sim_Sita->Location = System::Drawing::Point(512, 24);
+			this->Sim_Sita->Location = System::Drawing::Point(139, 15);
 			this->Sim_Sita->Name = L"Sim_Sita";
 			this->Sim_Sita->Size = System::Drawing::Size(34, 12);
 			this->Sim_Sita->TabIndex = 4;
@@ -261,7 +265,7 @@ namespace SKS_VC2013 {
 			// Re_Position
 			// 
 			this->Re_Position->AutoSize = true;
-			this->Re_Position->Location = System::Drawing::Point(432, 24);
+			this->Re_Position->Location = System::Drawing::Point(6, 28);
 			this->Re_Position->Name = L"Re_Position";
 			this->Re_Position->Size = System::Drawing::Size(61, 16);
 			this->Re_Position->TabIndex = 9;
@@ -273,26 +277,36 @@ namespace SKS_VC2013 {
 			// 
 			this->SimLaserShow->FormattingEnabled = true;
 			this->SimLaserShow->ItemHeight = 12;
-			this->SimLaserShow->Location = System::Drawing::Point(608, 46);
+			this->SimLaserShow->Location = System::Drawing::Point(608, 52);
 			this->SimLaserShow->Name = L"SimLaserShow";
 			this->SimLaserShow->Size = System::Drawing::Size(259, 592);
 			this->SimLaserShow->TabIndex = 10;
+			// 
+			// groupBox2
+			// 
+			this->groupBox2->Controls->Add(this->Re_Movement);
+			this->groupBox2->Controls->Add(this->Re_Position);
+			this->groupBox2->Controls->Add(this->Sim_Y);
+			this->groupBox2->Controls->Add(this->Sim_X);
+			this->groupBox2->Controls->Add(this->Sim_Sita);
+			this->groupBox2->Location = System::Drawing::Point(429, 2);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(219, 44);
+			this->groupBox2->TabIndex = 11;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"R_Robot Status";
 			// 
 			// Map
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
-			this->ClientSize = System::Drawing::Size(897, 651);
+			this->ClientSize = System::Drawing::Size(902, 662);
+			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->SimLaserShow);
-			this->Controls->Add(this->Re_Position);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->Map_Save);
-			this->Controls->Add(this->Re_Movement);
 			this->Controls->Add(this->Furniture_Box);
-			this->Controls->Add(this->Sim_Sita);
-			this->Controls->Add(this->Sim_Y);
-			this->Controls->Add(this->Sim_X);
 			this->Controls->Add(this->drawMap);
 			this->Controls->Add(this->groupBox1);
 			this->Name = L"Map";
@@ -301,6 +315,8 @@ namespace SKS_VC2013 {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->EndInit();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
+			this->groupBox2->ResumeLayout(false);
+			this->groupBox2->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -602,6 +618,7 @@ private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System
 private: System::Void Re_Movement_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Movement");
 		 }
+
 
 };
 }

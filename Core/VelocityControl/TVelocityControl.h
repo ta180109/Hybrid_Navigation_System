@@ -12,18 +12,18 @@
 //          y-axis parameter:speedmax, speedmin
 //===============================================
 
-#ifndef Stra_VelocityControlH
-#define Stra_VelocityControlH
+#ifndef TVelocityControlH
+#define TVelocityControlH
 //#include "StrategyModule.h"
 #include <stdio.h>
 //#include <tinyxml.h>
 namespace SKS_VC2013 {
-	class VelocityControl //: public StrategyModule
+	class TVelocityControl //: public StrategyModule
 	{
 
 	public:
 
-		~VelocityControl();
+		~TVelocityControl();
 
 		//static VelocityControl*  GetInstance() {
 			//return m_UniqueInstance;
@@ -40,7 +40,7 @@ namespace SKS_VC2013 {
 
 		//static VelocityControl* m_UniqueInstance;
 
-		VelocityControl();
+		TVelocityControl();
 
 		void VelocityTransform( double, double, double );
 

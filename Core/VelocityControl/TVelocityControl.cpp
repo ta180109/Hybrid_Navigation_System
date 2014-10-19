@@ -1,5 +1,6 @@
-#include "../../Database.h"
+#include "../../database.h"
 #include "TVelocityControl.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -7,39 +8,39 @@ using namespace SKS_VC2013;
 using namespace std;
 
 
-//Stra_VelocityControl* Stra_VelocityControl::m_UniqueInstance = new Stra_VelocityControl();
+//stra_velocitycontrol* stra_velocitycontrol::m_uniqueinstance = new stra_velocitycontrol();
 
-VelocityControl::VelocityControl()
+TVelocityControl::TVelocityControl()
 {
 
 }
 
-VelocityControl::~VelocityControl()
+TVelocityControl::~TVelocityControl()
 {
 
 }
 //----------------------------------------------------------------------------xml
 /*
-int VelocityControl::LoadXMLSettings (TiXmlElement* element) {
-    if(element != NULL) {
-        element->Attribute("dis_max", &DistanceMax);
-        element->Attribute("dis_min", &DistanceMin);
-        element->Attribute("spd_max", &SpeedMax);
-        element->Attribute("spd_min", &SpeedMin);
-        element->Attribute("sita_max", &ThetaMax);
-        element->Attribute("sita_min", &ThetaMin);
-        element->Attribute("w_max", &OmegaMax);
-        element->Attribute("w_min", &OmegaMin);
+int velocitycontrol::loadxmlsettings (tixmlelement* element) {
+    if(element != null) {
+        element->attribute("dis_max", &distancemax);
+        element->attribute("dis_min", &distancemin);
+        element->attribute("spd_max", &speedmax);
+        element->attribute("spd_min", &speedmin);
+        element->attribute("sita_max", &thetamax);
+        element->attribute("sita_min", &thetamin);
+        element->attribute("w_max", &omegamax);
+        element->attribute("w_min", &omegamin);
     }
 }
 */
 //----------------------------------------------------------------------------
-void VelocityControl::Initialize(void)
+void TVelocityControl::Initialize(void)
 {
 
 }
 
-void VelocityControl::Process(void)
+void TVelocityControl::Process(void)
 {
 #ifndef Def_OMNIDIRECTION_SYSTEM
 	
@@ -87,7 +88,7 @@ void VelocityControl::Process(void)
 
 //-----------------------------------------------------------------------------
 
-void VelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAng, double Theta )
+void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAng, double Theta )
 {
     TCoordinate Vector( dTargetCutAng );
 
@@ -175,7 +176,7 @@ void VelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAng
 
 //---------------------------------------------------------------------------
 
-double VelocityControl::S_Function(const double &TargetMax, const double &TargetMin,
+double TVelocityControl::S_Function(const double &TargetMax, const double &TargetMin,
 
                                         const double &CurrentMax,const double &CurrentMin,
 
@@ -193,7 +194,7 @@ double VelocityControl::S_Function(const double &TargetMax, const double &Target
 
 //---------------------------------------------------------------------------
 
-double VelocityControl::Raise_Function( double V, double Cmd )
+double TVelocityControl::Raise_Function( double V, double Cmd )
 
 {
 

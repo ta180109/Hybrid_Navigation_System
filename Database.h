@@ -12,7 +12,8 @@
 	#define Map_Height 600
 	#define Laser_Width 500
 	#define Laser_Height 500
-	
+	#define LASER_SCAN_NUM 73
+
 	const double RaderCenter_x = 72;		//!雷達中心 x
 	const double RaderCenter_y = 72;		//!雷達中心 y
 	const double Rader_Radius = 70;				//!雷達半徑 = 70

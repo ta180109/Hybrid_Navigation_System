@@ -124,6 +124,8 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::Button^  btn_SysStop;
 
 
+
+
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
 
 
@@ -182,7 +184,7 @@ namespace SKS_VC2013 {
 			// Up_sd
 			// 
 			this->Up_sd->BackColor = System::Drawing::Color::Transparent;
-			this->Up_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->Up_sd->Font = (gcnew System::Drawing::Font(L"新細明體", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->Up_sd->Location = System::Drawing::Point(80, 215);
 			this->Up_sd->Name = L"Up_sd";
@@ -194,7 +196,7 @@ namespace SKS_VC2013 {
 			// 
 			// Left_sd
 			// 
-			this->Left_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->Left_sd->Font = (gcnew System::Drawing::Font(L"新細明體", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->Left_sd->Location = System::Drawing::Point(30, 265);
 			this->Left_sd->Name = L"Left_sd";
@@ -206,7 +208,7 @@ namespace SKS_VC2013 {
 			// 
 			// Right_sd
 			// 
-			this->Right_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->Right_sd->Font = (gcnew System::Drawing::Font(L"新細明體", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->Right_sd->Location = System::Drawing::Point(130, 265);
 			this->Right_sd->Name = L"Right_sd";
@@ -218,7 +220,7 @@ namespace SKS_VC2013 {
 			// 
 			// Down_sd
 			// 
-			this->Down_sd->Font = (gcnew System::Drawing::Font(L"PMingLiU", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->Down_sd->Font = (gcnew System::Drawing::Font(L"新細明體", 20.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->Down_sd->Location = System::Drawing::Point(80, 265);
 			this->Down_sd->Name = L"Down_sd";
@@ -255,7 +257,7 @@ namespace SKS_VC2013 {
 			this->Setup_set->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->furnitureToolStripMenuItem, 
 				this->mapEditerToolStripMenuItem, this->mapToolStripMenuItem1, this->lasertestToolStripMenuItem});
 			this->Setup_set->Name = L"Setup_set";
-			this->Setup_set->Size = System::Drawing::Size(49, 20);
+			this->Setup_set->Size = System::Drawing::Size(53, 20);
 			this->Setup_set->Text = L"Setup";
 			// 
 			// furnitureToolStripMenuItem
@@ -378,7 +380,7 @@ namespace SKS_VC2013 {
 			// Ctrl_check
 			// 
 			this->Ctrl_check->AutoSize = true;
-			this->Ctrl_check->Font = (gcnew System::Drawing::Font(L"PMingLiU", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->Ctrl_check->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(136)));
 			this->Ctrl_check->ForeColor = System::Drawing::SystemColors::ControlLightLight;
 			this->Ctrl_check->Location = System::Drawing::Point(7, 13);
@@ -458,7 +460,7 @@ namespace SKS_VC2013 {
 			this->MainMenuStrip = this->menuStrip1;
 			this->MaximizeBox = false;
 			this->Name = L"Form1";
-			this->Text = L"Form1";
+			this->Text = L"MainFrom";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawPB))->EndInit();
 			this->menuStrip1->ResumeLayout(false);
@@ -482,6 +484,7 @@ namespace SKS_VC2013 {
 				 drawPB->Height = Radar_Height;
 
 				 Radar_Basic(RaderCenter_x , RaderCenter_y);
+				 D_Database->EndPosition = (D_Furniture->M_EndArea.x, D_Furniture->M_EndArea.y);
 				
 				 Read_Object();
 			 }
@@ -1029,6 +1032,7 @@ private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventAr
 		 }
 private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //start algorithm
+			 
 		 }
 };
 }

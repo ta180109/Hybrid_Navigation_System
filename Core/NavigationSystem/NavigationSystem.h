@@ -32,6 +32,7 @@ namespace SKS_VC2013 {
 
 		void Process(void);
 
+		
 		//int LoadXMLSettings(TiXmlElement* element);  //LoadXMLSettings
 
 	private:

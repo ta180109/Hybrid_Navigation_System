@@ -33,6 +33,7 @@ data10 *R_Robot = new data10();
 
 Database *D_Database = new Database();
 
+
 void Robot_Request(System::String^ Re_Node){
 	XmlDocument^ doc = gcnew XmlDocument();
 	doc->Load("Robot_Request.xml");

@@ -18,22 +18,7 @@ NavigationSystem::~NavigationSystem()
 {
 
 }
-//----------------------------------------------------------------------------xml
-/*
-int VelocityControl::LoadXMLSettings (TiXmlElement* element) {
-    if(element != NULL) {
-        element->Attribute("dis_max", &DistanceMax);
-        element->Attribute("dis_min", &DistanceMin);
-        element->Attribute("spd_max", &SpeedMax);
-        element->Attribute("spd_min", &SpeedMin);
-        element->Attribute("sita_max", &ThetaMax);
-        element->Attribute("sita_min", &ThetaMin);
-        element->Attribute("w_max", &OmegaMax);
-        element->Attribute("w_min", &OmegaMin);
-    }
-}
-*/
-//----------------------------------------------------------------------------
+
 void NavigationSystem::Initialize(void)
 {
 
@@ -41,4 +26,6 @@ void NavigationSystem::Initialize(void)
 
 void NavigationSystem::Process(void)
 {
+	
+	
 }

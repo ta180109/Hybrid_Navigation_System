@@ -946,7 +946,7 @@ public:	void Read_Robot(){
 				}
 			}
 			Write_Robot();
-			Read_Robot();
+
 			//send();
 		}
 	}

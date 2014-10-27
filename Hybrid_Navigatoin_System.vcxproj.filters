@@ -46,6 +46,9 @@
     <Filter Include="TCoordiante">
       <UniqueIdentifier>{a36670db-5a27-4895-a38a-b23de47cc234}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\AStar">
+      <UniqueIdentifier>{b3c97b77-2b50-4763-940c-830f65421b68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -96,6 +99,9 @@
     <ClCompile Include="Core\NavigationSystem\NavigationSystem.cpp">
       <Filter>Core\NavigationSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Core\AStar\TAStar.cpp">
+      <Filter>Core\AStar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -142,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="Core\NavigationSystem\NavigationSystem.h">
       <Filter>Core\NavigationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AStar\TAStar.h">
+      <Filter>Core\AStar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

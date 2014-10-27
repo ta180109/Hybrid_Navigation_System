@@ -184,6 +184,16 @@
 		
 		 bool FlagForward;
 
+		 //for AStar
+		 //bool AStarEnable;
+
+		 struct {
+			 int Status;
+			 TCoordinate StartPos;
+			 TCoordinate GoalPos;
+			 int PCnt;
+		 }AStarPath;
+
 		//for velocity control
 		 float FixSpeed;                                 // Speed Power 1~100 %
 		 double MotionDistance;
@@ -193,14 +203,6 @@
 
 
 		 long MotorSpeed[3];
-
-
-		typedef struct {
-			int Status;
-			TCoordinate StartPos;
-			TCoordinate GoalPos;
-			int PCnt;
-		} tsAStarPath;
 
 	};
 	extern Database *D_Database;	

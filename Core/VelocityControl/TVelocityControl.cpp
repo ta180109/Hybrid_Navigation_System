@@ -8,7 +8,7 @@ using namespace SKS_VC2013;
 using namespace std;
 
 
-//stra_velocitycontrol* stra_velocitycontrol::m_uniqueinstance = new stra_velocitycontrol();
+//stra_velocitycontrol* stra_velocitycontrssol::m_uniqueinstance = new stra_velocitycontrol();
 
 TVelocityControl::TVelocityControl()
 {
@@ -35,12 +35,12 @@ int velocitycontrol::loadxmlsettings (tixmlelement* element) {
 }
 */
 //----------------------------------------------------------------------------
-void TVelocityControl::Initialize(void)
+void TVelocityControl::Velocity_Initialize(void)
 {
 
 }
 
-void TVelocityControl::Process(void)
+void TVelocityControl::Velocity_Main(void)
 {
 #ifndef Def_OMNIDIRECTION_SYSTEM
 	

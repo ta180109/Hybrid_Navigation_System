@@ -92,6 +92,10 @@ namespace SKS_VC2013 {
 		MapEditer^ mMapEditer;
 		TLaserForm^ mLaserForm;
 
+		TNavigationSystem *NewNavigationSystem;
+
+		
+
 	private: System::Windows::Forms::ListBox^  MSG_list;
 	private: System::Windows::Forms::Button^  Up_sd;
 	private: System::Windows::Forms::Button^  Left_sd;
@@ -480,6 +484,8 @@ namespace SKS_VC2013 {
 //! First Load Code.
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 				 
+				 NewNavigationSystem = new TNavigationSystem();
+
 				 drawPB->Width  = Radar_Width;
 				 drawPB->Height = Radar_Height;
 
@@ -1032,7 +1038,7 @@ private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventAr
 		 }
 private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //start algorithm
-			 
+			 NewNavigationSystem->NavigationSystem_Main();
 		 }
 };
 }

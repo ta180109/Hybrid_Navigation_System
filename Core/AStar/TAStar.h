@@ -9,6 +9,7 @@
 //
 //Function :AStar Strategy
 //===============================================
+
 #ifndef TAStarH
 #define TAStarH
 //#include "StrategyModule.h"
@@ -22,7 +23,7 @@
 #include <sstream>
 
 #define Def_Open 1
-#define  Def_Closed 2
+#define Def_Closed 2
 //#include <tinyxml.h>
 using namespace std;
 namespace SKS_VC2013
@@ -75,22 +76,20 @@ namespace SKS_VC2013
 // 		static Stra_AStar*  GetInstance() {
 // 			return m_UniqueInstance;
 // 		}
-
+		TAStar();
 		~TAStar();
 
-		void Initialize(void);
+		void AStar_Initialize(void);
 
-		void Process(void);
+		void AStar_Main(void);
 
 		//int LoadXMLSettings(TiXmlElement* element);
 
 		void Behavior_AstarPath( void );
-
+		
 	private:
 
 		//static Stra_AStar* m_UniqueInstance;
-
-		TAStar();
 
 		TCoordinate StartPos, GoalPos;
 
@@ -120,7 +119,6 @@ namespace SKS_VC2013
 
 		//int LoadXMLSettings (TiXmlElement* element);
 
-
 		//------------Private
 		vector < vector<tsNode> > Map;
 		vector <TCoordinate> Path;
@@ -137,5 +135,4 @@ namespace SKS_VC2013
 		int NodeResolution;
 	};
 }
-
 #endif

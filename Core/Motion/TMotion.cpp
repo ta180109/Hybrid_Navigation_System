@@ -8,13 +8,13 @@
 
 #define ROBOT_RADIUS 1.0
 
-using namespace Robot;
+using namespace SKS_VC2013;
 using namespace std;
 
 //Motion* Motion::m_UniqueInstance = new Motion();
 
-Motion::Motion():
-    mAngle1Sin(-sin(ANGLE_1)),
+TMotion::TMotion():
+	mAngle1Sin(-sin(ANGLE_1)),
     mAngle2Sin(-sin(ANGLE_2)),
     mAngle3Sin(-sin(ANGLE_3)),
     mAngle1Cos(cos(ANGLE_1)),
@@ -23,15 +23,15 @@ Motion::Motion():
 {
 }
 
-Motion::~Motion()
+TMotion::~TMotion()
 {
 }
 
-void Motion::Initialize()
+void TMotion::Motion_Initialize()
 {
 }
 
-void Motion::Process()
+void TMotion::Motion_Main()
 {
     double w = D_Database->w * 48;
     D_Database->MotorSpeed[0] = mAngle1Sin*D_Database->x + mAngle1Cos*D_Database->y - ROBOT_RADIUS * w;

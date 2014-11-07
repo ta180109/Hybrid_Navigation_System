@@ -22,7 +22,7 @@ namespace SKS_VC2013 {
 	{
 
 	public:
-
+		TVelocityControl();
 		~TVelocityControl();
 
 		//static VelocityControl*  GetInstance() {
@@ -30,17 +30,15 @@ namespace SKS_VC2013 {
 		//}
 		//static string  ParameterReset(void);
 
-		void Initialize(void);
+		void Velocity_Initialize(void);
 
-		void Process(void);
+		void Velocity_Main(void);
 
 		//int LoadXMLSettings(TiXmlElement* element);  //LoadXMLSettings
 
 	private:
 
 		//static VelocityControl* m_UniqueInstance;
-
-		TVelocityControl();
 
 		void VelocityTransform( double, double, double );
 

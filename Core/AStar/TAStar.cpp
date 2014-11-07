@@ -10,7 +10,6 @@ TAStar::TAStar()
 {
 
 }
-
 TAStar::~TAStar()
 {
 
@@ -23,7 +22,7 @@ TAStar::~TAStar()
 // 	}
 // }
 //-----------------------------------------------------------------
-void TAStar::Initialize(void)
+void TAStar::AStar_Initialize(void)
 {
 
 	StartNode = aVector(-1,-1);
@@ -42,7 +41,7 @@ void TAStar::Initialize(void)
 
 }
 //-----------------------------------------------------------------
-void TAStar::Process(void)
+void TAStar::AStar_Main(void)
 {
 	//if(!StrategyStatus::AStarEnable) return;
 	if( D_Database->AStarPath.StartPos == aVector(-999, -999) ||
@@ -122,7 +121,6 @@ void TAStar::Behavior_AstarPath( void )
 
 	*/
 }
-
 
 void TAStar::CleanList( void )
 {

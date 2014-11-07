@@ -45,7 +45,14 @@ namespace SKS_VC2013 {
 			//TODO: 在此加入建構函式程式碼
 			//
 			Map_Node = new asNode*[60];
-			for(int x=0;x<60;x++) Map_Node[x] = new asNode[60];
+			MapWeight = new int*[60];
+			tmpMapWeight = new int*[60];
+			
+			for(int x=0;x<60;x++){
+				Map_Node[x] = new asNode[60];
+				MapWeight[x] = new int[60];
+				tmpMapWeight[x] = new int[60];
+			}
 		}
 
 	protected:
@@ -72,6 +79,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::RadioButton^  BT_End;
 	private: System::Windows::Forms::Button^  BT_Search;
 	private: System::Windows::Forms::Button^  Map_Expansion;
+	private: System::Windows::Forms::ListBox^  listBox1;
 	
 	private:
 		/// <summary>
@@ -82,6 +90,8 @@ namespace SKS_VC2013 {
 
 		Bitmap^ mBMP_Map;
 		Graphics^ mGraphic_Map;
+	
+
 
 		System::ComponentModel::Container ^components;
 
@@ -104,6 +114,7 @@ namespace SKS_VC2013 {
 			this->BT_End = (gcnew System::Windows::Forms::RadioButton());
 			this->BT_Search = (gcnew System::Windows::Forms::Button());
 			this->Map_Expansion = (gcnew System::Windows::Forms::Button());
+			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->Map_Ed))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -236,12 +247,22 @@ namespace SKS_VC2013 {
 			this->Map_Expansion->UseVisualStyleBackColor = true;
 			this->Map_Expansion->Click += gcnew System::EventHandler(this, &MapEditer::Map_Expansion_Click);
 			// 
+			// listBox1
+			// 
+			this->listBox1->FormattingEnabled = true;
+			this->listBox1->ItemHeight = 12;
+			this->listBox1->Location = System::Drawing::Point(619, 24);
+			this->listBox1->Name = L"listBox1";
+			this->listBox1->Size = System::Drawing::Size(473, 568);
+			this->listBox1->TabIndex = 13;
+			// 
 			// MapEditer
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
-			this->ClientSize = System::Drawing::Size(609, 626);
+			this->ClientSize = System::Drawing::Size(1104, 626);
+			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->Map_Expansion);
 			this->Controls->Add(this->BT_Search);
 			this->Controls->Add(this->BT_End);
@@ -276,15 +297,49 @@ namespace SKS_VC2013 {
 	int end_node_y;
 	int st_node_x;
 	int st_node_y;
+	int ** MapWeight;
+	int ** tmpMapWeight;
 
-	private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^  e) {
-				 mos_click=0;
+
+private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^  e) {
+				
+			     mos_click=0;
 				 light = Light_HSB->Value;
 				 Load_Map();
 				 drawbase();
-				 //Editer_witer();
-			 }
 
+				 drawExpansion(gray_num);
+				 
+				 
+
+// 				 for(int x=0;x<60;x++){
+// 					 Map_Array(x,MapWeight[x]);
+// 					 for(int y=0;y<60;y++){
+// 						 this->listBox1->Items->Add("x:"+x+" "+"y:"+y);
+// 						 this->listBox1->Items->Add(MapWeight[x][y]);
+// 					 }
+// 				 }
+
+				 for(int x=0;x<60;x++)
+					 Map_Array(x,MapWeight[x]);
+
+				 ProcessGridMap();
+				 
+
+				 for(int x=0;x<60;x++){
+					 
+					 for(int y=0;y<60;y++){
+						 this->listBox1->Items->Add("nx:"+x+" "+"ny:"+y);
+						 this->listBox1->Items->Add(MapWeight[x][y]);
+					 }
+				 }
+
+				 //Editer_witer();
+				 //Editer_read();
+				
+		 }
+	 	
+	
 ///////////////////////////重新載入地圖///////////////////////////////////
 	void Load_Map(){
 		FileInfo^ fg = gcnew FileInfo("2013sksmap.bmp");
@@ -341,7 +396,7 @@ namespace SKS_VC2013 {
 		mGraphic->FillRectangle(whiteBrush,0,0,600,600);
 		find_map();
 		drawLine();
-
+		
 		Map_Ed->Image = mBMP;
 	}
 /////畫線格
@@ -455,14 +510,10 @@ namespace SKS_VC2013 {
 			else
 				*(Weighs+y) = 0;
 		}
+	
 	}
 	void Editer_witer(){
-		int Map_Weights[60][60];
-
-		for(int x=0;x<60;x++){
-			Map_Array(x,Map_Weights[x]);
-		}
-
+	
 		XmlDocument^ doc = gcnew XmlDocument();
 		doc->Load("Robot_Config.xml");
 		XmlNode^ Manual = doc->SelectSingleNode("/Config/GridMap"); //選擇節點
@@ -473,8 +524,9 @@ namespace SKS_VC2013 {
 		for(int x=0;x<60;x++){
 			Grid_value = doc->CreateElement("value");
 			for(int y=0;y<60;y++){
-				Grid_value->SetAttribute("x"+System::Convert::ToString(x)+"y"+System::Convert::ToString(y),System::Convert::ToString(Map_Weights[x][y]));
+				Grid_value->SetAttribute("x"+System::Convert::ToString(x)+"y"+System::Convert::ToString(y),System::Convert::ToString(MapWeight[x][y]));
 				element->AppendChild(Grid_value);
+				
 			}
 		}
 
@@ -509,10 +561,26 @@ namespace SKS_VC2013 {
 		M_x = x*10+1;
 		M_y = 591-(y*10);
 		mGraphic->FillRectangle(WeightBrush,M_x,M_y,draw_w,draw_w);
-		
+	
 		Map_Ed->Image = mBMP;
 	}
+	void ProcessGridMap(){
 
+		tmpMapWeight = MapWeight;
+		for(int i=1;i<59;i++){
+			for(int j=1;j<59;j++){				
+				if(MapWeight[i][j] == 0){
+					MapWeight[i][j] = (tmpMapWeight[i-1][j-1]+tmpMapWeight[i][j-1]+tmpMapWeight[i+1][j-1]+
+									   tmpMapWeight[i-1][ j ]			+		   tmpMapWeight[i+1][ j ]+
+									   tmpMapWeight[i-1][j+1]+tmpMapWeight[i][j+1]+tmpMapWeight[i+1][j+1]) / 8;
+							
+					//MapWeight[i][j] = MapWeight[i][j]*1.3;
+				}
+				drawmap(MapWeight[i][j],i,j);
+			}			
+		}		
+				
+	}
 
 private: System::Void Map_Ed_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 				 int x,y;
@@ -567,6 +635,8 @@ private: System::Void Map_Ed_MouseLeave(System::Object^  sender, System::EventAr
 		 }
 private: System::Void MapEditer_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
 			 this->Hide();
+			 delete []Map_Node;
+			 delete []tmpMapWeight;
 			 e->Cancel = true;
 		 }
 private: System::Void Map_base_Click(System::Object^  sender, System::EventArgs^  e) {

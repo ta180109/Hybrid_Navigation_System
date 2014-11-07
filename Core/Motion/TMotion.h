@@ -1,5 +1,5 @@
-#ifndef _MOTION_H_
-#define _MOTION_H_
+#ifndef _TMOTION_H_
+#define _TMOTION_H_
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -8,9 +8,9 @@
 //#include "StrategyStatus.h"
 //#include "StrategyModule.h"
 
-namespace Robot
+namespace SKS_VC2013
 {
-class Motion //: public StrategyModule
+class TMotion //: public StrategyModule
 {
 private:
     //static Motion* m_UniqueInstance;
@@ -27,11 +27,11 @@ public:
 //         return m_UniqueInstance;
 //     }
 
-    Motion();
-    ~Motion();
+    TMotion();
+    ~TMotion();
 
-    void Initialize();
-    void Process();
+    void Motion_Initialize();
+    void Motion_Main();
 };
 }
 

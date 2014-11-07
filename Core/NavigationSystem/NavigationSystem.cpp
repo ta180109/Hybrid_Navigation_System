@@ -1,31 +1,31 @@
-#include "../../Database.h"
 #include "NavigationSystem.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 using namespace SKS_VC2013;
 using namespace std;
 
+TNavigationSystem::TNavigationSystem()
+{
+	AStar = new TAStar();
+	VelocityControl = new TVelocityControl();
+	Motion = new TMotion();
+}
 
-//Stra_VelocityControl* Stra_VelocityControl::m_UniqueInstance = new Stra_VelocityControl();
-
-NavigationSystem::NavigationSystem()
+TNavigationSystem::~TNavigationSystem()
 {
 
 }
 
-NavigationSystem::~NavigationSystem()
+void TNavigationSystem::NavigationSystem_Initialize(void)
 {
 
 }
 
-void NavigationSystem::Initialize(void)
+void TNavigationSystem::NavigationSystem_Main(void)
 {
+	AStar->AStar_Main();
 
-}
-
-void NavigationSystem::Process(void)
-{
+	VelocityControl->Velocity_Main();
+	Motion->Motion_Main();
 	
 	
 }

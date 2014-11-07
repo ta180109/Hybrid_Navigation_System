@@ -13,27 +13,32 @@
 #define NavigationSystemH
 //#include "StrategyModule.h"
 #include <stdio.h>
+#include "../../stdAfx.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include "../../Database.h"
+#include "../../Core/AStar/TAStar.h"
+#include "../../Core/VelocityControl/TVelocityControl.h"
+#include "../../Core/Motion/TMotion.h"
+
 //#include <tinyxml.h>
 namespace SKS_VC2013 {
-	class NavigationSystem //: public StrategyModule
+	class TNavigationSystem
 	{
 
 	public:
 
-		NavigationSystem();
-		~NavigationSystem();
+		TNavigationSystem();
+		~TNavigationSystem();
 
-		//static VelocityControl*  GetInstance() {
-		//return m_UniqueInstance;
-		//}
-		//static string  ParameterReset(void);
-
-		void Initialize(void);
-
-		void Process(void);
-
+		TAStar *AStar;
+		TVelocityControl *VelocityControl;
+		TMotion *Motion;
 		
-		//int LoadXMLSettings(TiXmlElement* element);  //LoadXMLSettings
+
+		void NavigationSystem_Initialize(void);
+
+		void NavigationSystem_Main(void);
 
 	private:
 

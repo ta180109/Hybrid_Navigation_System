@@ -52,7 +52,9 @@ namespace SKS_VC2013 {
 				Map_Node[x] = new asNode[60];
 				MapWeight[x] = new int[60];
 				tmpMapWeight[x] = new int[60];
+				
 			}
+		
 		}
 
 	protected:
@@ -308,6 +310,11 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 				 Load_Map();
 				 drawbase();
 
+				 for(int x=0;x<60;x++)
+					 Map_Array(x,MapWeight[x]);
+				 
+				 Dilation_Erosion();
+
 				 drawExpansion(gray_num);
 				 
 				 
@@ -319,20 +326,19 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 // 						 this->listBox1->Items->Add(MapWeight[x][y]);
 // 					 }
 // 				 }
-
+// 
 				 for(int x=0;x<60;x++)
 					 Map_Array(x,MapWeight[x]);
-
+// 
 				 ProcessGridMap();
-				 
+// 				 
 
-				 for(int x=0;x<60;x++){
-					 
-					 for(int y=0;y<60;y++){
-						 this->listBox1->Items->Add("nx:"+x+" "+"ny:"+y);
-						 this->listBox1->Items->Add(MapWeight[x][y]);
-					 }
-				 }
+// 				 for(int x=0;x<60;x++){
+// 					 for(int y=0;y<60;y++){
+// 						 this->listBox1->Items->Add("nx:"+x+" "+"ny:"+y);
+// 						 this->listBox1->Items->Add(MapWeight[x][y]);
+// 					 }
+// 				 }
 
 				 //Editer_witer();
 				 //Editer_read();
@@ -563,6 +569,7 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		mGraphic->FillRectangle(WeightBrush,M_x,M_y,draw_w,draw_w);
 	
 		Map_Ed->Image = mBMP;
+	
 	}
 	void ProcessGridMap(){
 
@@ -574,12 +581,49 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 									   tmpMapWeight[i-1][ j ]			+		   tmpMapWeight[i+1][ j ]+
 									   tmpMapWeight[i-1][j+1]+tmpMapWeight[i][j+1]+tmpMapWeight[i+1][j+1]) / 8;
 							
-					//MapWeight[i][j] = MapWeight[i][j]*1.3;
+					MapWeight[i][j] = MapWeight[i][j]*1.3;
 				}
 				drawmap(MapWeight[i][j],i,j);
 			}			
 		}		
 				
+	}
+	void Dilation_Erosion(){
+		int i,j,tmp;
+		//tmpMapWeight = MapWeight;
+	
+		//Dilation
+		for (i=0;i<60;i++)
+			for (j=0;j<60;j++)
+			{
+				tmpMapWeight[i][j] = 255;
+			}
+
+ 		for(i=1;i<59;i++){
+ 			for(j=1;j<59;j++){	
+					tmp = (MapWeight[i-1][j-1]+MapWeight[i][j-1]+MapWeight[i+1][j-1]+
+						MapWeight[i-1][ j ]			+		   MapWeight[i+1][ j ]+
+						MapWeight[i-1][j+1]+MapWeight[i][j+1]+MapWeight[i+1][j+1]);
+					if(tmp >= 255)
+						tmpMapWeight[i][j] = 255;
+					else
+						tmpMapWeight[i][j] = 0;
+					//drawmap(tmpMapWeight[i][j],i,j);
+			}	
+		}		
+
+		for(i=1;i<59;i++){
+			for(j=1;j<59;j++){	
+				tmp = (tmpMapWeight[i-1][j-1]*tmpMapWeight[i][j-1]*tmpMapWeight[i+1][j-1]*
+					tmpMapWeight[i-1][ j ]			*		   tmpMapWeight[i+1][ j ]*
+					tmpMapWeight[i-1][j+1]*tmpMapWeight[i][j+1]*tmpMapWeight[i+1][j+1]);
+				if(tmp ==0)
+					MapWeight[i][j] = 0;
+				else
+					MapWeight[i][j] = 255;
+				drawmap(MapWeight[i][j],i,j);
+			}
+		}			
 	}
 
 private: System::Void Map_Ed_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {

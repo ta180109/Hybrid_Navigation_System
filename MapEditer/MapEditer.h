@@ -53,6 +53,10 @@ namespace SKS_VC2013 {
 				MapWeight[x] = new int[60];
 				tmpMapWeight[x] = new int[60];
 				
+
+				//for(int i=0;i<60;i++)
+					memcpy(tmpMapWeight[x],MapWeight[x],60*sizeof(int));
+				//memset(tmpMapWeight[x],255,60);
 			}
 		
 		}
@@ -314,23 +318,11 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 					 Map_Array(x,MapWeight[x]);
 				 
 				 Dilation_Erosion();
+				 
+				 ProcessGridMap();
+				 ProcessGridMap();
 
 				 drawExpansion(gray_num);
-				 
-				 
-
-// 				 for(int x=0;x<60;x++){
-// 					 Map_Array(x,MapWeight[x]);
-// 					 for(int y=0;y<60;y++){
-// 						 this->listBox1->Items->Add("x:"+x+" "+"y:"+y);
-// 						 this->listBox1->Items->Add(MapWeight[x][y]);
-// 					 }
-// 				 }
-// 
-				 for(int x=0;x<60;x++)
-					 Map_Array(x,MapWeight[x]);
-// 
-				 ProcessGridMap();
 // 				 
 
 // 				 for(int x=0;x<60;x++){
@@ -562,18 +554,31 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		int draw_w = 9;
 
 		Map_Node[x][y].Weight=w;
-
-		SolidBrush^ WeightBrush = gcnew SolidBrush( Color::FromArgb(255- w,255-w,255-w ) );
-		M_x = x*10+1;
-		M_y = 591-(y*10);
-		mGraphic->FillRectangle(WeightBrush,M_x,M_y,draw_w,draw_w);
 	
-		Map_Ed->Image = mBMP;
+
+		try
+		{
+			SolidBrush^ WeightBrush = gcnew SolidBrush( Color::FromArgb(255- w,255-w,255-w ) );
+			M_x = x*10+1;
+			M_y = 591-(y*10);
+			mGraphic->FillRectangle(WeightBrush,M_x,M_y,draw_w,draw_w);
+
+			Map_Ed->Image = mBMP;
+		}
+		catch (const char* message)
+		{
+			//MessageBox.Show(message);
+		}
+	
+		
 	
 	}
 	void ProcessGridMap(){
 
-		tmpMapWeight = MapWeight;
+ 		for(int i=0;i<60;i++)
+			 memcpy(tmpMapWeight[i],MapWeight[i],60*sizeof(int));
+						
+		
 		for(int i=1;i<59;i++){
 			for(int j=1;j<59;j++){				
 				if(MapWeight[i][j] == 0){
@@ -581,8 +586,9 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 									   tmpMapWeight[i-1][ j ]			+		   tmpMapWeight[i+1][ j ]+
 									   tmpMapWeight[i-1][j+1]+tmpMapWeight[i][j+1]+tmpMapWeight[i+1][j+1]) / 8;
 							
-					MapWeight[i][j] = MapWeight[i][j]*1.3;
+					 MapWeight[i][j] = MapWeight[i][j]*2 >255? 255: MapWeight[i][j]*2;
 				}
+				this->listBox1->Items->Add(MapWeight[i][j]);
 				drawmap(MapWeight[i][j],i,j);
 			}			
 		}		
@@ -590,15 +596,9 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 	}
 	void Dilation_Erosion(){
 		int i,j,tmp;
-		//tmpMapWeight = MapWeight;
-	
+		
 		//Dilation
-		for (i=0;i<60;i++)
-			for (j=0;j<60;j++)
-			{
-				tmpMapWeight[i][j] = 255;
-			}
-
+		
  		for(i=1;i<59;i++){
  			for(j=1;j<59;j++){	
 					tmp = (MapWeight[i-1][j-1]+MapWeight[i][j-1]+MapWeight[i+1][j-1]+

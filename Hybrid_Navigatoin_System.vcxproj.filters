@@ -140,9 +140,6 @@
     <ClInclude Include="Core\Motion\TMotion.h">
       <Filter>Core\Motion</Filter>
     </ClInclude>
-    <ClInclude Include="Core\VelocityControl\TVelocityControl.h">
-      <Filter>Core\VelocityControl</Filter>
-    </ClInclude>
     <ClInclude Include="TCoordinate\TCoordinate.h">
       <Filter>TCoordiante</Filter>
     </ClInclude>
@@ -151,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="Core\AStar\TAStar.h">
       <Filter>Core\AStar</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\VelocityControl\TVelocityControl.h">
+      <Filter>Core\VelocityControl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

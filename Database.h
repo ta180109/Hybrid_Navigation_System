@@ -183,8 +183,13 @@ class Database{
 		
 		 bool FlagForward;
 
-		 //for AStar
-		 //bool AStarEnable;
+		 //for grid map
+		 bool NewGridMapFlag;
+		 int ** MapWeight;
+		 
+
+
+		 bool AStarEnable;
 
 		 struct {
 			 int Status;

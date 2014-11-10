@@ -18,13 +18,16 @@
 //#include "AstarTool.h"
 #include "../../TCoordinate/TCoordinate.h"
 
+
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <string.h>
 #include <sstream>
 
 #define Def_Open 1
 #define Def_Closed 2
-//#include <tinyxml.h>
+
 using namespace std;
 namespace SKS_VC2013
 {
@@ -109,6 +112,7 @@ namespace SKS_VC2013
 		void  AStar_Search( TCoordinate Start , TCoordinate Goal );
 		void  AdjustPath( void );
 		void  CleanList( void );
+		void  LoadGridMap();
 
 		void OneStepInitial( TCoordinate Start , TCoordinate Goal );
 		void OneStepExe();

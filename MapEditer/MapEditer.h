@@ -45,17 +45,17 @@ namespace SKS_VC2013 {
 			//TODO: 在此加入建構函式程式碼
 			//
 			Map_Node = new asNode*[60];
-			MapWeight = new int*[60];
+			D_Database->MapWeight = new int*[60];
 			tmpMapWeight = new int*[60];
 			
 			for(int x=0;x<60;x++){
 				Map_Node[x] = new asNode[60];
-				MapWeight[x] = new int[60];
+				D_Database->MapWeight[x] = new int[60];
 				tmpMapWeight[x] = new int[60];
 				
 
 				//for(int i=0;i<60;i++)
-					memcpy(tmpMapWeight[x],MapWeight[x],60*sizeof(int));
+					memcpy(tmpMapWeight[x],D_Database->MapWeight[x],60*sizeof(int));
 				//memset(tmpMapWeight[x],255,60);
 			}
 		
@@ -303,7 +303,6 @@ namespace SKS_VC2013 {
 	int end_node_y;
 	int st_node_x;
 	int st_node_y;
-	int ** MapWeight;
 	int ** tmpMapWeight;
 
 
@@ -315,7 +314,7 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 				 drawbase();
 
 				 for(int x=0;x<60;x++)
-					 Map_Array(x,MapWeight[x]);
+					 Map_Array(x,D_Database->MapWeight[x]);
 				 
 				 Dilation_Erosion();
 				 
@@ -323,14 +322,6 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 				 ProcessGridMap();
 
 				 drawExpansion(gray_num);
-// 				 
-
-// 				 for(int x=0;x<60;x++){
-// 					 for(int y=0;y<60;y++){
-// 						 this->listBox1->Items->Add("nx:"+x+" "+"ny:"+y);
-// 						 this->listBox1->Items->Add(MapWeight[x][y]);
-// 					 }
-// 				 }
 
 				 //Editer_witer();
 				 //Editer_read();
@@ -522,7 +513,7 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		for(int x=0;x<60;x++){
 			Grid_value = doc->CreateElement("value");
 			for(int y=0;y<60;y++){
-				Grid_value->SetAttribute("x"+System::Convert::ToString(x)+"y"+System::Convert::ToString(y),System::Convert::ToString(MapWeight[x][y]));
+				Grid_value->SetAttribute("x"+System::Convert::ToString(x)+"y"+System::Convert::ToString(y),System::Convert::ToString(D_Database->MapWeight[x][y]));
 				element->AppendChild(Grid_value);
 				
 			}
@@ -576,20 +567,20 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 	void ProcessGridMap(){
 
  		for(int i=0;i<60;i++)
-			 memcpy(tmpMapWeight[i],MapWeight[i],60*sizeof(int));
+			 memcpy(tmpMapWeight[i],D_Database->MapWeight[i],60*sizeof(int));
 						
 		
 		for(int i=1;i<59;i++){
 			for(int j=1;j<59;j++){				
-				if(MapWeight[i][j] == 0){
-					MapWeight[i][j] = (tmpMapWeight[i-1][j-1]+tmpMapWeight[i][j-1]+tmpMapWeight[i+1][j-1]+
+				if(D_Database->MapWeight[i][j] == 0){
+					D_Database->MapWeight[i][j] = (tmpMapWeight[i-1][j-1]+tmpMapWeight[i][j-1]+tmpMapWeight[i+1][j-1]+
 									   tmpMapWeight[i-1][ j ]			+		   tmpMapWeight[i+1][ j ]+
 									   tmpMapWeight[i-1][j+1]+tmpMapWeight[i][j+1]+tmpMapWeight[i+1][j+1]) / 8;
 							
-					 MapWeight[i][j] = MapWeight[i][j]*2 >255? 255: MapWeight[i][j]*2;
+					 D_Database->MapWeight[i][j] = D_Database->MapWeight[i][j]*2 >255? 255: D_Database->MapWeight[i][j]*2;
 				}
-				this->listBox1->Items->Add(MapWeight[i][j]);
-				drawmap(MapWeight[i][j],i,j);
+				this->listBox1->Items->Add(D_Database->MapWeight[i][j]);
+				drawmap(D_Database->MapWeight[i][j],i,j);
 			}			
 		}		
 				
@@ -601,9 +592,9 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		
  		for(i=1;i<59;i++){
  			for(j=1;j<59;j++){	
-					tmp = (MapWeight[i-1][j-1]+MapWeight[i][j-1]+MapWeight[i+1][j-1]+
-						MapWeight[i-1][ j ]			+		   MapWeight[i+1][ j ]+
-						MapWeight[i-1][j+1]+MapWeight[i][j+1]+MapWeight[i+1][j+1]);
+					tmp = (D_Database->MapWeight[i-1][j-1]+D_Database->MapWeight[i][j-1]+D_Database->MapWeight[i+1][j-1]+
+						D_Database->MapWeight[i-1][ j ]			+		   D_Database->MapWeight[i+1][ j ]+
+						D_Database->MapWeight[i-1][j+1]+D_Database->MapWeight[i][j+1]+D_Database->MapWeight[i+1][j+1]);
 					if(tmp >= 255)
 						tmpMapWeight[i][j] = 255;
 					else
@@ -618,10 +609,10 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 					tmpMapWeight[i-1][ j ]			*		   tmpMapWeight[i+1][ j ]*
 					tmpMapWeight[i-1][j+1]*tmpMapWeight[i][j+1]*tmpMapWeight[i+1][j+1]);
 				if(tmp ==0)
-					MapWeight[i][j] = 0;
+					D_Database->MapWeight[i][j] = 0;
 				else
-					MapWeight[i][j] = 255;
-				drawmap(MapWeight[i][j],i,j);
+					D_Database->MapWeight[i][j] = 255;
+				drawmap(D_Database->MapWeight[i][j],i,j);
 			}
 		}			
 	}
@@ -679,8 +670,8 @@ private: System::Void Map_Ed_MouseLeave(System::Object^  sender, System::EventAr
 		 }
 private: System::Void MapEditer_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
 			 this->Hide();
-			 delete []Map_Node;
-			 delete []tmpMapWeight;
+//			 delete []Map_Node;
+//			 delete []tmpMapWeight;
 			 e->Cancel = true;
 		 }
 private: System::Void Map_base_Click(System::Object^  sender, System::EventArgs^  e) {

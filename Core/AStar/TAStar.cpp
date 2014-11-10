@@ -4,11 +4,13 @@
 using namespace SKS_VC2013;
 using namespace std;
 
+
+
 //Stra_AStar* Stra_AStar::m_UniqueInstance = new Stra_AStar();
 
 TAStar::TAStar()
 {
-
+	D_Database->NewGridMapFlag = true;
 }
 TAStar::~TAStar()
 {
@@ -43,7 +45,11 @@ void TAStar::AStar_Initialize(void)
 //-----------------------------------------------------------------
 void TAStar::AStar_Main(void)
 {
-	//if(!StrategyStatus::AStarEnable) return;
+	if(D_Database->NewGridMapFlag)
+		LoadGridMap();
+	
+	
+	if(D_Database->AStarEnable) return;
 	if( D_Database->AStarPath.StartPos == aVector(-999, -999) ||
 		D_Database->AStarPath.StartPos ==  aVector(-999, -999) ) {
 			return ;
@@ -129,37 +135,54 @@ void TAStar::CleanList( void )
 	OpenList.clear();
 }
 //--------------------------xmlGridMap
-/*
-int AstarTool::LoadXMLSettings(TiXmlElement* element) {
+
+void TAStar::LoadGridMap() {
 	Map.clear();
-	if(element != NULL) {
-		TiXmlElement* child=element->FirstChildElement();
-		while(child!=NULL) {
-			vector<tsNode> vecTmp;
-			TiXmlAttribute* type=child->FirstAttribute();
-			while(type!=NULL) {
-				tsNode tsNodeTmp;
-				tsNodeTmp.Weight = atoi(type->Value());
-				vecTmp.push_back(tsNodeTmp);
-				type=type->Next();
-			}
+	vector<tsNode> vecTmp;
+	tsNode tsNodeTmp;
+	int i=0,j=0;
+	while(i<=59){
+		tsNodeTmp.Weight = D_Database->MapWeight[i][j++];
+		vecTmp.push_back(tsNodeTmp);
+		if(j>59){
+			i++;
+			j=0;
 			Map.push_back(vecTmp);
-			child=child->NextSiblingElement();
+			vecTmp.clear();
 		}
 	}
-	//	for(int i =59; i>=0; i--){
-	//		for(int j=59; j>=0; j--){
-	//			if(Map[i][j].Weight == 255) printf("X");
-	//			if(Map[i][j].Weight == 128) printf("b");
-	//			if(Map[i][j].Weight == 0) printf(" ");
-	//			if(j==0) printf("\n");
-	//
-	//		}
-	//	}
 
-	return 0;
+
+	// 	char filename[]="test.txt";
+	// 	fstream fp;
+	// 	fp.open(filename, ios::out);//開啟檔案
+	// 
+	// 	for(int i=59;i>=0;i--){
+	// 		for(int j=59;j>=0;j--)
+	// 			fp<< Map[i][j].Weight <<endl;
+	// 	}
+	// 	fp.close();//關閉檔案
+
+	//-------------------old------------------------
+// 	if(element != NULL) {
+// 		TiXmlElement* child=element->FirstChildElement();
+// 		while(child!=NULL) {
+// 			vector<tsNode> vecTmp;
+// 			TiXmlAttribute* type=child->FirstAttribute();
+// 			while(type!=NULL) {
+// 				tsNode tsNodeTmp;
+// 				tsNodeTmp.Weight = atoi(type->Value());
+// 				vecTmp.push_back(tsNodeTmp);
+// 				type=type->Next();
+// 			}
+// 			Map.push_back(vecTmp);
+// 			child=child->NextSiblingElement();
+// 		}
+// 	}
+
+	D_Database->NewGridMapFlag = false;
 }
-*/
+
 //---------------------------------------------------------------------------
 void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 {

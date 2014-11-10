@@ -24,8 +24,8 @@ void TNavigationSystem::NavigationSystem_Main(void)
 {
 	AStar->AStar_Main();
 
-	VelocityControl->Velocity_Main();
-	Motion->Motion_Main();
+	//VelocityControl->Velocity_Main();
+	//Motion->Motion_Main();
 	
 	
 }

@@ -2,12 +2,6 @@
 #include "Database.h"
 // 預設建構函式
 
-
-
-using namespace System::Xml;
-using namespace System::IO;
-
-
 data1 *D_Robot = new data1();
 
 data2 *D_Order = new data2();

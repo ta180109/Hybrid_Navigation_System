@@ -126,10 +126,6 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::ToolStripMenuItem^  mapToolStripMenuItem1;
 	private: System::Windows::Forms::Button^  Btn_SysStart;
 	private: System::Windows::Forms::Button^  btn_SysStop;
-
-
-
-
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
 
 
@@ -267,28 +263,28 @@ namespace SKS_VC2013 {
 			// furnitureToolStripMenuItem
 			// 
 			this->furnitureToolStripMenuItem->Name = L"furnitureToolStripMenuItem";
-			this->furnitureToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->furnitureToolStripMenuItem->Size = System::Drawing::Size(138, 22);
 			this->furnitureToolStripMenuItem->Text = L"Furniture";
 			this->furnitureToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::furnitureToolStripMenuItem_Click);
 			// 
 			// mapEditerToolStripMenuItem
 			// 
 			this->mapEditerToolStripMenuItem->Name = L"mapEditerToolStripMenuItem";
-			this->mapEditerToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->mapEditerToolStripMenuItem->Size = System::Drawing::Size(138, 22);
 			this->mapEditerToolStripMenuItem->Text = L"MapEditer";
 			this->mapEditerToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::mapEditerToolStripMenuItem_Click);
 			// 
 			// mapToolStripMenuItem1
 			// 
 			this->mapToolStripMenuItem1->Name = L"mapToolStripMenuItem1";
-			this->mapToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
+			this->mapToolStripMenuItem1->Size = System::Drawing::Size(138, 22);
 			this->mapToolStripMenuItem1->Text = L"Map";
 			this->mapToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::mapToolStripMenuItem1_Click);
 			// 
 			// lasertestToolStripMenuItem
 			// 
 			this->lasertestToolStripMenuItem->Name = L"lasertestToolStripMenuItem";
-			this->lasertestToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->lasertestToolStripMenuItem->Size = System::Drawing::Size(138, 22);
 			this->lasertestToolStripMenuItem->Text = L"LaserSetup";
 			this->lasertestToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::lasertestToolStripMenuItem_Click);
 			// 
@@ -490,8 +486,8 @@ namespace SKS_VC2013 {
 				 drawPB->Height = Radar_Height;
 
 				 Radar_Basic(RaderCenter_x , RaderCenter_y);
-				 D_Database->EndPosition = (D_Furniture->M_EndArea.x, D_Furniture->M_EndArea.y);
-				
+				 
+
 				 Read_Object();
 			 }
 
@@ -1037,6 +1033,10 @@ private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventAr
 
 		 }
 private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //give end position
+			 D_Database->EndPosition.x = D_Furniture->M_EndArea.x;
+			 D_Database->EndPosition.y = D_Furniture->M_EndArea.y;
+
 			 //start algorithm
 			 NewNavigationSystem->NavigationSystem_Main();
 		 }

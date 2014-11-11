@@ -1129,6 +1129,7 @@ private: System::Windows::Forms::Label^  label19;
 			this->Controls->Add(this->label1);
 			this->Name = L"Furniture";
 			this->Text = L"Furniture";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Furniture::Furniture_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &Furniture::Furniture_Load);
 			this->flowLayoutPanel1->ResumeLayout(false);
 			this->flowLayoutPanel1->PerformLayout();
@@ -1410,6 +1411,9 @@ private: System::Void Save_set_Click(System::Object^  sender, System::EventArgs^
 		 }
 private: System::Void Reset_set_Click(System::Object^  sender, System::EventArgs^  e) {
 			 viewObject();
+		 }
+private: System::Void Furniture_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+			 D_Database->EndPosition = (D_Furniture->M_EndArea.x,D_Furniture->M_EndArea.y);
 		 }
 };
 }

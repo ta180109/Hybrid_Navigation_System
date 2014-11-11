@@ -10,7 +10,9 @@ using namespace std;
 
 TAStar::TAStar()
 {
+	AStar_Initialize();
 	D_Database->NewGridMapFlag = true;
+	D_Database->AStarEnable = false;
 }
 TAStar::~TAStar()
 {
@@ -48,7 +50,10 @@ void TAStar::AStar_Main(void)
 	if(D_Database->NewGridMapFlag)
 		LoadGridMap();
 	
-	
+	D_Database->AStarPath.StartPos = aVector(40,270); 
+	D_Database->AStarPath.GoalPos = D_Database->EndPosition;
+
+
 	if(D_Database->AStarEnable) return;
 	if( D_Database->AStarPath.StartPos == aVector(-999, -999) ||
 		D_Database->AStarPath.StartPos ==  aVector(-999, -999) ) {
@@ -130,7 +135,7 @@ void TAStar::Behavior_AstarPath( void )
 
 void TAStar::CleanList( void )
 {
-	Path.clear();
+	D_Database->Path.clear();
 	ClosedList.clear();
 	OpenList.clear();
 }
@@ -152,7 +157,6 @@ void TAStar::LoadGridMap() {
 		}
 	}
 
-
 	// 	char filename[]="test.txt";
 	// 	fstream fp;
 	// 	fp.open(filename, ios::out);//開啟檔案
@@ -163,7 +167,7 @@ void TAStar::LoadGridMap() {
 	// 	}
 	// 	fp.close();//關閉檔案
 
-	//-------------------old------------------------
+//-------------------old------------------------
 // 	if(element != NULL) {
 // 		TiXmlElement* child=element->FirstChildElement();
 // 		while(child!=NULL) {
@@ -197,8 +201,14 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 	GoalNode.x  = (int)(Goal.x /NodeResolution);
 	GoalNode.y  = (int)(Goal.y /NodeResolution);
 
-	//printf("StartNode %f %f\n",StartNode.x,StartNode.y);
-	//printf("GoalNode %f %f\n",GoalNode.x,GoalNode.y);
+// 	char filename[]="test.txt";
+// 	fstream fp;
+// 	fp.open(filename, ios::out);//開啟檔案
+// 	fp<< StartNode.x<<","<< StartNode.y  <<endl;
+// 	fp<< GoalNode.x<<","<< GoalNode.y  <<endl;
+// 	
+// 	fp.close();//關閉檔案
+
 
 	//---- initial the list information
 	Map[StartNode.x][StartNode.y].Father = StartNode;
@@ -235,17 +245,29 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 
 	if( Front.x == GoalNode.x && Front.y == GoalNode.y )
 	{
-		Path.insert( Path.begin(), Goal );
+		D_Database->Path.insert( D_Database->Path.begin(), Goal );
 		Father = GoalNode;
 		while( StartNode.x != Father.x || StartNode.y != Father.y   )
 		{
 			Father = Map[ Father.x ][ Father.y ].Father;
-			if(StartNode.x == Father.x && StartNode.y == Father.y)
-				Path.insert( Path.begin(), Start );
-			else
-				Path.insert( Path.begin(), (Father*NodeResolution)+ aVector(NodeResolution/2,NodeResolution/2) );
+			
+			if(StartNode.x == Father.x && StartNode.y == Father.y){
+				
+				D_Database->Path.insert( D_Database->Path.begin(), Start);
+			}else{
+				D_Database->Path.insert( D_Database->Path.begin(), (Father*NodeResolution)+ aVector(NodeResolution/2,NodeResolution/2) );
+				
+			}
 		}
 	}
+//  		char filename[]="test.txt";
+//  		fstream fp;
+//  		fp.open(filename, ios::out);//開啟檔案
+//  		 
+//  		for(int i=0;i<D_Database->Path.size();i++){
+//  		 		fp<< D_Database->Path[i].x <<","<<D_Database->Path[i].y  <<endl;
+//  		 }
+//  		 fp.close();//關閉檔案
 }
 //---------------------------------------------------------------------------
 void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
@@ -312,11 +334,11 @@ void TAStar::AdjustPath( void )
 {
 	unsigned int tmp1,tmp2;
 
-	if( Path.size() > 3 )
+	if( D_Database->Path.size() > 3 )
 	{
 		SmoothPath.clear();
-		SmoothPath.push_back(Path.front());
-		for(unsigned int i=2; i< Path.size()-1 ; i++)
+		SmoothPath.push_back(D_Database->Path.front());
+		for(unsigned int i=2; i< D_Database->Path.size()-1 ; i++)
 		{
 			tmp1 = CheckPath_Same( i );
 			if( tmp1 == i )
@@ -328,21 +350,21 @@ void TAStar::AdjustPath( void )
 			{
 				i = tmp1;
 			}
-			SmoothPath.push_back( Path[i] );
+			SmoothPath.push_back( D_Database->Path[i] );
 		}
 	}
 	else
 	{
-		SmoothPath = Path ;
+		SmoothPath = D_Database->Path ;
 	}
 }
 //---------------------------------------------------------------------------
 unsigned int TAStar::CheckPath_Diff( unsigned int PathNum )
 {
-	if( PathNum == Path.size()-2 ) return Path.size()-1;
-	TCoordinate Vector1 = Path[PathNum-1] - Path[PathNum-2];
-	TCoordinate Vector2 = Path[PathNum] - Path[PathNum-1];
-	TCoordinate Vector3 = Path[PathNum+1] - Path[PathNum];
+	if( PathNum == D_Database->Path.size()-2 ) return D_Database->Path.size()-1;
+	TCoordinate Vector1 = D_Database->Path[PathNum-1] - D_Database->Path[PathNum-2];
+	TCoordinate Vector2 = D_Database->Path[PathNum] - D_Database->Path[PathNum-1];
+	TCoordinate Vector3 = D_Database->Path[PathNum+1] - D_Database->Path[PathNum];
 	if( Vector3 == Vector2 )
 		if( (Vector1.x != Vector3.x) || (Vector1.y != Vector3.y) )
 			return PathNum-1;
@@ -354,10 +376,10 @@ unsigned int TAStar::CheckPath_Diff( unsigned int PathNum )
 //---------------------------------------------------------------------------
 unsigned int TAStar::CheckPath_Same( unsigned int PathNum )
 {
-	if( PathNum == Path.size()-2 ) return Path.size()-1;
+	if( PathNum == D_Database->Path.size()-2 ) return D_Database->Path.size()-1;
 
-	TCoordinate Vector1 = Path[PathNum] - Path[PathNum-1];
-	TCoordinate Vector2 = Path[PathNum+1] - Path[PathNum];
+	TCoordinate Vector1 = D_Database->Path[PathNum] - D_Database->Path[PathNum-1];
+	TCoordinate Vector2 = D_Database->Path[PathNum+1] - D_Database->Path[PathNum];
 	if( Vector1 == Vector2 )
 		return CheckPath_Same( PathNum+1 );
 	else

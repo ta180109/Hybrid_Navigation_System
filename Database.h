@@ -5,6 +5,9 @@
 #include <vector>
 #include "TCoordinate/TCoordinate.h"
 
+using namespace System::Xml;
+using namespace System::IO;
+using namespace std;
 
 #define Radar_Width 144				//!雷達圖寬度
 #define Radar_Height 144			//!雷達圖長度
@@ -190,6 +193,8 @@ class Database{
 
 
 		 bool AStarEnable;
+
+		 vector <TCoordinate> Path;
 
 		 struct {
 			 int Status;

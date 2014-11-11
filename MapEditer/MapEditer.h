@@ -3,6 +3,10 @@
 #include "../Database.h"
 #include <math.h>
 #include <vector>
+
+#include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
 
 struct asNode
@@ -316,10 +320,10 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 				 for(int x=0;x<60;x++)
 					 Map_Array(x,D_Database->MapWeight[x]);
 				 
-				 Dilation_Erosion();
-				 
-				 ProcessGridMap();
-				 ProcessGridMap();
+ 				 Dilation_Erosion();
+ 				 
+ 				 ProcessGridMap();
+ 				 ProcessGridMap();
 
 				 drawExpansion(gray_num);
 
@@ -617,6 +621,29 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		}			
 	}
 
+	void DrawPath(){
+		int road_x;
+		int road_y;
+
+		SolidBrush^ RedBrush = gcnew SolidBrush( Color::FromArgb( 255,0,0 ) );
+		int draw_w = 9;
+		TCoordinate TmpPos;
+
+		while (!D_Database->Path.empty()){
+			
+			TmpPos = D_Database->Path.back();
+			TmpPos.x = (int)TmpPos.x/10;
+			TmpPos.y = (int)TmpPos.y/10;
+			
+  			road_x = (TmpPos.x*10)+1;
+  			road_y = ((59-TmpPos.y)*10)+1;
+
+			mGraphic->FillRectangle(RedBrush,road_x,road_y,draw_w,draw_w);
+			D_Database->Path.pop_back();
+		}
+		Map_Ed->Image = mBMP;
+		
+	}
 private: System::Void Map_Ed_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 				 int x,y;
 				 mos_x = e->X;
@@ -701,9 +728,9 @@ private: System::Void BT_End_Click(System::Object^  sender, System::EventArgs^  
 
 		road_x = (Map_Node[x][y].firther_x*10)+1;
 		road_y = ((59-Map_Node[x][y].firther_y)*10)+1;
-		
-		SolidBrush^ RedBrush = gcnew SolidBrush( Color::FromArgb( 255,0,0 ) );
-		int draw_w = 9;
+ 		
+ 		SolidBrush^ RedBrush = gcnew SolidBrush( Color::FromArgb( 255,0,0 ) );
+ 		int draw_w = 9;
 		if(Map_Node[x][y].clild_node==1){
 			if (road_x!=(st_node_x*10+1) || road_y!=((59-st_node_y)*10+1))
 			{
@@ -792,43 +819,44 @@ private: System::Void BT_End_Click(System::Object^  sender, System::EventArgs^  
 	}
 		 
 private: System::Void BT_Search_Click(System::Object^  sender, System::EventArgs^  e) {
-			 Vint OpenNode;
-			
-			 for(int x=0;x<60;x++){
-				 for (int y=0;y<60;y++)
-				 {
-					 Map_Node[x][y].x = x;
-					 Map_Node[x][y].y = y;
-					 Map_Node[x][y].f=0;
-					 Map_Node[x][y].g=0;
-					 Map_Node[x][y].h=0;
-					 Map_Node[x][y].clild_node=0;
-					 Map_Node[x][y].close_node=0;
-					 Map_Node[x][y].firther_x=0;
-					 Map_Node[x][y].firther_y=0;
-				 }
-			 }
-			 st_node_x = start_x/10;
-			 st_node_y = (600-start_y)/10;
-			 end_node_x = end_x/10;
-			 end_node_y = (600-end_y)/10;
-			 Map_Node[st_node_x][st_node_y].g = 0;
-
-			 a_star(OpenNode,st_node_x,st_node_y);
-
-			 int ch_x;
-			 int ch_y;
-			 while (true){
-				 if(OpenNode.empty()) break;
-				 ch_x = OpenNode[OpenNode.size()-1].x;
-				 ch_y = OpenNode[OpenNode.size()-1].y;
-				 if(ch_x == end_node_x && ch_y==end_node_y){
-					 draw_road(ch_x,ch_y);
-					 break;
-				 }
-				 OpenNode.pop_back();
-				 a_star(OpenNode,ch_x,ch_y);
-			 }
+// 			 Vint OpenNode;
+// 			
+// 			 for(int x=0;x<60;x++){
+// 				 for (int y=0;y<60;y++)
+// 				 {
+// 					 Map_Node[x][y].x = x;
+// 					 Map_Node[x][y].y = y;
+// 					 Map_Node[x][y].f=0;
+// 					 Map_Node[x][y].g=0;
+// 					 Map_Node[x][y].h=0;
+// 					 Map_Node[x][y].clild_node=0;
+// 					 Map_Node[x][y].close_node=0;
+// 					 Map_Node[x][y].firther_x=0;
+// 					 Map_Node[x][y].firther_y=0;
+// 				 }
+// 			 }
+// 			 st_node_x = start_x/10;
+// 			 st_node_y = (600-start_y)/10;
+// 			 end_node_x = end_x/10;
+// 			 end_node_y = (600-end_y)/10;
+// 			 Map_Node[st_node_x][st_node_y].g = 0;
+// 
+// 			 a_star(OpenNode,st_node_x,st_node_y);
+// 
+// 			 int ch_x;
+// 			 int ch_y;
+// 			 while (true){
+// 				 if(OpenNode.empty()) break;
+// 				 ch_x = OpenNode[OpenNode.size()-1].x;
+// 				 ch_y = OpenNode[OpenNode.size()-1].y;
+// 				 if(ch_x == end_node_x && ch_y==end_node_y){
+// 					 draw_road(ch_x,ch_y);
+// 					 break;
+// 				 }
+// 				 OpenNode.pop_back();
+// 				 a_star(OpenNode,ch_x,ch_y);
+// 			 }
+			 DrawPath();
 		 }
 private: System::Void Map_Expansion_Click(System::Object^  sender, System::EventArgs^  e) {
 			 drawExpansion(gray_num);

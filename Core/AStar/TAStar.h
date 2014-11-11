@@ -22,7 +22,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <string.h>
+#include <string>
 #include <sstream>
 
 #define Def_Open 1
@@ -125,7 +125,7 @@ namespace SKS_VC2013
 
 		//------------Private
 		vector < vector<tsNode> > Map;
-		vector <TCoordinate> Path;
+		//vector <TCoordinate> Path;
 		void SearchNeighbor( TCoordinate Current );
 		void SearchNeighbor_8Connect( TCoordinate Current );
 		unsigned int CheckPath_Same( unsigned int PathNum );

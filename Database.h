@@ -195,6 +195,7 @@ class Database{
 		 bool AStarEnable;
 
 		 vector <TCoordinate> Path;
+		 vector <TCoordinate> TurnPoint;
 
 		 struct {
 			 int Status;

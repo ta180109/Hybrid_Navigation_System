@@ -260,6 +260,8 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 			}
 		}
 	}
+
+	FindTurnPoint();
 //  		char filename[]="test.txt";
 //  		fstream fp;
 //  		fp.open(filename, ios::out);//開啟檔案
@@ -384,4 +386,31 @@ unsigned int TAStar::CheckPath_Same( unsigned int PathNum )
 		return CheckPath_Same( PathNum+1 );
 	else
 		return PathNum;
+}
+
+void TAStar::FindTurnPoint(){
+	TCoordinate PosFirst,PosMiddle,PosLast;
+	double GradientFirst,GradientLast;
+
+	for(int i=2;i<D_Database->Path.size();i++){
+		PosFirst = D_Database->Path[i-2];
+		PosMiddle = D_Database->Path[i-1];
+		PosLast = D_Database->Path[i];
+
+		GradientFirst = (PosMiddle.y - PosFirst.y) / (PosMiddle.x - PosFirst.x) + DBL_MIN_10_EXP ;
+		GradientLast = (PosLast.y - PosMiddle.y) / (PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP;
+
+		if (GradientFirst != GradientLast)
+			D_Database->TurnPoint.insert( D_Database->TurnPoint.begin(), PosMiddle);
+	}
+ 
+  		char filename[]="test.txt";
+ 	  		fstream fp;
+ 	  		fp.open(filename, ios::out);//開啟檔案
+ 	  		 
+ 	  		for(int i=0;i<D_Database->TurnPoint.size();i++){
+ 	  		 		fp<< D_Database->TurnPoint[i].x <<","<<D_Database->TurnPoint[i].y  <<endl;
+ 	  		 }
+ 	  		 fp.close();//關閉檔案
+ 	
 }

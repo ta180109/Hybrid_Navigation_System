@@ -113,6 +113,7 @@ namespace SKS_VC2013
 		void  AdjustPath( void );
 		void  CleanList( void );
 		void  LoadGridMap();
+		void  FindTurnPoint();
 
 		void OneStepInitial( TCoordinate Start , TCoordinate Goal );
 		void OneStepExe();

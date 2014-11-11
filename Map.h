@@ -42,6 +42,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::CheckBox^  Re_Position;
 	private: System::Windows::Forms::ListBox^  SimLaserShow;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
+	private: System::Windows::Forms::Button^  button1;
 
 
 
@@ -107,6 +108,7 @@ namespace SKS_VC2013 {
 			this->Re_Position = (gcnew System::Windows::Forms::CheckBox());
 			this->SimLaserShow = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -296,12 +298,23 @@ namespace SKS_VC2013 {
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"R_Robot Status";
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(732, 16);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 12;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Map::button1_Click);
+			// 
 			// Map
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->ClientSize = System::Drawing::Size(902, 662);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->SimLaserShow);
 			this->Controls->Add(this->label3);
@@ -473,6 +486,16 @@ namespace SKS_VC2013 {
 				}
 			}
 		}
+		void DrawTurnPoint(){
+			SolidBrush^ TurnpointColor = gcnew SolidBrush( Color::Orange );
+			TCoordinate Tmp;
+			for(int i = 0;i < D_Database->TurnPoint.size(); i++){
+				mGraphic->FillPie(TurnpointColor,(int)D_Database->TurnPoint[i].x , (Map_Height - (int)D_Database->TurnPoint[i].y) ,10 ,10,(int) 0,(int) 360 );
+				
+			}
+			drawMap->Image = mBMP;
+		}
+
 
 	private: void scanning(){
 
@@ -538,6 +561,7 @@ namespace SKS_VC2013 {
 			 }
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			 drawRobot();
+			 DrawTurnPoint();
 			 Sim_X->Text = "X¡G" + System::Convert::ToString((int)R_Robot->X);
 			 Sim_Y->Text = "Y¡G" +System::Convert::ToString((int)R_Robot->Y);
 			 Sim_Sita->Text = "Sita¡G" +System::Convert::ToString((int)R_Robot->Radian);
@@ -620,5 +644,8 @@ private: System::Void Re_Movement_CheckedChanged(System::Object^  sender, System
 		 }
 
 
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+			 DrawTurnPoint();
+		 }
 };
 }

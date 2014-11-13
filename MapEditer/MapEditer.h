@@ -564,10 +564,8 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		{
 			//MessageBox.Show(message);
 		}
-	
-		
-	
 	}
+
 	void ProcessGridMap(){
 
  		for(int i=0;i<60;i++)

@@ -4,7 +4,7 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-
+#define AchieveErrRange 10
 
 //Stra_AStar* Stra_AStar::m_UniqueInstance = new Stra_AStar();
 
@@ -13,6 +13,8 @@ TAStar::TAStar()
 	AStar_Initialize();
 	D_Database->NewGridMapFlag = true;
 	D_Database->AStarEnable = false;
+	D_Database->ReachTurnPointFlag = false;
+	tmpFlag = true;
 }
 TAStar::~TAStar()
 {
@@ -50,7 +52,7 @@ void TAStar::AStar_Main(void)
 	if(D_Database->NewGridMapFlag)
 		LoadGridMap();
 	
-	D_Database->AStarPath.StartPos = aVector(40,270); 
+	D_Database->AStarPath.StartPos = aVector(D_Database->RobotPos.x,D_Database->RobotPos.y); 
 	D_Database->AStarPath.GoalPos = D_Database->EndPosition;
 
 
@@ -84,6 +86,34 @@ void TAStar::AStar_Main(void)
 //-----------------------------------------------------------------
 void TAStar::Behavior_AstarPath( void )
 {
+	TCoordinate NextTurnPoint;
+	TCoordinate TmpVector;
+	int i, Length = 0;
+	if(tmpFlag){
+		NextTurnPoint = D_Database->TurnPoint[0];
+		tmpFlag = false;
+	}
+
+	D_Database->GlobaPlanlVector.x = NextTurnPoint.x - D_Database->RobotPos.x;
+	D_Database->GlobaPlanlVector.y = NextTurnPoint.y - D_Database->RobotPos.y;
+
+	Length = D_Database->LocalPlanVector.Length();
+	
+	if(Length < AchieveErrRange){
+		//如果到達轉折點
+		D_Database->ReachTurnPointFlag = true;
+	}else{
+
+	}
+
+	if(D_Database->ReachTurnPointFlag){
+		if(D_Database->TurnPoint.size()>0){
+			i++;
+			NextTurnPoint  = D_Database->TurnPoint[i]; 
+			D_Database->ReachTurnPointFlag = false;
+		}
+	}
+	
 /*
 	int Length = 0;
 	int Size = AstarTool::GetInstance()->SmoothPath.size();
@@ -100,7 +130,7 @@ void TAStar::Behavior_AstarPath( void )
 			}
 		} else {
 			if( D_Database->AStarPath.PCnt > 0 ) {
-				StrategyStatus::Goal1 = TmpGoal_V >> LocationStatus::Handle;
+				StrategyStatus::Goal1 = TmpGoal_V >> LocationStatufs::Handle;
 				if( Length < PathErrRange ) {
 					if( !CloseState ) {
 						TargetVector = AstarTool::GetInstance()->SmoothPath[ D_Database->AStarPath.PCnt ] - AstarTool::GetInstance()->SmoothPath[ D_Database->AStarPath.PCnt-1 ];
@@ -401,16 +431,15 @@ void TAStar::FindTurnPoint(){
 		GradientLast = (PosLast.y - PosMiddle.y) / (PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP;
 
 		if (GradientFirst != GradientLast)
-			D_Database->TurnPoint.insert( D_Database->TurnPoint.begin(), PosMiddle);
+			D_Database->TurnPoint.insert( D_Database->TurnPoint.end(), PosMiddle);
 	}
- 
-  		char filename[]="test.txt";
- 	  		fstream fp;
- 	  		fp.open(filename, ios::out);//開啟檔案
- 	  		 
- 	  		for(int i=0;i<D_Database->TurnPoint.size();i++){
- 	  		 		fp<< D_Database->TurnPoint[i].x <<","<<D_Database->TurnPoint[i].y  <<endl;
- 	  		 }
- 	  		 fp.close();//關閉檔案
+//   		char filename[]="test.txt";
+//  	  		fstream fp;
+//  	  		fp.open(filename, ios::out);//開啟檔案
+//  	  		 
+//  	  		for(int i=0;i<D_Database->TurnPoint.size();i++){
+//  	  		 		fp<< D_Database->TurnPoint[i].x <<","<<D_Database->TurnPoint[i].y  <<endl;
+//  	  		 }
+//  	  		 fp.close();//關閉檔案
  	
 }

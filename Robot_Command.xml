@@ -4,5 +4,6 @@
     <Rotate w="0" />
     <Camera ang="0" />
     <TakeBall ballFlag="0" />
+    <Sim_flag />
   </ManualDirection>
 </Command>

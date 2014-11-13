@@ -17,6 +17,7 @@ using namespace std;
 #define Laser_Height 500
 #define LASER_SCAN_NUM 73
 
+
 const double RaderCenter_x = 72;		//!雷達中心 x
 const double RaderCenter_y = 72;		//!雷達中心 y
 const double Rader_Radius = 70;				//!雷達半徑 = 70
@@ -171,29 +172,35 @@ class Database{
 	private:
 
 	public:
-
+		 bool Sim_Flag;
+		 
 		 double x;
 		 double y;
 		 double w;
 		 double FI;
+
+		 TCoordinate RobotPos;
+		 double RobotDir;
+
 
 		 double Direction;
 
 		 TCoordinate StartPosition;
 		 TCoordinate EscapePosition;
 		 TCoordinate EndPosition;
-		 TCoordinate RobotPos;
+		 
+		 //for localization
+		 TCoordinate LocalizatoinRobotPos;
+		 double LocalizatoinRobotDir;
+		 
 		
 		 bool FlagForward;
 
-		 //for grid map
+		 //for grid map and Astar
 		 bool NewGridMapFlag;
+		 bool AStarEnable;
 		 int ** MapWeight;
 		 
-
-
-		 bool AStarEnable;
-
 		 vector <TCoordinate> Path;
 		 vector <TCoordinate> TurnPoint;
 
@@ -203,6 +210,12 @@ class Database{
 			 TCoordinate GoalPos;
 			 int PCnt;
 		 }AStarPath;
+		 TCoordinate GlobaPlanlVector;
+
+		 //for local plan
+		 bool ReachTurnPointFlag;
+		 bool AvoidEnableFlag;
+		 TCoordinate LocalPlanVector;
 
 		//for velocity control
 		 float FixSpeed;                                 // Speed Power 1~100 %

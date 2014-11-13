@@ -73,12 +73,9 @@ namespace SKS_VC2013
 	};
 
 
-	class TAStar  //: public StrategyModule
+	class TAStar  
 	{
 	public:
-// 		static Stra_AStar*  GetInstance() {
-// 			return m_UniqueInstance;
-// 		}
 		TAStar();
 		~TAStar();
 
@@ -86,15 +83,13 @@ namespace SKS_VC2013
 
 		void AStar_Main(void);
 
-		//int LoadXMLSettings(TiXmlElement* element);
 
 		void Behavior_AstarPath( void );
 		
 	private:
 
-		//static Stra_AStar* m_UniqueInstance;
-
 		TCoordinate StartPos, GoalPos;
+		bool tmpFlag;
 
 		bool CloseState;
 
@@ -126,7 +121,6 @@ namespace SKS_VC2013
 
 		//------------Private
 		vector < vector<tsNode> > Map;
-		//vector <TCoordinate> Path;
 		void SearchNeighbor( TCoordinate Current );
 		void SearchNeighbor_8Connect( TCoordinate Current );
 		unsigned int CheckPath_Same( unsigned int PathNum );

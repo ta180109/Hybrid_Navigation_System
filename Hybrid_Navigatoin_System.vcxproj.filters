@@ -49,6 +49,9 @@
     <Filter Include="Core\AStar">
       <UniqueIdentifier>{b3c97b77-2b50-4763-940c-830f65421b68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\LocalPathPlan">
+      <UniqueIdentifier>{92d0229e-dce1-4c3a-bd62-ec68cb35bd61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -102,6 +105,9 @@
     <ClCompile Include="Core\AStar\TAStar.cpp">
       <Filter>Core\AStar</Filter>
     </ClCompile>
+    <ClCompile Include="Core\LocalPathPlan\TLocalPathPlan.cpp">
+      <Filter>Core\LocalPathPlan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -151,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Core\VelocityControl\TVelocityControl.h">
       <Filter>Core\VelocityControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LocalPathPlan\TLocalPathPlan.h">
+      <Filter>Core\LocalPathPlan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

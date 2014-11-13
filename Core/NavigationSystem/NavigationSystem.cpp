@@ -6,6 +6,7 @@ using namespace std;
 TNavigationSystem::TNavigationSystem()
 {
 	AStar = new TAStar();
+	LocalPathPlan = new TLocalPathPlan();
 	VelocityControl = new TVelocityControl();
 	Motion = new TMotion();
 }
@@ -23,9 +24,9 @@ void TNavigationSystem::NavigationSystem_Initialize(void)
 void TNavigationSystem::NavigationSystem_Main(void)
 {
 	AStar->AStar_Main();
-
-	//VelocityControl->Velocity_Main();
-	//Motion->Motion_Main();
+	LocalPathPlan->LocalPathPlan_Main();
+	VelocityControl->Velocity_Main();
+	Motion->Motion_Main();
 	
 	
 }

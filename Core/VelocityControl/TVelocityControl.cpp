@@ -1,5 +1,15 @@
-#include "../../database.h"
+#include "../../Database.h"
 #include "TVelocityControl.h"
+
+
+#define DistanceMax 100
+#define DistanceMin 10 
+#define SpeedMax 200
+#define	SpeedMin 30 
+#define	ThetaMax 1.047197552 
+#define	ThetaMin 0.05 
+#define	OmegaMax 21
+#define	OmegaMin 9
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -12,29 +22,14 @@ using namespace std;
 
 TVelocityControl::TVelocityControl()
 {
-
+	D_Database->FixSpeed = 0.0;
 }
 
 TVelocityControl::~TVelocityControl()
 {
 
 }
-//----------------------------------------------------------------------------xml
-/*
-int velocitycontrol::loadxmlsettings (tixmlelement* element) {
-    if(element != null) {
-        element->attribute("dis_max", &distancemax);
-        element->attribute("dis_min", &distancemin);
-        element->attribute("spd_max", &speedmax);
-        element->attribute("spd_min", &speedmin);
-        element->attribute("sita_max", &thetamax);
-        element->attribute("sita_min", &thetamin);
-        element->attribute("w_max", &omegamax);
-        element->attribute("w_min", &omegamin);
-    }
-}
-*/
-//----------------------------------------------------------------------------
+
 void TVelocityControl::Velocity_Initialize(void)
 {
 
@@ -90,6 +85,8 @@ void TVelocityControl::Velocity_Main(void)
 
 void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAng, double Theta )
 {
+
+
     TCoordinate Vector( dTargetCutAng );
 
     double Speed = 0;
@@ -102,23 +99,23 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
             Speed = 0;
     }
-    else if( dTargetDis > this->DistanceMax )
+    else if( dTargetDis > DistanceMax ){
 
         Speed = SpeedMax;
 
-    else if( dTargetDis < this->DistanceMin )
+	}else if( dTargetDis < DistanceMin )
 
         Speed = SpeedMin;
 
     else
 
-        Speed = S_Function( this->SpeedMax   , this->SpeedMin,
+        Speed = S_Function( SpeedMax   , SpeedMin,
 
-                            this->DistanceMax, this->DistanceMin, dTargetDis);
+                            DistanceMax, DistanceMin, dTargetDis);
 
     if( Speed != 0 && D_Database->FixSpeed != 0 )
 
-        Speed = (D_Database->FixSpeed/100.0)*this->SpeedMax ;
+        Speed = (D_Database->FixSpeed/100.0)*SpeedMax ;
 
     /*if( Speed > 20 ){
 
@@ -132,8 +129,8 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
     }*/
 
-    D_Database->x = -Speed * Vector.y;
 
+    D_Database->x = Speed * Vector.y;
     D_Database->y = Speed * Vector.x;
 
     //StrategyStatus::PathMotion = Speed * Vector;
@@ -146,19 +143,19 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
         Omega = 0;
 
-    else if( fabs(Theta) > this->ThetaMax )
+    else if( fabs(Theta) > ThetaMax )
 
         Omega = OmegaMax;
 
-    else if( fabs(Theta) < this->ThetaMin )
+    else if( fabs(Theta) < ThetaMin )
 
         Omega = OmegaMin;
 
     else
 
-        Omega = S_Function( this->OmegaMax, this->OmegaMin,
+        Omega = S_Function( OmegaMax, OmegaMin,
 
-                            this->ThetaMax, this->ThetaMin, fabs(Theta) );
+                            ThetaMax, ThetaMin, fabs(Theta) );
 
 
 
@@ -166,7 +163,7 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
     D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
 
-    //StrategyStatus::w = StrategyStatus::PathRotation;
+    //D_Database->w = D_Database->PathRotation;
 
 }
 

@@ -18,6 +18,7 @@
 #include <math.h>
 #include "../../Database.h"
 #include "../../Core/AStar/TAStar.h"
+#include "../../Core/LocalPathPlan/TLocalPathPlan.h"
 #include "../../Core/VelocityControl/TVelocityControl.h"
 #include "../../Core/Motion/TMotion.h"
 
@@ -34,7 +35,7 @@ namespace SKS_VC2013 {
 		TAStar *AStar;
 		TVelocityControl *VelocityControl;
 		TMotion *Motion;
-		
+		TLocalPathPlan *LocalPathPlan;
 
 		void NavigationSystem_Initialize(void);
 

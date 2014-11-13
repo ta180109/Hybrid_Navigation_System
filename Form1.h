@@ -126,6 +126,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::ToolStripMenuItem^  mapToolStripMenuItem1;
 	private: System::Windows::Forms::Button^  Btn_SysStart;
 	private: System::Windows::Forms::Button^  btn_SysStop;
+	private: System::Windows::Forms::Timer^  timer1;
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
 
 
@@ -137,6 +138,7 @@ namespace SKS_VC2013 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->MSG_list = (gcnew System::Windows::Forms::ListBox());
 			this->Up_sd = (gcnew System::Windows::Forms::Button());
@@ -164,6 +166,7 @@ namespace SKS_VC2013 {
 			this->L_b = (gcnew System::Windows::Forms::Button());
 			this->Btn_SysStart = (gcnew System::Windows::Forms::Button());
 			this->btn_SysStop = (gcnew System::Windows::Forms::Button());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawPB))->BeginInit();
 			this->menuStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
@@ -357,6 +360,8 @@ namespace SKS_VC2013 {
 			// Auto_check
 			// 
 			this->Auto_check->AutoSize = true;
+			this->Auto_check->Checked = true;
+			this->Auto_check->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->Auto_check->ForeColor = System::Drawing::SystemColors::ControlLightLight;
 			this->Auto_check->Location = System::Drawing::Point(7, 29);
 			this->Auto_check->Name = L"Auto_check";
@@ -443,6 +448,10 @@ namespace SKS_VC2013 {
 			this->btn_SysStop->UseVisualStyleBackColor = false;
 			this->btn_SysStop->Click += gcnew System::EventHandler(this, &Form1::btn_SysStop_Click);
 			// 
+			// timer1
+			// 
+			this->timer1->Tick += gcnew System::EventHandler(this, &Form1::timer1_Tick);
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -478,18 +487,30 @@ namespace SKS_VC2013 {
 #pragma endregion
 
 //! First Load Code.
-	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
-				 
-				 NewNavigationSystem = new TNavigationSystem();
+private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {				 
+			NewNavigationSystem = new TNavigationSystem();
+			
+			D_Robot->X=30;
+			D_Robot->Y=Map_Height-265;
+			D_Robot->R=45;	
+			
+			
+			drawPB->Width  = Radar_Width;
+			drawPB->Height = Radar_Height;
 
-				 drawPB->Width  = Radar_Width;
-				 drawPB->Height = Radar_Height;
+			Radar_Basic(RaderCenter_x , RaderCenter_y);
+			
+			Read_Object();
+			timer1->Start();
 
-				 Radar_Basic(RaderCenter_x , RaderCenter_y);
-				 
+			mMap = gcnew Map();
+			mMap->Show();
 
-				 Read_Object();
-			 }
+			if(mMapEditer==nullptr){
+				mMapEditer = gcnew MapEditer();
+			}
+			mMapEditer->Show();
+}
 
 //! Connection Set.
 /**<Client Code. */
@@ -576,7 +597,7 @@ namespace SKS_VC2013 {
 
 
 //!Ladar Drawing.
-	void Radar_Basic(double x , double y){
+void Radar_Basic(double x , double y){
 		Pen^ blackPen = gcnew Pen(Color::Black, 3);
 
 		mBMP  = gcnew Bitmap(Radar_Width, Radar_Height); //­I´º©M®ØÃ¸»s°Ï
@@ -586,177 +607,175 @@ namespace SKS_VC2013 {
 		drawPoint(x,y);
 		mGraphic->DrawLine(blackPen , (int)RaderCenter_x , (int)RaderCenter_y , (int)x , (int)y);
 
-	}
+}
 /**<Red Point. */
-	private: void drawPoint(double x , double y){
+private: void drawPoint(double x , double y){
 				 SolidBrush^ PointBrush = gcnew SolidBrush( Color::Red );
 				 mGraphic->FillPie(PointBrush,(int)x-3 ,(int)y-3 ,(int)7 ,(int)7,(int) 0,(int) 359 );
 				 drawPB->Image = mBMP;
 			 }
 /**<ArcInt. */
-	private: void DrawArcInt(double length,double ang){
-				 Pen^ blackPen = gcnew Pen( Color::Black,3 );		/**<Black Pen. */
-				 SolidBrush^ skyblueBrush = gcnew SolidBrush( Color::SkyBlue );
+private: void DrawArcInt(double length,double ang){
+		Pen^ blackPen = gcnew Pen( Color::Black,3 );		/**<Black Pen. */
+		SolidBrush^ skyblueBrush = gcnew SolidBrush( Color::SkyBlue );
 
-				 double x = RaderCenter_x-length;
-				 double y = RaderCenter_y-length;
-				 double width = length+length;
-				 double height = length+length;
+		double x = RaderCenter_x-length;
+		double y = RaderCenter_y-length;
+		double width = length+length;
+		double height = length+length;
+		
+		double startAngle = 270;
 
-				 double startAngle = 270;
-
-				 while(ang>180)ang = ang - 360;
-				 while(ang<-180)ang = ang + 360;
-				 double sweepAngle = ang;
-				 if(width>0 && height>0){
-					 mGraphic->FillPie(skyblueBrush,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
-					 mGraphic->DrawArc(blackPen,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
-				 }
-
-				 drawPB->Image = mBMP;
-			 }
+		while(ang>180)ang = ang - 360;
+		while(ang<-180)ang = ang + 360;
+		double sweepAngle = ang;
+		if(width>0 && height>0){
+			mGraphic->FillPie(skyblueBrush,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
+			mGraphic->DrawArc(blackPen,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
+		}
+			drawPB->Image = mBMP;
+}
 
 /**
 	Xml Area.
 */
 //!Read Furniture Xml.
-		void Read_Object(){
-			XmlDocument^ doc = gcnew XmlDocument();
-			doc->Load("Furniture_set.xml");
-			XmlNode^ Manual = doc->SelectSingleNode("/Config/DirectionObject");
+void Read_Object(){
+	XmlDocument^ doc = gcnew XmlDocument();
+	doc->Load("Furniture_set.xml");
+	XmlNode^ Manual = doc->SelectSingleNode("/Config/DirectionObject");
 
-			for(int i =0 ;i < Manual->ChildNodes->Count;i++){
-				XmlNode^ node = Manual->ChildNodes[i];
-				XmlElement^ element=(XmlElement^)node;
-				if(element->Name =="LivingRM_Sofa"){
-					D_Furniture->M_LivingRM.Sofa.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_LivingRM.Sofa.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_LivingRM.Sofa.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_LivingRM.Sofa.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_LivingRM.Sofa.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="LivingRM_Table"){
-					D_Furniture->M_LivingRM.Table.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_LivingRM.Table.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_LivingRM.Table.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_LivingRM.Table.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_LivingRM.Table.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="LivingRM_Cabinet"){
-					D_Furniture->M_LivingRM.Cabinet.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_LivingRM.Cabinet.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_LivingRM.Cabinet.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_LivingRM.Cabinet.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_LivingRM.Cabinet.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="DiningRM_Table"){
-					D_Furniture->M_DiningRM.Table.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_DiningRM.Table.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_DiningRM.Table.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_DiningRM.Table.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_DiningRM.Table.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="DiningRM_Chair"){
-					D_Furniture->M_DiningRM.Chair.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_DiningRM.Chair.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_DiningRM.Chair.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_DiningRM.Chair.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_DiningRM.Chair.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="Library_Desk"){
-					D_Furniture->M_Library.Desk.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_Library.Desk.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_Library.Desk.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_Library.Desk.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_Library.Desk.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="Library_Chair"){
-					D_Furniture->M_Library.Chair.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_Library.Chair.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_Library.Chair.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_Library.Chair.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_Library.Chair.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="Library_Cabinet"){
-					D_Furniture->M_Library.Cabinet.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_Library.Cabinet.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_Library.Cabinet.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_Library.Cabinet.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_Library.Cabinet.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="BedRM_Bed"){
-					D_Furniture->M_BedRM.Bed.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_BedRM.Bed.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_BedRM.Bed.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_BedRM.Bed.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_BedRM.Bed.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="DiningRM_door"){
-					D_Furniture->M_DiningRM.door.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_DiningRM.door.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_DiningRM.door.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_DiningRM.door.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_DiningRM.door.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="BedRM_door"){
-					D_Furniture->M_BedRM.door.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_BedRM.door.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_BedRM.door.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_BedRM.door.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_BedRM.door.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="Trashcan"){
-					D_Furniture->M_Trashcan.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_Trashcan.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_Trashcan.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_Trashcan.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_Trashcan.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="ChargeArea"){
-					D_Furniture->M_ChargeArea.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_ChargeArea.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_ChargeArea.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_ChargeArea.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_ChargeArea.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}else if(element->Name =="EndArea"){
-					D_Furniture->M_EndArea.x = System::Convert::ToDouble(element->GetAttribute("x"));
-					D_Furniture->M_EndArea.y = System::Convert::ToDouble(element->GetAttribute("y"));
-					D_Furniture->M_EndArea.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
-					D_Furniture->M_EndArea.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
-					D_Furniture->M_EndArea.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-				}
-			}
+	for(int i =0 ;i < Manual->ChildNodes->Count;i++){
+		XmlNode^ node = Manual->ChildNodes[i];
+		XmlElement^ element=(XmlElement^)node;
+		if(element->Name =="LivingRM_Sofa"){
+			D_Furniture->M_LivingRM.Sofa.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_LivingRM.Sofa.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_LivingRM.Sofa.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_LivingRM.Sofa.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_LivingRM.Sofa.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="LivingRM_Table"){
+			D_Furniture->M_LivingRM.Table.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_LivingRM.Table.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_LivingRM.Table.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_LivingRM.Table.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_LivingRM.Table.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="LivingRM_Cabinet"){
+			D_Furniture->M_LivingRM.Cabinet.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_LivingRM.Cabinet.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_LivingRM.Cabinet.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_LivingRM.Cabinet.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_LivingRM.Cabinet.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="DiningRM_Table"){
+			D_Furniture->M_DiningRM.Table.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_DiningRM.Table.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_DiningRM.Table.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_DiningRM.Table.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_DiningRM.Table.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="DiningRM_Chair"){
+			D_Furniture->M_DiningRM.Chair.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_DiningRM.Chair.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_DiningRM.Chair.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_DiningRM.Chair.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_DiningRM.Chair.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="Library_Desk"){
+			D_Furniture->M_Library.Desk.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Library.Desk.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Library.Desk.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Library.Desk.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Library.Desk.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="Library_Chair"){
+			D_Furniture->M_Library.Chair.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Library.Chair.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Library.Chair.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Library.Chair.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Library.Chair.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="Library_Cabinet"){
+			D_Furniture->M_Library.Cabinet.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Library.Cabinet.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Library.Cabinet.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Library.Cabinet.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Library.Cabinet.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="BedRM_Bed"){
+			D_Furniture->M_BedRM.Bed.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_BedRM.Bed.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_BedRM.Bed.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_BedRM.Bed.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_BedRM.Bed.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="DiningRM_door"){
+			D_Furniture->M_DiningRM.door.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_DiningRM.door.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_DiningRM.door.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_DiningRM.door.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_DiningRM.door.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="BedRM_door"){
+			D_Furniture->M_BedRM.door.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_BedRM.door.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_BedRM.door.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_BedRM.door.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_BedRM.door.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="Trashcan"){
+			D_Furniture->M_Trashcan.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Trashcan.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Trashcan.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Trashcan.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Trashcan.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="ChargeArea"){
+			D_Furniture->M_ChargeArea.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_ChargeArea.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_ChargeArea.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_ChargeArea.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_ChargeArea.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+		}else if(element->Name =="EndArea"){
+			D_Furniture->M_EndArea.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_EndArea.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_EndArea.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_EndArea.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_EndArea.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
 		}
+	}
+}
 
 
 //!Read Callback Status Xml.
-public:	void Read_Status(){
-			XmlDocument^ doc = gcnew XmlDocument();
-			doc->Load("Back_Status.xml");
-			XmlNode^ Manual = doc->SelectSingleNode("/Status");
-			if(Manual!=nullptr){
-				for(int i=0;i < Manual->ChildNodes->Count;i++){
-					XmlNode^ Manual2 = Manual->ChildNodes[i];
-					XmlElement^ element=(XmlElement^)Manual2;
-					if(element->Name == "Movement"){
-						R_Robot->X= System::Convert::ToDouble(element->GetAttribute("x"));
-						R_Robot->Y= System::Convert::ToDouble(element->GetAttribute("y"));
-						R_Robot->Radian= System::Convert::ToDouble(element->GetAttribute("sita"));
-					}else if (element->Name == "Laser"){
-						for(int i=0;i<element->ChildNodes->Count;i++){
-							XmlNode^ b = element->ChildNodes[i];
-							XmlElement^ a = (XmlElement^) b;
-
-							Real_Laser[i].Angle = 90-(2.5*i);	//! 90 to -90.
-							Real_Laser[i].Distance = System::Convert::ToDouble(a->GetAttribute("d")) / 10;	//! mm to cm.
-						}
-					}else if(element->Name == "Position"){
-						R_Position->x= System::Convert::ToDouble(element->GetAttribute("x"));
-						R_Position->y= System::Convert::ToDouble(element->GetAttribute("y"));
-						R_Position->ang= System::Convert::ToDouble(element->GetAttribute("sita"))*180/PI; //! Radian to Angle
-					}else if(element->Name == "Camera_Angle"){
-						R_Robot->Camera_Angle = System::Convert::ToDouble(element->GetAttribute("ang"));
-					}
-				}
-			}
-		}
+// public:	void Read_Status(){
+// 			XmlDocument^ doc = gcnew XmlDocument();
+// 			doc->Load("Back_Status.xml");
+// 			XmlNode^ Manual = doc->SelectSingleNode("/Status");
+// 			if(Manual!=nullptr){
+// 				for(int i=0;i < Manual->ChildNodes->Count;i++){
+// 					XmlNode^ Manual2 = Manual->ChildNodes[i];
+// 					XmlElement^ element=(XmlElement^)Manual2;
+// 					if(element->Name == "Movement"){
+// 						R_Robot->X= System::Convert::ToDouble(element->GetAttribute("x"));
+// 						R_Robot->Y= System::Convert::ToDouble(element->GetAttribute("y"));
+// 						R_Robot->Radian= System::Convert::ToDouble(element->GetAttribute("sita"));
+// 					}else if (element->Name == "Laser"){
+// 						for(int i=0;i<element->ChildNodes->Count;i++){
+// 							XmlNode^ b = element->ChildNodes[i];
+// 							XmlElement^ a = (XmlElement^) b;
+// 
+// 							Real_Laser[i].Angle = 90-(2.5*i);	//! 90 to -90.
+// 							Real_Laser[i].Distance = System::Convert::ToDouble(a->GetAttribute("d")) / 10;	//! mm to cm.
+// 						}
+// 					}else if(element->Name == "Position"){
+// 						R_Position->x= System::Convert::ToDouble(element->GetAttribute("x"));
+// 						R_Position->y= System::Convert::ToDouble(element->GetAttribute("y"));
+// 						R_Position->ang= System::Convert::ToDouble(element->GetAttribute("sita"))*180/PI; //! Radian to Angle
+// 					}else if(element->Name == "Camera_Angle"){
+// 						R_Robot->Camera_Angle = System::Convert::ToDouble(element->GetAttribute("ang"));
+// 					}
+// 				}
+// 			}
+// 		}
 
 //! Change to Unit.
-		double ChangetoUnit(double Sit){
+double ChangetoUnit(double Sit){
 			double Unit_Sit;
 			if(Sit > Rader_Radius){	Unit_Sit = 1;}
 			else if(Sit < -1*Rader_Radius){	Unit_Sit = -1;}
 			else{	Unit_Sit = Sit / Rader_Radius;}
-
-			return Unit_Sit;
+				return Unit_Sit;
 		}
 //!Read Command Xml.
 public:	void Write_Robot(){
@@ -796,12 +815,14 @@ public:	void Write_Robot(){
 			}
 
 			if(Auto_check->Checked){
-				if(Sim_t==0){
-					XmlElement^ Distance = doc->CreateElement("Sim_flag");
-					Manual->AppendChild(Distance);
-				}
+// 				if(Sim_t==0){
+// 					XmlElement^ Distance = doc->CreateElement("Sim_flag");
+// 					Manual->AppendChild(Distance);
+// 				}
+				D_Database->Sim_Flag = 1;
+
 			}else{
-				if(Sim_t==1)	Manual->RemoveChild(Manual->SelectSingleNode("Sim_flag"));
+				//if(Sim_t==1)	Manual->RemoveChild(Manual->SelectSingleNode("Sim_flag"));
 			}
 
 
@@ -977,7 +998,7 @@ public:	void Read_Robot(){
 // ===========================From part==========================
 
 private: System::Void mapToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e) {
-			 mMap = gcnew Map();
+			 //mMap = gcnew Map();
 			 mMap->Show();
 		 }
 
@@ -987,9 +1008,9 @@ private: System::Void furnitureToolStripMenuItem_Click(System::Object^  sender, 
 		 }
 
 private: System::Void mapEditerToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 if(mMapEditer==nullptr){
-				 mMapEditer = gcnew MapEditer();
-			 }
+// 			 if(mMapEditer==nullptr){
+// 				 mMapEditer = gcnew MapEditer();
+// 			 }
 			 mMapEditer->Show();
 		 }
 private: System::Void lasertestToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1038,8 +1059,22 @@ private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventA
 			 D_Database->EndPosition.y = D_Furniture->M_EndArea.y;
 
 			 //start algorithm
-			 NewNavigationSystem->NavigationSystem_Main();
+			 if(Auto_check->Checked)
+				NewNavigationSystem->NavigationSystem_Main();
 		 }
+private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+			if(Auto_check->Checked){
+				 D_Database->RobotPos.x = (int)D_Robot->X;
+				 D_Database->RobotPos.y = Map_Height-(int)D_Robot->Y;
+				 D_Database->RobotDir   = D_Robot->Angle;
+
+			}else{
+				D_Database->RobotPos.x = D_Database->LocalizatoinRobotPos.x;
+				D_Database->RobotPos.y = D_Database->LocalizatoinRobotPos.y;
+				D_Database->RobotDir   = D_Database->LocalizatoinRobotDir;
+			}
+			
+		}
 };
 }
 

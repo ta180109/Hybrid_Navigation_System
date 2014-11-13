@@ -42,7 +42,7 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::CheckBox^  Re_Position;
 	private: System::Windows::Forms::ListBox^  SimLaserShow;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
-	private: System::Windows::Forms::Button^  button1;
+
 
 
 
@@ -108,7 +108,6 @@ namespace SKS_VC2013 {
 			this->Re_Position = (gcnew System::Windows::Forms::CheckBox());
 			this->SimLaserShow = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
@@ -298,23 +297,12 @@ namespace SKS_VC2013 {
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"R_Robot Status";
 			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(732, 16);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 12;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &Map::button1_Click);
-			// 
 			// Map
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->ClientSize = System::Drawing::Size(902, 662);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->SimLaserShow);
 			this->Controls->Add(this->label3);
@@ -341,17 +329,14 @@ namespace SKS_VC2013 {
 	int mos_click;
 	int mos_x,mos_y;
 //******************************************//
-	private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
 				 drawMap->Width  = Map_Width;
 				 drawMap->Height = Map_Height;
 
 				 int num;
 				 for(num=0;num<=270;num++) Ang_CB->Items->Add(num);
 				 for(num=10;num<=20;num++) Spa_CB->Items->Add(num);
-
-				 D_Robot->X=30;
-				 D_Robot->Y=Map_Height-265;
-				 D_Robot->R=45;
+				
 
 				 D_Robot->X_tar = D_Robot->X + D_Robot->R/2;
 				 D_Robot->Y_tar = D_Robot->Y;
@@ -365,7 +350,7 @@ namespace SKS_VC2013 {
 				 timer1->Start();
 			 }
 ///////////////////////機器人繪製區///////////////////////////////////////
-	public: void drawRobot(){
+public: void drawRobot(){
 				 mBMP  = gcnew Bitmap("SKS_2013MAP.bmp"); //背景和框繪製區
 				 mGraphic   = Graphics::FromImage(mBMP);
 				 Read_Object();
@@ -373,7 +358,7 @@ namespace SKS_VC2013 {
 				 
 				 if(D_Order->X !=0 || D_Order->Y !=0 || D_Order->Radian !=0){
 					 Rec_Angle = atan2(D_Order->X,D_Order->Y)*180/PI;			//前進的向量角度
-					 Rec_Length = sqrt(pow(D_Order->X,2)+pow(D_Order->Y,2));	//前進的向量長度
+					 Rec_Length = sqrt(pow(D_Order->X,2)+pow(D_Order->Y,2));  	//前進的向量長度
 					 Rec_Length = Rec_Length/60;
 					 if(D_Order->Radian != 0){
 						 D_Robot->Angle = D_Robot->Angle - (D_Order->Radian*180/PI)/100;			//自轉
@@ -382,14 +367,9 @@ namespace SKS_VC2013 {
 					 }else{
 						 D_Robot->X = D_Robot->X + (Rec_Length*wheel_dis*cos((D_Robot->Angle-Rec_Angle)*PI/180))/100;
 						 D_Robot->Y = D_Robot->Y - (Rec_Length*wheel_dis*sin((D_Robot->Angle-Rec_Angle)*PI/180))/100;
-						 
-// 						 if(Obst(D_Robot->X,D_Robot->Y)==1){
-// 							 D_Robot->X = D_Robot->X - (Rec_Length*wheel_dis*cos((D_Robot->Angle-Rec_Angle)*PI/180))/100;
-// 							 D_Robot->Y = D_Robot->Y + (Rec_Length*wheel_dis*sin((D_Robot->Angle-Rec_Angle)*PI/180))/100;
-// 						 }
 					 }
 				 }
-				 writeSimulator();
+				 //writeSimulator();
 
 				 double r = (D_Robot->R/2);
 
@@ -406,28 +386,28 @@ namespace SKS_VC2013 {
 					 scanning();
 				 drawMap->Image = mBMP;
 			 }
-		void writeSimulator(){
-			if(Re_Movement->Checked || Re_Position->Checked){
-				if(R_Position->x!=0 || R_Position->y!=0 || R_Position->ang!=0){
-					D_Robot->X = R_Position->x;
-					D_Robot->Y = Map_Height - R_Position->y;
-					D_Robot->Angle = R_Position->ang;
-				}
-				try{
-					XmlDocument^ doc = gcnew XmlDocument();
-					doc->Load("Robot_Simulator.xml");
-					XmlNode^ Manual = doc->SelectSingleNode("/Simulator/Sim_Position");
-					XmlElement^ element=(XmlElement^)Manual;
-
-					element->SetAttribute("x",System::Convert::ToString(D_Robot->X));
-					element->SetAttribute("y",System::Convert::ToString(Map_Height-D_Robot->Y));
-					element->SetAttribute("sita",System::Convert::ToString(D_Robot->Angle));
-
-					doc->Save("Robot_Simulator.xml");
-				}catch (IOException^){
-				}
-			}
-		}
+// 		void writeSimulator(){
+// 			if(Re_Movement->Checked || Re_Position->Checked){
+// 				if(R_Position->x!=0 || R_Position->y!=0 || R_Position->ang!=0){
+// 					D_Robot->X = R_Position->x;
+// 					D_Robot->Y = Map_Height - R_Position->y;
+// 					D_Robot->Angle = R_Position->ang;
+// 				}
+// 				try{
+// 					XmlDocument^ doc = gcnew XmlDocument();
+// 					doc->Load("Robot_Simulator.xml");
+// 					XmlNode^ Manual = doc->SelectSingleNode("/Simulator/Sim_Position");
+// 					XmlElement^ element=(XmlElement^)Manual;
+// 
+// 					element->SetAttribute("x",System::Convert::ToString(D_Robot->X));
+// 					element->SetAttribute("y",System::Convert::ToString(Map_Height-D_Robot->Y));
+// 					element->SetAttribute("sita",System::Convert::ToString(D_Robot->Angle));
+// 
+// 					doc->Save("Robot_Simulator.xml");
+// 				}catch (IOException^){
+// 				}
+// 			}
+// 		}
 /////////////////////////家具繪製區///////////////////////////////////////
 		void Read_Object(){
 			drawObject(D_Furniture->M_LivingRM.Sofa,0);
@@ -486,12 +466,21 @@ namespace SKS_VC2013 {
 				}
 			}
 		}
+
 		void DrawTurnPoint(){
 			SolidBrush^ TurnpointColor = gcnew SolidBrush( Color::Orange );
+			Pen^ RedPen = gcnew Pen( Color::Red,2 );
 			TCoordinate Tmp;
 			for(int i = 0;i < D_Database->TurnPoint.size(); i++){
-				mGraphic->FillPie(TurnpointColor,(int)D_Database->TurnPoint[i].x , (Map_Height - (int)D_Database->TurnPoint[i].y) ,10 ,10,(int) 0,(int) 360 );
-				
+				mGraphic->FillPie(TurnpointColor,(int)D_Database->TurnPoint[i].x-5 , (Map_Height - (int)D_Database->TurnPoint[i].y)-5 ,10 ,10,(int) 0,(int) 360 );
+				if(i==0){
+					Tmp.x = 30;
+					Tmp.y = Map_Height-270;
+				}else{
+					Tmp.x = (int)D_Database->TurnPoint[i-1].x;
+					Tmp.y = Map_Height-(int)D_Database->TurnPoint[i-1].y;
+				}
+				mGraphic->DrawLine(RedPen , (int)D_Database->TurnPoint[i].x ,  (Map_Height - (int)D_Database->TurnPoint[i].y) , Tmp.x , Tmp.y);
 			}
 			drawMap->Image = mBMP;
 		}
@@ -641,11 +630,6 @@ private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System
 		 }
 private: System::Void Re_Movement_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Movement");
-		 }
-
-
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-			 DrawTurnPoint();
 		 }
 };
 }

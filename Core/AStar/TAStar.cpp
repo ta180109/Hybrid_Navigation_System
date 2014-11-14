@@ -4,10 +4,8 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-#define ACHIVERANGEERR 15
-#define TRUNINGWEIGHT 2
-
-//Stra_AStar* Stra_AStar::m_UniqueInstance = new Stra_AStar();
+#define ACHIVERANGEERR 10
+#define TRUNINGWEIGHT 1.3
 
 TAStar::TAStar()
 {
@@ -21,14 +19,7 @@ TAStar::~TAStar()
 {
 
 }
-//-----------------------------------------------------------------
-// int Stra_AStar::LoadXMLSettings(TiXmlElement* element) {
-// 	if(element != NULL) {
-// 		element->Attribute("PathErrRange", &PathErrRange);
-// 		element->Attribute("AchieveErrRange", &AchieveErrRange);
-// 	}
-// }
-//-----------------------------------------------------------------
+
 void TAStar::AStar_Initialize(void)
 {
 
@@ -75,8 +66,10 @@ void TAStar::AStar_Main(void)
 
 		AdjustPath();
 
-		D_Database->AStarPath.PCnt = 0;
-
+		//D_Database->AStarPath.PCnt = 0;
+		
+		FindTurnPoint();
+		
 		Behavior_AstarPath();
 
 	} else {
@@ -190,33 +183,6 @@ void TAStar::LoadGridMap() {
 		}
 	}
 
-	// 	char filename[]="test.txt";
-	// 	fstream fp;
-	// 	fp.open(filename, ios::out);//開啟檔案
-	// 
-	// 	for(int i=59;i>=0;i--){
-	// 		for(int j=59;j>=0;j--)
-	// 			fp<< Map[i][j].Weight <<endl;
-	// 	}
-	// 	fp.close();//關閉檔案
-
-//-------------------old------------------------
-// 	if(element != NULL) {
-// 		TiXmlElement* child=element->FirstChildElement();
-// 		while(child!=NULL) {
-// 			vector<tsNode> vecTmp;
-// 			TiXmlAttribute* type=child->FirstAttribute();
-// 			while(type!=NULL) {
-// 				tsNode tsNodeTmp;
-// 				tsNodeTmp.Weight = atoi(type->Value());
-// 				vecTmp.push_back(tsNodeTmp);
-// 				type=type->Next();
-// 			}
-// 			Map.push_back(vecTmp);
-// 			child=child->NextSiblingElement();
-// 		}
-// 	}
-
 	D_Database->NewGridMapFlag = false;
 }
 
@@ -233,15 +199,6 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 	StartNode.y = (int)(Start.y/NodeResolution);
 	GoalNode.x  = (int)(Goal.x /NodeResolution);
 	GoalNode.y  = (int)(Goal.y /NodeResolution);
-
-// 	char filename[]="test.txt";
-// 	fstream fp;
-// 	fp.open(filename, ios::out);//開啟檔案
-// 	fp<< StartNode.x<<","<< StartNode.y  <<endl;
-// 	fp<< GoalNode.x<<","<< GoalNode.y  <<endl;
-// 	
-// 	fp.close();//關閉檔案
-
 
 	//---- initial the list information
 	Map[StartNode.x][StartNode.y].Father = StartNode;
@@ -260,9 +217,7 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 	while( (Front.x != -1        || Front.y != -1) &&
 		(Front.x != GoalNode.x || Front.y != GoalNode.y) )
 	{
-		//OpenList.extract_min();
-
-		OpenList.erase(OpenList.begin());
+				OpenList.erase(OpenList.begin());
 
 		Map[Front.x][Front.y].Status = CurrentStatus-Def_Closed;
 		ClosedList.push_back( Front );
@@ -293,16 +248,6 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 			}
 		}
 	}
-
-	FindTurnPoint();
-//  		char filename[]="test.txt";
-//  		fstream fp;
-//  		fp.open(filename, ios::out);//開啟檔案
-//  		 
-//  		for(int i=0;i<D_Database->Path.size();i++){
-//  		 		fp<< D_Database->Path[i].x <<","<<D_Database->Path[i].y  <<endl;
-//  		 }
-//  		 fp.close();//關閉檔案
 }
 //---------------------------------------------------------------------------
 void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
@@ -340,9 +285,7 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 
 						vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));
 						OpenList.insert(it, Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F));
-						//OpenList.push_back(Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F) );
-						//sort(OpenList.begin(),OpenList.end());
-					}
+											}
 				}
 				else if( Map[TmpPos.x][TmpPos.y].Status != CurrentStatus-Def_Closed )
 				{
@@ -354,16 +297,10 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 
 					vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));
 					OpenList.insert(it, Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F));
-
-					//OpenList.push_back(Nodelist(TmpPos.x, TmpPos.y,Map[TmpPos.x][TmpPos.y].F) );
-					//sort(OpenList.begin(),OpenList.end());
 				}
-				//printf("G: %d ",Map[TmpPos.x][TmpPos.y].G );
-				//printf("H: %d ",Map[TmpPos.x][TmpPos.y].H );
 			}
 		}
 	}
-	//printf("\n");
 }
 void TAStar::AdjustPath( void )
 {
@@ -421,21 +358,25 @@ unsigned int TAStar::CheckPath_Same( unsigned int PathNum )
 		return PathNum;
 }
 
+
+
 void TAStar::FindTurnPoint(){
-	TCoordinate PosFirst,PosMiddle,PosLast;
-	double GradientFirst,GradientLast;
+		TCoordinate PosFirst,PosMiddle,PosLast;
+		double GradientFirst,GradientLast;
 
-	for(int i=2;i<D_Database->Path.size();i++){
-		PosFirst = D_Database->Path[i-2];
-		PosMiddle = D_Database->Path[i-1];
-		PosLast = D_Database->Path[i];
+		for(int i=2;i< SmoothPath.size();i++){
+			PosFirst = SmoothPath[i-2];
+			PosMiddle = SmoothPath[i-1];
+			PosLast = SmoothPath[i];
 
-		GradientFirst = (PosMiddle.y - PosFirst.y) / (PosMiddle.x - PosFirst.x) + DBL_MIN_10_EXP ;
-		GradientLast = (PosLast.y - PosMiddle.y) / (PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP;
+			GradientFirst = (PosMiddle.y - PosFirst.y) / (PosMiddle.x - PosFirst.x) + DBL_MIN_10_EXP ;
+			GradientLast = (PosLast.y - PosMiddle.y) / (PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP;
 
-		if (GradientFirst != GradientLast)
-			D_Database->TurnPoint.insert( D_Database->TurnPoint.end(), PosMiddle);
-	}
+			if (GradientFirst != GradientLast)
+				D_Database->TurnPoint.insert( D_Database->TurnPoint.end(), PosMiddle);
+		}
+
+		D_Database->TurnPoint.insert( D_Database->TurnPoint.end(), D_Database->EndPosition);
 //   		char filename[]="test.txt";
 //  	  		fstream fp;
 //  	  		fp.open(filename, ios::out);//開啟檔案

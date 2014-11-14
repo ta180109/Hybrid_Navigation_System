@@ -1,14 +1,3 @@
-//=============================================
-//File name: Stra_Avoid
-//
-//Author   :Hsieh Ming-Hua
-//          Transplant form 2012 SKS project
-//Phone    :0921307020
-//E-mail   :ta180109@hotmail.com
-//Update   :2013/07/09
-//
-//Function :Robot avoidance strategy
-//===============================================
 #ifndef TLOCALPATHPLANH
 #define TLOCALPATHPLANH
 #include "../../TCoordinate/TCoordinate.h"

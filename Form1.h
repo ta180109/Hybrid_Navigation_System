@@ -744,39 +744,6 @@ void Read_Object(){
 	}
 }
 
-
-//!Read Callback Status Xml.
-// public:	void Read_Status(){
-// 			XmlDocument^ doc = gcnew XmlDocument();
-// 			doc->Load("Back_Status.xml");
-// 			XmlNode^ Manual = doc->SelectSingleNode("/Status");
-// 			if(Manual!=nullptr){
-// 				for(int i=0;i < Manual->ChildNodes->Count;i++){
-// 					XmlNode^ Manual2 = Manual->ChildNodes[i];
-// 					XmlElement^ element=(XmlElement^)Manual2;
-// 					if(element->Name == "Movement"){
-// 						R_Robot->X= System::Convert::ToDouble(element->GetAttribute("x"));
-// 						R_Robot->Y= System::Convert::ToDouble(element->GetAttribute("y"));
-// 						R_Robot->Radian= System::Convert::ToDouble(element->GetAttribute("sita"));
-// 					}else if (element->Name == "Laser"){
-// 						for(int i=0;i<element->ChildNodes->Count;i++){
-// 							XmlNode^ b = element->ChildNodes[i];
-// 							XmlElement^ a = (XmlElement^) b;
-// 
-// 							Real_Laser[i].Angle = 90-(2.5*i);	//! 90 to -90.
-// 							Real_Laser[i].Distance = System::Convert::ToDouble(a->GetAttribute("d")) / 10;	//! mm to cm.
-// 						}
-// 					}else if(element->Name == "Position"){
-// 						R_Position->x= System::Convert::ToDouble(element->GetAttribute("x"));
-// 						R_Position->y= System::Convert::ToDouble(element->GetAttribute("y"));
-// 						R_Position->ang= System::Convert::ToDouble(element->GetAttribute("sita"))*180/PI; //! Radian to Angle
-// 					}else if(element->Name == "Camera_Angle"){
-// 						R_Robot->Camera_Angle = System::Convert::ToDouble(element->GetAttribute("ang"));
-// 					}
-// 				}
-// 			}
-// 		}
-
 //! Change to Unit.
 double ChangetoUnit(double Sit){
 			double Unit_Sit;
@@ -1068,11 +1035,6 @@ private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::Event
 			if(Auto_check){
  				Write_Robot();
  				Read_Robot();	
-
-// 				D_Order->X = D_Database->x;
-// 				D_Order->Y = D_Database->y;
-// 				if (mMap != nullptr)																																							
-// 					mMap->drawRobot();
 
 				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
 				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");

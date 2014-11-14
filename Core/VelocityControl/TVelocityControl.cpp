@@ -130,8 +130,8 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
     }*/
 
 
-    D_Database->x = Speed * Vector.y;
-    D_Database->y = Speed * Vector.x;
+     D_Database->x = Speed * Vector.y;
+     D_Database->y = Speed * Vector.x;
 
     //StrategyStatus::PathMotion = Speed * Vector;
 

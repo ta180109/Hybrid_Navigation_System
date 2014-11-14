@@ -126,7 +126,9 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::ToolStripMenuItem^  mapToolStripMenuItem1;
 	private: System::Windows::Forms::Button^  Btn_SysStart;
 	private: System::Windows::Forms::Button^  btn_SysStop;
-	private: System::Windows::Forms::Timer^  timer1;
+	private: System::Windows::Forms::Timer^  LocalizationTimer;
+	private: System::Windows::Forms::Timer^  AlgorithmTimer;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
 
 
@@ -166,7 +168,8 @@ namespace SKS_VC2013 {
 			this->L_b = (gcnew System::Windows::Forms::Button());
 			this->Btn_SysStart = (gcnew System::Windows::Forms::Button());
 			this->btn_SysStop = (gcnew System::Windows::Forms::Button());
-			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
+			this->LocalizationTimer = (gcnew System::Windows::Forms::Timer(this->components));
+			this->AlgorithmTimer = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawPB))->BeginInit();
 			this->menuStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
@@ -448,9 +451,13 @@ namespace SKS_VC2013 {
 			this->btn_SysStop->UseVisualStyleBackColor = false;
 			this->btn_SysStop->Click += gcnew System::EventHandler(this, &Form1::btn_SysStop_Click);
 			// 
-			// timer1
+			// LocalizationTimer
 			// 
-			this->timer1->Tick += gcnew System::EventHandler(this, &Form1::timer1_Tick);
+			this->LocalizationTimer->Tick += gcnew System::EventHandler(this, &Form1::LocalizationTimer_Tick);
+			// 
+			// AlgorithmTimer
+			// 
+			this->AlgorithmTimer->Tick += gcnew System::EventHandler(this, &Form1::AlgorithmTimer_Tick);
 			// 
 			// Form1
 			// 
@@ -497,12 +504,11 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 			
 			drawPB->Width  = Radar_Width;
 			drawPB->Height = Radar_Height;
-
+			
 			Radar_Basic(RaderCenter_x , RaderCenter_y);
 			
 			Read_Object();
-			timer1->Start();
-
+			
 			mMap = gcnew Map();
 			mMap->Show();
 
@@ -510,6 +516,8 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 				mMapEditer = gcnew MapEditer();
 			}
 			mMapEditer->Show();
+
+			LocalizationTimer->Start();
 }
 
 //! Connection Set.
@@ -616,25 +624,25 @@ private: void drawPoint(double x , double y){
 			 }
 /**<ArcInt. */
 private: void DrawArcInt(double length,double ang){
-		Pen^ blackPen = gcnew Pen( Color::Black,3 );		/**<Black Pen. */
-		SolidBrush^ skyblueBrush = gcnew SolidBrush( Color::SkyBlue );
+			 Pen^ blackPen = gcnew Pen( Color::Black,3 );		/**<Black Pen. */
+			 SolidBrush^ skyblueBrush = gcnew SolidBrush( Color::SkyBlue );
 
-		double x = RaderCenter_x-length;
-		double y = RaderCenter_y-length;
-		double width = length+length;
-		double height = length+length;
+			 double x = RaderCenter_x-length;
+			 double y = RaderCenter_y-length;
+			 double width = length+length;
+			 double height = length+length;
 		
-		double startAngle = 270;
+			 double startAngle = 270;
 
-		while(ang>180)ang = ang - 360;
-		while(ang<-180)ang = ang + 360;
-		double sweepAngle = ang;
-		if(width>0 && height>0){
-			mGraphic->FillPie(skyblueBrush,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
-			mGraphic->DrawArc(blackPen,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
+			 while(ang>180)ang = ang - 360;
+			 while(ang<-180)ang = ang + 360;
+			 double sweepAngle = ang;
+			 if(width>0 && height>0){
+				 mGraphic->FillPie(skyblueBrush,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
+				 mGraphic->DrawArc(blackPen,(int)x,(int)y,(int) width,(int)height,(int) startAngle,(int) sweepAngle );
+			 }
+				 drawPB->Image = mBMP;
 		}
-			drawPB->Image = mBMP;
-}
 
 /**
 	Xml Area.
@@ -815,17 +823,14 @@ public:	void Write_Robot(){
 			}
 
 			if(Auto_check->Checked){
-// 				if(Sim_t==0){
-// 					XmlElement^ Distance = doc->CreateElement("Sim_flag");
-// 					Manual->AppendChild(Distance);
-// 				}
+
+				D_Order->X = -D_Database->x;
+				D_Order->Y = D_Database->y;
+				//D_Order->Radian = D_Database->PathRotation;
 				D_Database->Sim_Flag = 1;
-
-			}else{
-				//if(Sim_t==1)	Manual->RemoveChild(Manual->SelectSingleNode("Sim_flag"));
+				if (mMap != nullptr)																																							
+					mMap->drawRobot();
 			}
-
-
 			doc->Save("Robot_Command.xml");
 			if(Ctrl_check->Checked){
 				D_Order->X = Unit_x * Speed_Bar->Value;
@@ -872,7 +877,7 @@ public:	void Read_Robot(){
 			//MSG_list->TopIndex = MSG_list->Items->Count-1;		//¸òÀH¨÷¶b©¹¤U(2)
 		}
 */
-	private: System::Void Down_sd_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void Down_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
 			 D_Touch->Y = Rader_Radius/-10;
 			 D_Touch->Radian = 0;
@@ -881,7 +886,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void Up_sd_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void Up_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
 			 D_Touch->Y = Rader_Radius/10;
 			 D_Touch->Radian = 0;
@@ -890,7 +895,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void Left_sd_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void Left_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = Rader_Radius/-10;
 			 D_Touch->Y = 0;
 			 D_Touch->Radian = 0;
@@ -899,7 +904,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void Right_sd_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void Right_sd_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = Rader_Radius/10;
 			 D_Touch->Y = 0;
 			 D_Touch->Radian = 0;
@@ -908,7 +913,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void R_b_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void R_b_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
 			 D_Touch->Y = 0;
 			 D_Touch->Radian = 10*PI/180;
@@ -917,7 +922,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void L_b_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void L_b_Click(System::Object^  sender, System::EventArgs^  e) {
 			 D_Touch->X = 0;
 			 D_Touch->Y = 0;
 			 D_Touch->Radian = -10*PI/180;
@@ -926,7 +931,7 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	void drawPB_mos(System::Windows::Forms::MouseEventArgs^  e){
+void drawPB_mos(System::Windows::Forms::MouseEventArgs^  e){
 		D_mos->X = e->X;
 		D_mos->Y = e->Y;
 		D_mos->Right = 0;
@@ -969,19 +974,18 @@ public:	void Read_Robot(){
 				}
 			}
 			Write_Robot();
-
 			//send();
 		}
 	}
-	private: System::Void drawPB_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawPB_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 if(D_mos->Touch == 0)	 Radar_Basic(RaderCenter_x , RaderCenter_y);
 			 else if(D_mos->Touch == 1)  drawPB_mos(e);
 		 }
-	private: System::Void drawPB_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawPB_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 D_mos->Touch = 1;									//½T»{·Æ¹««ö¤U
 			 drawPB_mos(e);
 		 }
-	private: System::Void drawPB_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawPB_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 D_mos->Touch = 0;
 			 D_mos->Right = 0;
 			 D_Touch->X = 0;
@@ -991,11 +995,9 @@ public:	void Read_Robot(){
 			 Read_Robot();
 			 //send();
 		 }
-	private: System::Void Speed_Bar_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
+private: System::Void Speed_Bar_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
 			 Speed_lab->Text = System::Convert::ToString(Speed_Bar->Value);
 		 }
-
-// ===========================From part==========================
 
 private: System::Void mapToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //mMap = gcnew Map();
@@ -1008,35 +1010,13 @@ private: System::Void furnitureToolStripMenuItem_Click(System::Object^  sender, 
 		 }
 
 private: System::Void mapEditerToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-// 			 if(mMapEditer==nullptr){
-// 				 mMapEditer = gcnew MapEditer();
-// 			 }
 			 mMapEditer->Show();
 		 }
 private: System::Void lasertestToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 mLaserForm = gcnew TLaserForm();
 			 mLaserForm->Show();
 		 }
-/*
-private: System::Void timer3_Tick(System::Object^  sender, System::EventArgs^  e) {
-			 try{
-				 if(Client_already){
-					 if (Auto_check->Checked && ClientSocket->Connected){
-						 fileName = "Robot_Command.xml";
-						 ClientSocket->SendFile(fileName);
-						 if(ClientSocket->Connected){
-							 fileName = "Robot_Simulator.xml";
-							 ClientSocket->SendFile(fileName);
-						 }
-						 D_Order->X = R_Robot->X;
-						 D_Order->Y = R_Robot->Y;
-						 D_Order->Radian = R_Robot->Radian;
-					 }
-					 Client_set->Text = "Close";
-				 }
-			 }catch(SocketException^){}
-		 }
-*/
+
 private: System::Void Auto_check_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Write_Robot();
 			 if(Ctrl_check->Checked){
@@ -1051,6 +1031,12 @@ private: System::Void Ctrl_check_CheckedChanged(System::Object^  sender, System:
 
 private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //motor stop command
+			 AlgorithmTimer->Stop();
+			 D_Order->X = 0;
+			 D_Order->Y = 0;
+			 D_Database->MotorSpeed[0] = 0.0;
+			 D_Database->MotorSpeed[1] = 0.0;
+			 D_Database->MotorSpeed[2] = 0.0;
 
 		 }
 private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1060,10 +1046,12 @@ private: System::Void Btn_SysStart_Click(System::Object^  sender, System::EventA
 
 			 //start algorithm
 			 if(Auto_check->Checked)
-				NewNavigationSystem->NavigationSystem_Main();
+				AlgorithmTimer->Start();
 		 }
-private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
-			if(Auto_check->Checked){
+private: System::Void LocalizationTimer_Tick(System::Object^  sender, System::EventArgs^  e) {
+			//Run localization
+			 
+			 if(Auto_check->Checked){
 				 D_Database->RobotPos.x = (int)D_Robot->X;
 				 D_Database->RobotPos.y = Map_Height-(int)D_Robot->Y;
 				 D_Database->RobotDir   = D_Robot->Angle;
@@ -1075,6 +1063,23 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 			}
 			
 		}
+private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::EventArgs^  e) {
+			NewNavigationSystem->NavigationSystem_Main();
+			if(Auto_check){
+ 				Write_Robot();
+ 				Read_Robot();	
+
+// 				D_Order->X = D_Database->x;
+// 				D_Order->Y = D_Database->y;
+// 				if (mMap != nullptr)																																							
+// 					mMap->drawRobot();
+
+				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
+				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
+				MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //¸òÀH¨÷¶b©¹¤U
+			
+			}
+		 }
 };
 }
 

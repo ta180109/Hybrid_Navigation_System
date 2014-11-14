@@ -214,6 +214,7 @@ class Database{
 
 		 //for local plan
 		 bool ReachTurnPointFlag;
+		 bool LeaveTurnPointFlag;
 		 bool AvoidEnableFlag;
 		 TCoordinate LocalPlanVector;
 

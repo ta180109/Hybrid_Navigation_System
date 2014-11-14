@@ -4,7 +4,8 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-#define AchieveErrRange 10
+#define ACHIVERANGEERR 15
+#define TRUNINGWEIGHT 2
 
 //Stra_AStar* Stra_AStar::m_UniqueInstance = new Stra_AStar();
 
@@ -13,8 +14,8 @@ TAStar::TAStar()
 	AStar_Initialize();
 	D_Database->NewGridMapFlag = true;
 	D_Database->AStarEnable = false;
-	D_Database->ReachTurnPointFlag = false;
 	tmpFlag = true;
+	GetTurnPoint = true;
 }
 TAStar::~TAStar()
 {
@@ -44,6 +45,7 @@ void TAStar::AStar_Initialize(void)
 	StartPos= aVector(-999, -999);
 
 	CloseState = false;
+	TurnPointIndex =0;
 
 }
 //-----------------------------------------------------------------
@@ -86,32 +88,33 @@ void TAStar::AStar_Main(void)
 //-----------------------------------------------------------------
 void TAStar::Behavior_AstarPath( void )
 {
-	TCoordinate NextTurnPoint;
-	TCoordinate TmpVector;
-	int i, Length = 0;
+	int Length = 0;
+
 	if(tmpFlag){
-		NextTurnPoint = D_Database->TurnPoint[0];
+		NextTurnPoint.x = D_Database->TurnPoint[0].x;
+		NextTurnPoint.y = D_Database->TurnPoint[0].y;
 		tmpFlag = false;
 	}
-
+	
 	D_Database->GlobaPlanlVector.x = NextTurnPoint.x - D_Database->RobotPos.x;
 	D_Database->GlobaPlanlVector.y = NextTurnPoint.y - D_Database->RobotPos.y;
-
-	Length = D_Database->LocalPlanVector.Length();
 	
-	if(Length < AchieveErrRange){
-		//如果到達轉折點
-		D_Database->ReachTurnPointFlag = true;
-	}else{
+	Length = D_Database->GlobaPlanlVector.Length();
 
+	if(Length < ACHIVERANGEERR){ //如果到達轉折點
+		InPointRange = true;
+	}else{
+		InPointRange = false;
 	}
 
-	if(D_Database->ReachTurnPointFlag){
-		if(D_Database->TurnPoint.size()>0){
-			i++;
-			NextTurnPoint  = D_Database->TurnPoint[i]; 
-			D_Database->ReachTurnPointFlag = false;
+	if(InPointRange){
+		TurnPointIndex++;
+		if( (TurnPointIndex <= D_Database->TurnPoint.size()-1) && GetTurnPoint){
+			NextTurnPoint  = D_Database->TurnPoint[TurnPointIndex]; 
+			GetTurnPoint = false;
 		}
+	}else{
+		GetTurnPoint = true;
 	}
 	
 /*
@@ -347,7 +350,7 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 					Map[TmpPos.x][TmpPos.y].Father = Current;
 					Map[TmpPos.x][TmpPos.y].G = Map[Current.x][Current.y].G + TmpWeight;
 					Map[TmpPos.x][TmpPos.y].H = NodeResolution*((GoalNode - TmpPos).Length());
-					Map[TmpPos.x][TmpPos.y].F = Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
+					Map[TmpPos.x][TmpPos.y].F = TRUNINGWEIGHT * Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
 
 					vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));
 					OpenList.insert(it, Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F));

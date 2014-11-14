@@ -90,6 +90,12 @@ namespace SKS_VC2013
 
 		TCoordinate StartPos, GoalPos;
 		bool tmpFlag;
+		bool GetTurnPoint;
+		bool InPointRange;
+
+		TCoordinate NextTurnPoint;
+		int TurnPointIndex;
+		TCoordinate TmpVector;
 
 		bool CloseState;
 

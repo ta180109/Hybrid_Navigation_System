@@ -172,7 +172,6 @@ class Database{
 	private:
 
 	public:
-		 bool Sim_Flag;
 		 
 		 double x;
 		 double y;
@@ -182,11 +181,9 @@ class Database{
 		 TCoordinate RobotPos;
 		 double RobotDir;
 
-
 		 double Direction;
 
 		 TCoordinate StartPosition;
-		 TCoordinate EscapePosition;
 		 TCoordinate EndPosition;
 		 
 		 //for localization

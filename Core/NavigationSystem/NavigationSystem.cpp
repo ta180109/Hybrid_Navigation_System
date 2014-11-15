@@ -27,6 +27,4 @@ void TNavigationSystem::NavigationSystem_Main(void)
 	LocalPathPlan->LocalPathPlan_Main();
 	VelocityControl->Velocity_Main();
 	Motion->Motion_Main();
-	
-	
 }

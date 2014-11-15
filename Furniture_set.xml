@@ -13,6 +13,6 @@
     <BedRM_door x="0" y="0" Width="0" Height="0" Angle="0" />
     <Trashcan x="464" y="311" Width="30" Height="30" Angle="0" />
     <ChargeArea x="341" y="4" Width="50" Height="50" Angle="0" />
-    <EndArea x="165" y="555" Width="50" Height="50" Angle="0" />
+    <EndArea x="555" y="555" Width="50" Height="50" Angle="0" />
   </DirectionObject>
 </Config>

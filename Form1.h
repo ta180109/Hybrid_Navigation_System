@@ -794,7 +794,6 @@ public:	void Write_Robot(){
 				D_Order->X = -D_Database->x;
 				D_Order->Y = D_Database->y;
 				//D_Order->Radian = D_Database->PathRotation;
-				D_Database->Sim_Flag = 1;
 				if (mMap != nullptr)																																							
 					mMap->drawRobot();
 			}

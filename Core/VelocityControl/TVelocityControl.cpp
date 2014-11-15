@@ -17,9 +17,6 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-
-//stra_velocitycontrol* stra_velocitycontrssol::m_uniqueinstance = new stra_velocitycontrol();
-
 TVelocityControl::TVelocityControl()
 {
 	D_Database->FixSpeed = 0.0;
@@ -75,11 +72,10 @@ void TVelocityControl::Velocity_Main(void)
 
 #endif
 
-    //------------------------------------------------------------------------
+ //------------------------------------------------------------------------
 
     VelocityTransform( D_Database->MotionDistance, D_Database->MotionAngle, D_Database->Direction );
 }
-
 
 //-----------------------------------------------------------------------------
 
@@ -117,23 +113,9 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
         Speed = (D_Database->FixSpeed/100.0)*SpeedMax ;
 
-    /*if( Speed > 20 ){
-
-        SpeedCmd = Raise_Function( Speed ,Speed - SpeedCmd );
-
-        this->SpeedTmp++
-
-    }else{
-
-        SpeedCmd = Speed;
-
-    }*/
-
 
      D_Database->x = Speed * Vector.y;
      D_Database->y = Speed * Vector.x;
-
-    //StrategyStatus::PathMotion = Speed * Vector;
 
     //---------------------------------------------------
 
@@ -157,13 +139,8 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
                             ThetaMax, ThetaMin, fabs(Theta) );
 
-
-
-
-
     D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
 
-    //D_Database->w = D_Database->PathRotation;
 
 }
 

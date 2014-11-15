@@ -11,7 +11,6 @@
 
 #ifndef NavigationSystemH
 #define NavigationSystemH
-//#include "StrategyModule.h"
 #include <stdio.h>
 #include "../../stdAfx.h"
 #define _USE_MATH_DEFINES
@@ -22,7 +21,6 @@
 #include "../../Core/VelocityControl/TVelocityControl.h"
 #include "../../Core/Motion/TMotion.h"
 
-//#include <tinyxml.h>
 namespace SKS_VC2013 {
 	class TNavigationSystem
 	{
@@ -42,7 +40,6 @@ namespace SKS_VC2013 {
 		void NavigationSystem_Main(void);
 
 	private:
-
 
 	};
 }

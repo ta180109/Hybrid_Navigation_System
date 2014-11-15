@@ -5,34 +5,28 @@
 #include <math.h>
 #include <string.h>
 #include "../../Database.h"
-//#include "StrategyStatus.h"
-//#include "StrategyModule.h"
 
 namespace SKS_VC2013
 {
-class TMotion //: public StrategyModule
+class TMotion
 {
-private:
-    //static Motion* m_UniqueInstance;
+	private:
+		const double mAngle1Sin;
+		const double mAngle2Sin;
+		const double mAngle3Sin;
 
-    const double mAngle1Sin;
-    const double mAngle2Sin;
-    const double mAngle3Sin;
+		const double mAngle1Cos;
+		const double mAngle2Cos;
+		const double mAngle3Cos;
 
-    const double mAngle1Cos;
-    const double mAngle2Cos;
-    const double mAngle3Cos;
-public:
-//     static Motion* GetInstance() {
-//         return m_UniqueInstance;
-//     }
+	public:
 
-    TMotion();
-    ~TMotion();
+		TMotion();
+		~TMotion();
 
-    void Motion_Initialize();
-    void Motion_Main();
-};
+		void Motion_Initialize();
+		void Motion_Main();
+	};
 }
 
 #endif

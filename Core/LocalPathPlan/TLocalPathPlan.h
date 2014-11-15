@@ -1,3 +1,13 @@
+//=============================================
+//File name: LocalPathPlan
+//
+//Author   :Hsieh Ming-Hua
+//Phone    :0921307020
+//E-mail   :ta180109@hotmail.com
+//Update   :2014/10/19
+//
+//Function :Local avoidance
+//===============================================
 #ifndef TLOCALPATHPLANH
 #define TLOCALPATHPLANH
 #include "../../TCoordinate/TCoordinate.h"

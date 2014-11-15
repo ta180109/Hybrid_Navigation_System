@@ -12,7 +12,6 @@ using namespace SKS_VC2013;
 using namespace std;
 
 TMotion::TMotion():
-
 	mAngle1Sin(-sin(ANGLE_1)),
     mAngle2Sin(-sin(ANGLE_2)),
     mAngle3Sin(-sin(ANGLE_3)),

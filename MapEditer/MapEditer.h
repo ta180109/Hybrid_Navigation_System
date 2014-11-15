@@ -368,7 +368,7 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 
 		for(i=0;i<10;i++){
 			for(j=0;j<10;j++){
-				if(mBMP_Map->GetPixel(x+i,y+j).R == 255 & mBMP_Map->GetPixel(x+i,y+j).G == 255 & mBMP_Map->GetPixel(x+i,y+j).B == 255){
+				if(mBMP_Map->GetPixel(x+i,y+j).R == 0 & mBMP_Map->GetPixel(x+i,y+j).G == 0 & mBMP_Map->GetPixel(x+i,y+j).B == 0){
 					draw_x = ((x+i)/10)*10+1;
 					draw_y = ((y+j)/10)*10+1;
 					mGraphic->FillRectangle(blackBrush,draw_x,draw_y,draw_w,draw_w);

@@ -7,15 +7,12 @@
 //E-mail   :ta180109@hotmail.com
 //Update   :2013/07/09
 //
-//Function :AStar Strategy
+//Function :AStar Algotithm and fetch trun point
 //===============================================
 
 #ifndef TAStarH
 #define TAStarH
-//#include "StrategyModule.h"
 #include "../../Database.h"
-//#include "LocationStatus.h"
-//#include "AstarTool.h"
 #include "../../TCoordinate/TCoordinate.h"
 
 
@@ -83,7 +80,6 @@ namespace SKS_VC2013
 
 		void AStar_Main(void);
 
-
 		void Behavior_AstarPath( void );
 		
 	private:
@@ -122,8 +118,6 @@ namespace SKS_VC2013
 		unsigned char ObstacleThreshold;
 
 		vector <TCoordinate> SmoothPath;
-
-		//int LoadXMLSettings (TiXmlElement* element);
 
 		//------------Private
 		vector < vector<tsNode> > Map;

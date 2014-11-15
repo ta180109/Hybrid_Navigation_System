@@ -5,7 +5,7 @@ using namespace SKS_VC2013;
 using namespace std;
 
 #define ACHIVERANGEERR 10
-#define TRUNINGWEIGHT 1.3
+#define TRUNINGWEIGHT 5
 
 TAStar::TAStar()
 {
@@ -280,7 +280,7 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 					if( Map[ TmpPos.x ][ TmpPos.y ].G > Map[Current.x][Current.y].G + TmpWeight )
 					{
 						Map[TmpPos.x][TmpPos.y].Father = Current;
-						Map[TmpPos.x][TmpPos.y].G = Map[Current.x][Current.y].G + TmpWeight;
+						Map[TmpPos.x][TmpPos.y].G = TRUNINGWEIGHT * Map[Current.x][Current.y].G + TmpWeight;
 						Map[TmpPos.x][TmpPos.y].F = Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
 
 						vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));

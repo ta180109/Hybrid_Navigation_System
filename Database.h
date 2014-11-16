@@ -15,8 +15,6 @@ using namespace std;
 #define Map_Height 600
 #define Laser_Width 500
 #define Laser_Height 500
-#define LASER_SCAN_NUM 73
-
 
 const double RaderCenter_x = 72;		//!雷達中心 x
 const double RaderCenter_y = 72;		//!雷達中心 y
@@ -139,13 +137,12 @@ class data8
 };
 extern data8 *D_Furniture;
 
-struct Laser_information
-{
-	double Angle;
-	double Distance;
-};
-extern Laser_information *Real_Laser;
-extern Laser_information *Sim_Laser;
+// struct Laser_Information{
+// 	double Angle;
+// 	double Distance;
+// };
+// extern Laser_information *Real_Laser;
+// extern Laser_information *Sim_Laser;
 
 
 class data9
@@ -214,6 +211,19 @@ class Database{
 		 bool LeaveTurnPointFlag;
 		 bool AvoidEnableFlag;
 		 TCoordinate LocalPlanVector;
+		 // information fetch
+		 int LaserScanRange;
+		 int LaserScanSpace;
+		 
+		 struct Laser_Info{
+			 double Angle;
+			 double Distance;
+		 };
+		 Laser_Info LaserInfo;
+		 vector <Laser_Info> Sim_Laser;
+		 vector <Laser_Info> Real_Laser;
+
+		 vector <Laser_Info> LaserData;
 
 		//for velocity control
 		 float FixSpeed;                                 // Speed Power 1~100 %

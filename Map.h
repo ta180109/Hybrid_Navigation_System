@@ -1,8 +1,13 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "Database.h"
 
+
+#include <vector>
+#include <iostream>
+#include <fstream>
 // double* LivingRM_Table = gcnew double [4];  //可全域的辦法
 namespace SKS_VC2013 {
 
@@ -117,6 +122,7 @@ namespace SKS_VC2013 {
 			// 
 			this->drawMap->ErrorImage = nullptr;
 			this->drawMap->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawMap.Image")));
+			this->drawMap->InitialImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawMap.InitialImage")));
 			this->drawMap->Location = System::Drawing::Point(2, 52);
 			this->drawMap->Name = L"drawMap";
 			this->drawMap->Size = System::Drawing::Size(600, 600);
@@ -165,7 +171,7 @@ namespace SKS_VC2013 {
 			this->Spa_CB->Name = L"Spa_CB";
 			this->Spa_CB->Size = System::Drawing::Size(42, 20);
 			this->Spa_CB->TabIndex = 8;
-			this->Spa_CB->Text = L"10";
+			this->Spa_CB->Text = L"5";
 			this->Spa_CB->SelectedIndexChanged += gcnew System::EventHandler(this, &Map::Spa_CB_SelectedIndexChanged);
 			// 
 			// Ang_CB
@@ -175,7 +181,7 @@ namespace SKS_VC2013 {
 			this->Ang_CB->Name = L"Ang_CB";
 			this->Ang_CB->Size = System::Drawing::Size(41, 20);
 			this->Ang_CB->TabIndex = 11;
-			this->Ang_CB->Text = L"180";
+			this->Ang_CB->Text = L"250";
 			this->Ang_CB->SelectedIndexChanged += gcnew System::EventHandler(this, &Map::Ang_CB_SelectedIndexChanged);
 			// 
 			// Laser_box
@@ -310,7 +316,9 @@ namespace SKS_VC2013 {
 			this->Controls->Add(this->Furniture_Box);
 			this->Controls->Add(this->drawMap);
 			this->Controls->Add(this->groupBox1);
+			this->Location = System::Drawing::Point(270, 0);
 			this->Name = L"Map";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"Map";
 			this->Load += gcnew System::EventHandler(this, &Map::Map_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->EndInit();
@@ -336,18 +344,20 @@ private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
 				 int num;
 				 for(num=0;num<=270;num++) Ang_CB->Items->Add(num);
 				 for(num=10;num<=20;num++) Spa_CB->Items->Add(num);
-				
+				 D_Database->LaserScanRange = System::Convert::ToInt32(Ang_CB->Text);
+				 D_Database->LaserScanSpace = System::Convert::ToInt32(Spa_CB->Text);
+
+				 
 
 				 D_Robot->X_tar = D_Robot->X + D_Robot->R/2;
 				 D_Robot->Y_tar = D_Robot->Y;
 				 D_Robot->Angle = atan2(D_Robot->Y_tar - D_Robot->Y,D_Robot->X_tar - D_Robot->X)*PI/180;
 
 				 D_Robot->Wheel = 10*PI;
-				 D_Range->Angle = 180;
-				 D_Range->Spa = 10;
+
 				 
 				 drawRobot();
-
+				 scanning();
 				 timer1->Start();
 			 }
 ///////////////////////機器人繪製區///////////////////////////////////////
@@ -384,18 +394,9 @@ public: void drawRobot(){
 				 mGraphic->FillPie(HotPinkBrush,(int)D_Robot->X -r ,(int)D_Robot->Y -r ,(int) D_Robot->R ,(int)D_Robot->R,(int) 0,(int) 360 );
 				 mGraphic->DrawLine(bluePen,(int)D_Robot->X,(int)D_Robot->Y , (int)D_Robot->X_tar , (int)D_Robot->Y_tar);
 				 
-				 if(Laser_box->Checked)
-					 scanning();
+// 				 if(Laser_box->Checked)
+// 					 scanning();
 
-// 				 for(int i=0;i<Map_Width;i++){
-// 					 for(int j=0;j<Map_Height;j++){
-// 						 if(mBMP->GetPixel(i,j) == Color::White){
-// 							 mBMP->SetPixel(i,j,Color::Black);
-// 						 }else if(mBMP->GetPixel(i,j) == Color::Black){
-// 							 mBMP->SetPixel(i,j,Color::White);
-// 						 }
-// 					 }
-// 				 }
 				 drawMap->Image = mBMP;
 			 }
 // 		void writeSimulator(){
@@ -480,7 +481,7 @@ void drawObject(Furniture_site object,int num){
 	}
 
 void DrawTurnPoint(){
-		SolidBrush^ TurnpointColor = gcnew SolidBrush( Color::Orange );
+		SolidBrush^ TurnpointColor = gcnew SolidBrush( Color::Blue );
 		Pen^ RedPen = gcnew Pen( Color::Red,2 );
 		TCoordinate Tmp;
 		for(int i = 0;i < D_Database->TurnPoint.size(); i++){
@@ -498,49 +499,58 @@ void DrawTurnPoint(){
 	}
 
 
-	private: void scanning(){
+private: void scanning(){
+				D_Database->Sim_Laser.clear();
+				double fmap_x,fmap_y;
+				double map_x,map_y;
+				int Ra=2;
+				double tar;
+				double f_tar;
+				Pen^ orangePen = gcnew Pen(Color::OrangeRed, 1);
+				int i=0;
+				f_tar = (D_Robot->Angle + D_Database->LaserScanRange / 2) * PI / 180;
+				tar = (D_Robot->Angle - D_Database->LaserScanRange / 2) * PI / 180;
+				
+				while(tar<=f_tar){
+					map_x = D_Robot->X + (D_Robot->R/2)*cos(tar);
+					map_y = D_Robot->Y - (D_Robot->R/2)*sin(tar);
+					fmap_x = map_x;
+					fmap_y = map_y;
 
-				 int num =  D_Range->Angle/D_Range->Spa + 1;
-				 array<double> ^Laser_dis = gcnew array<double>(num); 
-	
-
-				 double fmap_x,fmap_y;
-				 double map_x,map_y;
-				 int Ra=2;
-				 double tar;
-				 double f_tar;
-				 Pen^ orangePen = gcnew Pen(Color::OrangeRed, 1);
-				 int i=0;
-				 f_tar = (D_Robot->Angle + D_Range->Angle/2) * PI / 180;
-				 tar = (D_Robot->Angle - D_Range->Angle/2) * PI / 180;
-
-				 while(tar<=f_tar){
-					 map_x = D_Robot->X + (D_Robot->R/2)*cos(tar);
-					 map_y = D_Robot->Y - (D_Robot->R/2)*sin(tar);
-					 fmap_x = map_x;
-					 fmap_y = map_y;
-
-					 while(fmap_x <= Map_Width){
-						 map_x = map_x + Ra*cos(tar);
-						 map_y = map_y - Ra*sin(tar);
-						 if(map_x>Map_Width-1) map_x=Map_Width-1;
-						 if(map_y>Map_Height-1) map_y=Map_Height-1;
+					while(fmap_x <= Map_Width){
+						map_x = map_x + Ra*cos(tar);
+						map_y = map_y - Ra*sin(tar);
+						if(map_x>Map_Width-1) map_x=Map_Width-1;
+						if(map_y>Map_Height-1) map_y=Map_Height-1;
 						 
-						 if(mBMP->GetPixel(map_x,map_y).R == 0 & mBMP->GetPixel(map_x,map_y).G == 0 & mBMP->GetPixel(map_x,map_y).B == 0) break;
-					 }
-					 if(Laser_box->Checked)
-						 mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
+						if(mBMP->GetPixel(map_x,map_y).R == 0 & mBMP->GetPixel(map_x,map_y).G == 0 & mBMP->GetPixel(map_x,map_y).B == 0) break;
+					}
+					
+					if(this->Laser_box->Checked)
+						mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
 					 
-					 Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
-					 
-					 i++;
-					 tar = tar + (D_Range->Spa*PI/180);
+					//Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
+					
+					D_Database->LaserInfo.Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
+					D_Database->LaserInfo.Angle = 180 * (tar /  M_PI);
+					D_Database->Sim_Laser.push_back(D_Database->LaserInfo);
+
+// 					D_Database->Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
+// 					D_Database->Sim_Laser[i].Angle = tar;
+// 					i++;
+					tar = tar + (D_Database->LaserScanSpace*PI/180);
 				 }
-				 
-				 for(int k = i; k--; k>0)
-					 this->SimLaserShow->Items->Add("Linenum " + k + " : " + Sim_Laser[k].Distance );
-					 
-				 
+
+				char filename[]="test.txt";
+				fstream fp;
+				fp.open(filename, ios::out);//開啟檔案
+				  	  		 
+				for(int i=0;i<D_Database->Sim_Laser.size();i++){
+				  	  	fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
+				  	}
+				  	fp.close();//關閉檔案
+
+
 
 				 drawMap->Image = mBMP;
 			 }
@@ -562,6 +572,7 @@ private: int Obst(int x , int y){
 		 }
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			 drawRobot();
+			 scanning();
 			 DrawTurnPoint();
 			 Sim_X->Text = "X：" + System::Convert::ToString((int)R_Robot->X);
 			 Sim_Y->Text = "Y：" +System::Convert::ToString((int)R_Robot->Y);
@@ -630,10 +641,10 @@ private: System::Void Map_Save_Click(System::Object^  sender, System::EventArgs^
 			 mBMP_base->Save("2013sksmap.bmp");
 		}
 private: System::Void Ang_CB_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-			 D_Range->Angle = System::Convert::ToInt32(Ang_CB->Text);
+			D_Database->LaserScanRange = System::Convert::ToInt32(Ang_CB->Text);
 		 }
 private: System::Void Spa_CB_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-			 D_Range->Spa = System::Convert::ToInt32(Spa_CB->Text);
+			 D_Database->LaserScanSpace = System::Convert::ToInt32(Spa_CB->Text);
 		 }
 private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Position");

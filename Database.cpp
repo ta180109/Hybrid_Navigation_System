@@ -18,8 +18,8 @@ data7 *D_Range = new data7();
 
 data8 *D_Furniture = new data8();
 
-Laser_information *Real_Laser = new Laser_information[LASER_SCAN_NUM];
-Laser_information *Sim_Laser = new Laser_information[LASER_SCAN_NUM];
+// Laser_information *Real_Laser = new Laser_information[LASER_SCAN_NUM];
+// Laser_information *Sim_Laser = new Laser_information[LASER_SCAN_NUM];
 
 data9 *R_Position = new data9();
 

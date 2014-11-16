@@ -285,7 +285,9 @@ namespace SKS_VC2013 {
 			this->Controls->Add(this->Light_HSB);
 			this->Controls->Add(this->Map_Save);
 			this->Controls->Add(this->Map_Ed);
+			this->Location = System::Drawing::Point(270, 100);
 			this->Name = L"MapEditer";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"MapEditer";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MapEditer::MapEditer_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &MapEditer::MapEditer_Load);

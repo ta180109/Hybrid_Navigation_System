@@ -476,6 +476,7 @@ namespace SKS_VC2013 {
 			this->MainMenuStrip = this->menuStrip1;
 			this->MaximizeBox = false;
 			this->Name = L"Form1";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"MainFrom";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawPB))->EndInit();
@@ -966,7 +967,7 @@ private: System::Void Speed_Bar_Scroll(System::Object^  sender, System::Windows:
 		 }
 
 private: System::Void mapToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //mMap = gcnew Map();
+			 mMap = gcnew Map();
 			 mMap->Show();
 		 }
 
@@ -1030,16 +1031,27 @@ private: System::Void LocalizationTimer_Tick(System::Object^  sender, System::Ev
 			
 		}
 private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::EventArgs^  e) {
-			NewNavigationSystem->NavigationSystem_Main();
-			if(Auto_check){
+			 if(Auto_check){
+				 D_Database->LaserData.clear();
+				 D_Database->LaserData = D_Database->Sim_Laser;
+			 }else{
+				 D_Database->LaserData.clear();
+				 D_Database->LaserData = D_Database->Real_Laser;
+			 }
+			 
+			 NewNavigationSystem->NavigationSystem_Main();
+			 
+			 if(Auto_check){
  				Write_Robot();
- 				Read_Robot();	
+				Read_Robot();	
 
-				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
-				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
-				MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //跟隨卷軸往下
-			
-			}
+ 				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
+ 				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
+ 				MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //跟隨卷軸往下
+			}else{
+		
+			 }
+
 		 }
 };
 }

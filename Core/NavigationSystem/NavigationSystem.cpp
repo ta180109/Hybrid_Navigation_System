@@ -5,6 +5,7 @@ using namespace std;
 
 TNavigationSystem::TNavigationSystem()
 {
+	NavigationSystem_Initialize();
 	AStar = new TAStar();
 	LocalPathPlan = new TLocalPathPlan();
 	VelocityControl = new TVelocityControl();
@@ -18,7 +19,7 @@ TNavigationSystem::~TNavigationSystem()
 
 void TNavigationSystem::NavigationSystem_Initialize(void)
 {
-
+	D_Database->LaserData = D_Database->Sim_Laser;
 }
 
 void TNavigationSystem::NavigationSystem_Main(void)

@@ -128,7 +128,8 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::Button^  btn_SysStop;
 	private: System::Windows::Forms::Timer^  LocalizationTimer;
 	private: System::Windows::Forms::Timer^  AlgorithmTimer;
-	private: System::Windows::Forms::CheckBox^  AVoidance_CheckBox;
+	private: System::Windows::Forms::CheckBox^  Avoidance_CheckBox;
+
 
 
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
@@ -163,7 +164,7 @@ namespace SKS_VC2013 {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->Speed_lab = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->AVoidance_CheckBox = (gcnew System::Windows::Forms::CheckBox());
+			this->Avoidance_CheckBox = (gcnew System::Windows::Forms::CheckBox());
 			this->Auto_check = (gcnew System::Windows::Forms::CheckBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->Ctrl_check = (gcnew System::Windows::Forms::CheckBox());
@@ -346,7 +347,7 @@ namespace SKS_VC2013 {
 			// groupBox1
 			// 
 			this->groupBox1->BackColor = System::Drawing::Color::DimGray;
-			this->groupBox1->Controls->Add(this->AVoidance_CheckBox);
+			this->groupBox1->Controls->Add(this->Avoidance_CheckBox);
 			this->groupBox1->Controls->Add(this->Auto_check);
 			this->groupBox1->Controls->Add(this->groupBox2);
 			this->groupBox1->Controls->Add(this->Ctrl_check);
@@ -364,18 +365,18 @@ namespace SKS_VC2013 {
 			this->groupBox1->TabIndex = 20;
 			this->groupBox1->TabStop = false;
 			// 
-			// AVoidance_CheckBox
+			// Avoidance_CheckBox
 			// 
-			this->AVoidance_CheckBox->AutoSize = true;
-			this->AVoidance_CheckBox->Checked = true;
-			this->AVoidance_CheckBox->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->AVoidance_CheckBox->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->AVoidance_CheckBox->Location = System::Drawing::Point(7, 44);
-			this->AVoidance_CheckBox->Name = L"AVoidance_CheckBox";
-			this->AVoidance_CheckBox->Size = System::Drawing::Size(74, 16);
-			this->AVoidance_CheckBox->TabIndex = 30;
-			this->AVoidance_CheckBox->Text = L"Avoidance";
-			this->AVoidance_CheckBox->UseVisualStyleBackColor = true;
+			this->Avoidance_CheckBox->AutoSize = true;
+			this->Avoidance_CheckBox->Checked = true;
+			this->Avoidance_CheckBox->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->Avoidance_CheckBox->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
+			this->Avoidance_CheckBox->Location = System::Drawing::Point(7, 44);
+			this->Avoidance_CheckBox->Name = L"Avoidance_CheckBox";
+			this->Avoidance_CheckBox->Size = System::Drawing::Size(74, 16);
+			this->Avoidance_CheckBox->TabIndex = 30;
+			this->Avoidance_CheckBox->Text = L"Avoidance";
+			this->Avoidance_CheckBox->UseVisualStyleBackColor = true;
 			// 
 			// Auto_check
 			// 
@@ -1050,7 +1051,7 @@ private: System::Void LocalizationTimer_Tick(System::Object^  sender, System::Ev
 		}
 private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::EventArgs^  e) {
 			 
-			 if(Auto_check){
+			 if(Auto_check->Checked){
 				 D_Database->LaserData.clear();
 				 D_Database->LaserData = D_Database->Sim_Laser;
 			 }else{
@@ -1058,7 +1059,7 @@ private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::Event
 				 D_Database->LaserData = D_Database->Real_Laser;
 			 }
 			 
-			 if(AVoidance_CheckBox){
+			 if(Avoidance_CheckBox->Checked){
 				 D_Database->AvoidEnableFlag = true;
 			 }else{
 				 D_Database->AvoidEnableFlag = false;

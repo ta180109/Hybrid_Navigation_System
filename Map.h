@@ -347,6 +347,7 @@ private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
 				 D_Database->LaserScanRange = System::Convert::ToInt32(Ang_CB->Text);
 				 D_Database->LaserScanSpace = System::Convert::ToInt32(Spa_CB->Text);
 
+				 D_Database->LaserScanNumber = (D_Database->LaserScanRange / D_Database->LaserScanSpace) + 1;
 				 
 
 				 D_Robot->X_tar = D_Robot->X + D_Robot->R/2;
@@ -531,6 +532,7 @@ private: void scanning(){
 					 
 					//Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
 					
+					
 					D_Database->LaserInfo.Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
 					D_Database->LaserInfo.Angle = 180 * (tar /  M_PI);
 					D_Database->Sim_Laser.push_back(D_Database->LaserInfo);
@@ -642,9 +644,11 @@ private: System::Void Map_Save_Click(System::Object^  sender, System::EventArgs^
 		}
 private: System::Void Ang_CB_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			D_Database->LaserScanRange = System::Convert::ToInt32(Ang_CB->Text);
+			D_Database->LaserScanNumber = (D_Database->LaserScanRange / D_Database->LaserScanSpace) + 1;
 		 }
 private: System::Void Spa_CB_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 D_Database->LaserScanSpace = System::Convert::ToInt32(Spa_CB->Text);
+			 D_Database->LaserScanNumber = (D_Database->LaserScanRange / D_Database->LaserScanSpace) + 1;
 		 }
 private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Position");

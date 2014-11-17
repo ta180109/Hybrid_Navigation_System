@@ -42,9 +42,6 @@ namespace SKS_VC2013 {
 
 		void LocalPathPlan_Main(void);
 
-		TCoordinate CorrectV;
-
-
 	private:
 
 		TCoordinate VFF_Algorithm( TCoordinate OrigTarget );
@@ -72,6 +69,8 @@ namespace SKS_VC2013 {
 		double AvoidForce;
 
 		int FixDirect;
+
+		int Config;
 
 		int Lock_Avoid;
 

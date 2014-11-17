@@ -128,6 +128,8 @@ namespace SKS_VC2013 {
 	private: System::Windows::Forms::Button^  btn_SysStop;
 	private: System::Windows::Forms::Timer^  LocalizationTimer;
 	private: System::Windows::Forms::Timer^  AlgorithmTimer;
+	private: System::Windows::Forms::CheckBox^  AVoidance_CheckBox;
+
 
 	private: System::Windows::Forms::ToolStripMenuItem^  lasertestToolStripMenuItem;
 
@@ -161,6 +163,7 @@ namespace SKS_VC2013 {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->Speed_lab = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->AVoidance_CheckBox = (gcnew System::Windows::Forms::CheckBox());
 			this->Auto_check = (gcnew System::Windows::Forms::CheckBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->Ctrl_check = (gcnew System::Windows::Forms::CheckBox());
@@ -343,6 +346,7 @@ namespace SKS_VC2013 {
 			// groupBox1
 			// 
 			this->groupBox1->BackColor = System::Drawing::Color::DimGray;
+			this->groupBox1->Controls->Add(this->AVoidance_CheckBox);
 			this->groupBox1->Controls->Add(this->Auto_check);
 			this->groupBox1->Controls->Add(this->groupBox2);
 			this->groupBox1->Controls->Add(this->Ctrl_check);
@@ -359,6 +363,19 @@ namespace SKS_VC2013 {
 			this->groupBox1->Size = System::Drawing::Size(220, 320);
 			this->groupBox1->TabIndex = 20;
 			this->groupBox1->TabStop = false;
+			// 
+			// AVoidance_CheckBox
+			// 
+			this->AVoidance_CheckBox->AutoSize = true;
+			this->AVoidance_CheckBox->Checked = true;
+			this->AVoidance_CheckBox->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->AVoidance_CheckBox->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
+			this->AVoidance_CheckBox->Location = System::Drawing::Point(7, 44);
+			this->AVoidance_CheckBox->Name = L"AVoidance_CheckBox";
+			this->AVoidance_CheckBox->Size = System::Drawing::Size(74, 16);
+			this->AVoidance_CheckBox->TabIndex = 30;
+			this->AVoidance_CheckBox->Text = L"Avoidance";
+			this->AVoidance_CheckBox->UseVisualStyleBackColor = true;
 			// 
 			// Auto_check
 			// 
@@ -457,6 +474,7 @@ namespace SKS_VC2013 {
 			// 
 			// AlgorithmTimer
 			// 
+			this->AlgorithmTimer->Interval = 200;
 			this->AlgorithmTimer->Tick += gcnew System::EventHandler(this, &Form1::AlgorithmTimer_Tick);
 			// 
 			// Form1
@@ -495,9 +513,7 @@ namespace SKS_VC2013 {
 #pragma endregion
 
 //! First Load Code.
-private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {				 
-			NewNavigationSystem = new TNavigationSystem();
-			
+private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {				 		 		
 			D_Robot->X=30;
 			D_Robot->Y=Map_Height-265;
 			D_Robot->R=45;	
@@ -518,6 +534,7 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 			}
 			mMapEditer->Show();
 
+			NewNavigationSystem = new TNavigationSystem();
 			LocalizationTimer->Start();
 }
 
@@ -996,6 +1013,7 @@ private: System::Void Ctrl_check_CheckedChanged(System::Object^  sender, System:
 			 }
 		 }
 
+
 private: System::Void btn_SysStop_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //motor stop command
 			 AlgorithmTimer->Stop();
@@ -1031,6 +1049,7 @@ private: System::Void LocalizationTimer_Tick(System::Object^  sender, System::Ev
 			
 		}
 private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::EventArgs^  e) {
+			 
 			 if(Auto_check){
 				 D_Database->LaserData.clear();
 				 D_Database->LaserData = D_Database->Sim_Laser;
@@ -1039,20 +1058,27 @@ private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::Event
 				 D_Database->LaserData = D_Database->Real_Laser;
 			 }
 			 
+			 if(AVoidance_CheckBox){
+				 D_Database->AvoidEnableFlag = true;
+			 }else{
+				 D_Database->AvoidEnableFlag = false;
+			 }
+
 			 NewNavigationSystem->NavigationSystem_Main();
 			 
 			 if(Auto_check){
  				Write_Robot();
 				Read_Robot();	
 
- 				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
- 				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
+//  				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
+//  				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
  				MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //¸òÀH¨÷¶b©¹¤U
 			}else{
 		
 			 }
 
 		 }
+
 };
 }
 

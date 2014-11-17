@@ -212,6 +212,8 @@ class Database{
 		 bool AvoidEnableFlag;
 		 TCoordinate LocalPlanVector;
 		 // information fetch
+		 int LaserScanStartAng;
+		 int LaserScanNumber;
 		 int LaserScanRange;
 		 int LaserScanSpace;
 		 

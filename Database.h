@@ -211,6 +211,8 @@ class Database{
 		 bool LeaveTurnPointFlag;
 		 bool AvoidEnableFlag;
 		 TCoordinate LocalPlanVector;
+		 
+
 		 // information fetch
 		 int LaserScanStartAng;
 		 int LaserScanNumber;

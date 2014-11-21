@@ -19,21 +19,22 @@
 #include <math.h>
 
 namespace SKS_VC2013 {
-	class VecGaplist {
-	public:
-		TCoordinate vec;
-		double ang;
-		VecGaplist(TCoordinate vec, double ang) {
-			this->vec = vec;
-			this->ang = ang;
-		}
-		inline bool operator < (const VecGaplist &rhs) const {
-			return ang < rhs.ang;
-		}
-	};
+// 	class VecGaplist {
+// 	public:
+// 		TCoordinate vec;
+// 		double ang;
+// 		VecGaplist(TCoordinate vec, double ang) {
+// 			this->vec = vec;
+// 			this->ang = ang;
+// 		}
+// 		inline bool operator < (const VecGaplist &rhs) const {
+// 			return ang < rhs.ang;
+// 		}
+// 	};
 	class TLocalPathPlan
 	{
 	public:
+
 
 		TLocalPathPlan();
 		~TLocalPathPlan();
@@ -41,12 +42,14 @@ namespace SKS_VC2013 {
 		void LocalPathPlan_Initialize(void);
 
 		void LocalPathPlan_Main(void);
-
+		
 	private:
 
 		TCoordinate VFF_Algorithm( TCoordinate OrigTarget );
 
 		TCoordinate VHF_Algorithm( TCoordinate OrigTarget);
+
+		TCoordinate VFH_CostFunction(TCoordinate Goal);
 
 		TCoordinate LeftForce, RightForce;
 
@@ -58,6 +61,8 @@ namespace SKS_VC2013 {
 
 		double ScanScale;
 
+
+		//Parameter for VFF
 		int SafeDistance;
 
 		double SafeArc_D;
@@ -73,9 +78,32 @@ namespace SKS_VC2013 {
 		int Config;
 
 		int Lock_Avoid;
-
+	
 		TCoordinate *Stone;
 
+		//Parameter for VFH
+		int WindowRange; //number of scan line
+
+		double DetecedRange;
+		double ThresholdDis;
+		double WindowErr;
+		
+		typedef struct{
+			double StartAng;
+			double EndAng;
+			double GapSize;
+			double MiddleAng;
+			double AverageDis;
+			double GapWeight;
+		}Window_Info;
+		
+		Window_Info WindowMerge(Window_Info Window_L, Window_Info Window_R);
+		//PWindow_Info WindowMerge(PWindow_Info Window_L, PWindow_Info Window_R);
+
+		Window_Info TmpWindow;
+		Window_Info BestGap;
+		vector <Window_Info> SmallScanWindow;
+		vector <Window_Info> ChooseScanWindow;
 	};
 }
 

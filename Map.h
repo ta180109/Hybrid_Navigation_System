@@ -320,6 +320,7 @@ namespace SKS_VC2013 {
 			this->Name = L"Map";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"Map";
+			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &Map::Map_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &Map::Map_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawMap))->EndInit();
 			this->groupBox1->ResumeLayout(false);
@@ -389,7 +390,9 @@ public: void drawRobot(){
 				 D_Robot->X_tar = D_Robot->X + r*cos(D_Robot->Angle*PI/180);
 				 D_Robot->Y_tar = D_Robot->Y - r*sin(D_Robot->Angle*PI/180);
 
+
 				 Pen^ bluePen = gcnew Pen(Color::Blue, 3);
+				 Pen^ GreenPen = gcnew Pen(Color::Green, 3);
 				 SolidBrush^ HotPinkBrush = gcnew SolidBrush( Color::HotPink );
 				 
 				 mGraphic->FillPie(HotPinkBrush,(int)D_Robot->X -r ,(int)D_Robot->Y -r ,(int) D_Robot->R ,(int)D_Robot->R,(int) 0,(int) 360 );
@@ -543,14 +546,14 @@ private: void scanning(){
 					tar = tar + (D_Database->LaserScanSpace*PI/180);
 				 }
 
-				char filename[]="test.txt";
-				fstream fp;
-				fp.open(filename, ios::out);//開啟檔案
-				  	  		 
-				for(int i=0;i<D_Database->Sim_Laser.size();i++){
-				  	  	fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
-				  	}
-				  	fp.close();//關閉檔案
+// 				char filename[]="test.txt";
+// 				fstream fp;
+// 				fp.open(filename, ios::out);//開啟檔案
+// 				  	  		 
+// 				for(int i=0;i<D_Database->Sim_Laser.size();i++){
+// 				  	  	fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
+// 				  	}
+// 				  	fp.close();//關閉檔案
 
 
 
@@ -656,5 +659,9 @@ private: System::Void Re_Position_CheckedChanged(System::Object^  sender, System
 private: System::Void Re_Movement_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 Robot_Request("Movement");
 		 }
+private: System::Void Map_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) {
+			 D_Database->NewGridMapFlag = true;
+		 }
+		 
 };
 }

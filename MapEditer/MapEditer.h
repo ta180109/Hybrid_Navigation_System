@@ -685,6 +685,20 @@ private: System::Void Map_Save_Click(System::Object^  sender, System::EventArgs^
 			 Editer_witer();
 		 }
 private: System::Void Map_Reset_Click(System::Object^  sender, System::EventArgs^  e) {
+			 
+			 Load_Map();
+			 drawbase();
+
+			 for(int x=0;x<60;x++)
+				 Map_Array(x,D_Database->MapWeight[x]);
+
+			 Dilation_Erosion();
+
+			 ProcessGridMap();
+			 ProcessGridMap();
+
+			 drawExpansion(gray_num);
+			 
 			 Editer_read();
 			 start_x=-1;
 			 start_y=-1;
@@ -700,6 +714,7 @@ private: System::Void MapEditer_FormClosing(System::Object^  sender, System::Win
 //			 delete []Map_Node;
 //			 delete []tmpMapWeight;
 			 e->Cancel = true;
+			 
 		 }
 private: System::Void Map_base_Click(System::Object^  sender, System::EventArgs^  e) {
 			 Load_Map();

@@ -41,13 +41,17 @@ void TLocalPathPlan::LocalPathPlan_Initialize(void)
 
 	//Parameter for VFH
 	WindowRange = 3;
-	DetecedRange = 100.0;
-	ThresholdDis = 10.0;
-	WindowErr = 10.0;
+	DetecedRange = 70.0;
+	ThresholdDis = 30.0;
+	WindowErr = 3.0;
+
+	ObsScale = 0.7;
+	AngScale = 0.4;
 
 }
 void TLocalPathPlan::LocalPathPlan_Main(void)
 {
+
 	if( D_Database->AvoidEnableFlag)
 	{
 		#ifdef METHODSWITCH
@@ -55,7 +59,7 @@ void TLocalPathPlan::LocalPathPlan_Main(void)
 		#endif
 		
 		#ifndef METHODSWITCH
-			D_Database->LocalPlanVector = VHF_Algorithm( D_Database->GlobaPlanlVector);
+			D_Database->LocalPlanVector = VFH_Algorithm( D_Database->GlobaPlanlVector);
 		#endif
 		
 		D_Database->MotionDistance = D_Database->LocalPlanVector.Length();
@@ -177,26 +181,23 @@ TCoordinate TLocalPathPlan::VFF_Algorithm( TCoordinate Goal )
 	FixedGoal = FixedGoal + break_vel;
 	return (FixedGoal);
 }
-TCoordinate TLocalPathPlan::VHF_Algorithm( TCoordinate Goal ) {
- 	
+TCoordinate TLocalPathPlan::VFH_Algorithm( TCoordinate Goal ) {
 	TCoordinate FixedGoal = Goal;
 	vector <double> FixedInfo;
 	double FixedDis;
-
 	double AvgDis = 0.0; 
-	double TmpWeight = 0.0;
 
 	//Adjust laser information.
 	FixedInfo.clear();
 	for(int i = 0; i< D_Database->LaserData.size(); i++){
-		FixedDis = D_Database->LaserData[i].Distance;// - ThresholdDis;
+		FixedDis = D_Database->LaserData[i].Distance - ThresholdDis;
 		if(FixedDis > DetecedRange)
 			FixedDis = DetecedRange;
 	
 		FixedInfo.push_back(FixedDis);
 	}
 
-// 	//Use 3 scan line to build small window
+ 	//Use 3 scan line to build small window
 	SmallScanWindow.clear();
 	for(int i = 0; i < FixedInfo.size()-1; i=i+2) {
  			AvgDis =  (FixedInfo[i] + FixedInfo[i+1] + FixedInfo[i+2] ) / WindowRange ;
@@ -212,7 +213,8 @@ TCoordinate TLocalPathPlan::VHF_Algorithm( TCoordinate Goal ) {
 	}
 
 	//merge similar window
- 	ChooseScanWindow.clear();
+ 	
+	ChooseScanWindow.clear();
 	int WindowIndex = 0;
 	TmpWindow = SmallScanWindow[0];
 	while(WindowIndex+1 <= SmallScanWindow.size()){
@@ -227,6 +229,7 @@ TCoordinate TLocalPathPlan::VHF_Algorithm( TCoordinate Goal ) {
 			WindowIndex++;
 		}
 	}
+
 	FixedGoal = VFH_CostFunction(Goal);
 	
 	return FixedGoal;
@@ -237,51 +240,84 @@ TCoordinate TLocalPathPlan::VFH_CostFunction(TCoordinate Goal){
 	fstream fp;
 	fp.open(filename, ios::out);//開啟檔案
 	
-	double a = 1.5;
-	double b = 1.0;
-	double c = 1.5;
 	
-	Window_Info BestGap;
-	TCoordinate LastVector;
-	TCoordinate Fix;
-	double TmpWeight = DetecedRange + 10.0;
+// 	for(int i = 0; i<ChooseScanWindow.size(); i++){
+// 		fp<<"Distance"<<ChooseScanWindow[i].AverageDis<<endl;
+// 		fp<<"StartAmgle"<<ChooseScanWindow[i].StartAng<<endl;
+// 		fp<<"EndAmgle"<<ChooseScanWindow[i].EndAng<<endl;
+// 		fp<<"           "<<endl;
+// 	}
+// 
+// 	fp<<"------------------------"<<endl;
+
+	double ScaleA = 0.6;
+	double ScaleB = 0.4;
+	TCoordinate FixedGoal = Goal;
+	double AvoidAngle;
+	double ObsEvaluate;
+	double AngEvalute;
+	double MinAngle;
+	double TmpWeight = 0.0;
+
 	for(int i = 0; i < ChooseScanWindow.size(); i++){
 		ChooseScanWindow[i].MiddleAng = (ChooseScanWindow[i].StartAng + ChooseScanWindow[i].EndAng) / 2.0;
 
-		if(ChooseScanWindow[i].AverageDis < DANGERRANGE){
-			ChooseScanWindow[i].GapWeight = DetecedRange*2;
-		}else if(ChooseScanWindow[i].AverageDis == DetecedRange){
-			ChooseScanWindow[i].GapWeight = -10.0;
+		ObsEvaluate = DisWeightNomalize(ChooseScanWindow[i].AverageDis);
+		MinAngle = WindowSmallestAng(ChooseScanWindow[i], Goal);
+		AngEvalute = AngWeightNomalize(MinAngle, Goal);
+
+		ChooseScanWindow[i].GapWeight =  ObsScale * ObsEvaluate + AngScale * AngEvalute;
+		 
+		if(ChooseScanWindow[i].GapWeight > TmpWeight){
+			TmpWeight = ChooseScanWindow[i].GapWeight;
+			AvoidAngle = (0.3*MinAngle + 0.7*ChooseScanWindow[i].MiddleAng);
+		}
+			
+		fp<<"Distance"<<ChooseScanWindow[i].AverageDis<<endl;
+		fp<<"ObsEvaluate"<<ObsEvaluate<<endl;
+		fp<<"GoalAngle"<<Rad2Deg(Goal.Angle())<<endl;
+		fp<<"MinAngle"<<MinAngle<<endl;
+		fp<<"AngEvalute"<<AngEvalute<<endl;	
+		fp<<"GapWeight"<<ChooseScanWindow[i].GapWeight<<endl;
+		fp<<"           "<<endl;
+	}
+
+	double GoalAngDe = Rad2Deg(Goal.Angle());
+	double Tmp;
+	TCoordinate BreakVec;
+
+	fp<<"-----------"<<endl;
+	fp<<"Avoid ANG  "<<AvoidAngle<<endl;
+	fp<<"Goal ANG  "<<GoalAngDe<<endl;
+
+	if( AvoidAngle >= 0.0){
+		if(GoalAngDe >= 0.0){
+			Tmp = fabs(Deg2Rad(GoalAngDe - AvoidAngle));
+			if(AvoidAngle > GoalAngDe)
+				BreakVec = Goal << Tmp;
+			else
+				BreakVec = Goal >> Tmp;
 		}else{
-			ChooseScanWindow[i].GapWeight = DetecedRange - ChooseScanWindow[i].AverageDis;
+			Tmp = Deg2Rad(AvoidAngle + fabs(GoalAngDe)) ;
+			BreakVec = Goal << Tmp;
 		}
-		double WindowArea = pow(DetecedRange,2) * M_PI * (ChooseScanWindow[i].GapSize / 360.0);
-		
-		double AngleDiff = M_PI * ((Goal.Angle() - ChooseScanWindow[i].MiddleAng) / 360.0);
-		
-		double ObsArea = pow(ChooseScanWindow[i].GapWeight, 2) *  M_PI * (ChooseScanWindow[i].GapSize / 360.0);
-		ChooseScanWindow[i].GapWeight = (ObsArea / WindowArea) * 100.0 * AngleDiff;
-		fp<<ChooseScanWindow[i].GapWeight<<endl;
-
-		if(ChooseScanWindow[i].GapWeight < TmpWeight){
-			BestGap.MiddleAng = ChooseScanWindow[i].MiddleAng;
-			BestGap.AverageDis = ChooseScanWindow[i].AverageDis;
+		FixedGoal = BreakVec;
+	}else{
+		if(GoalAngDe >= 0.0){
+			Tmp = Deg2Rad(GoalAngDe + fabs(AvoidAngle));
+			BreakVec = Goal >> Tmp;
+		}else{
+			Tmp = fabs(Deg2Rad(fabs(AvoidAngle) - fabs(GoalAngDe))) ;
+			if(AvoidAngle > GoalAngDe)
+				BreakVec = Goal << Tmp;
+			else
+				BreakVec = Goal >> Tmp;
 		}
+		FixedGoal = BreakVec;
 	}
 
-	if( BestGap.MiddleAng >= 0.0){
-		TCoordinate BreakVec(BestGap.MiddleAng);
-		BreakVec = -1 * BreakVec * BestGap.AverageDis;
-		Fix = a*Goal + b*BreakVec + c*LastVector;
-		LastVector = Fix;
-	}else{ 
-		TCoordinate BreakVec(BestGap.MiddleAng);
-		BreakVec =  BreakVec * BestGap.AverageDis;
-		Fix = a*Goal + b*BreakVec + c*LastVector;
-		LastVector = Fix;
-	}
 	fp.close();//關閉檔案
-	return Fix;
+	return FixedGoal;
 }
 
 TLocalPathPlan::Window_Info TLocalPathPlan::WindowMerge(Window_Info Window_L, Window_Info Window_R){
@@ -292,6 +328,63 @@ TLocalPathPlan::Window_Info TLocalPathPlan::WindowMerge(Window_Info Window_L, Wi
 	TmpWindow.EndAng = Window_R.EndAng;
 	TmpWindow.MiddleAng = (TmpWindow.StartAng + TmpWindow.EndAng) / 2.0;
 	TmpWindow.GapSize = fabs(TmpWindow.EndAng - TmpWindow.StartAng);
+	
 	return TmpWindow;
+}
 
+double TLocalPathPlan::DisWeightNomalize(double Distance){
+	double DistanceW;
+
+	if(Distance < DANGERRANGE)
+		DistanceW = 0.0;
+	else
+		DistanceW = (Distance / DetecedRange) * 100.0;
+
+	return DistanceW;
+}
+
+double TLocalPathPlan::AngWeightNomalize(double Angle, TCoordinate Goal){
+	double AngleW;
+
+	double GoalAngDeg = Rad2Deg(Goal.Angle());
+		AngleW = ((180.0 - fabs(GoalAngDeg - Angle)) / 180.0) * 100.0;
+	
+	return AngleW;
+}
+double TLocalPathPlan::WindowSmallestAng(Window_Info Win, TCoordinate Goal){
+	#define MIN_3(a,b,c) a > b ?(b > c ?c : b):(a > c ?c:a)
+	
+	double GoalAng = (Goal.Angle() / M_PI) * 180.0;
+
+	double Goal2AngL = fabs(GoalAng - Win.StartAng);
+	double Goal2AngM = fabs(GoalAng - Win.MiddleAng);
+	double Goal2AngR = fabs(GoalAng - Win.EndAng);
+	
+	double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
+
+	if(Tmp == Goal2AngL){
+		return Win.StartAng;
+	}else if(Tmp == Goal2AngM){
+		return Win.MiddleAng;
+	}else if(Tmp == Goal2AngR){
+		return Win.EndAng;
+	}else{
+		return Win.MiddleAng;
+	}
+}
+
+double TLocalPathPlan::Deg2Rad(double AngleDeg){
+	double AgngleRad;
+
+	AgngleRad = M_PI * (AngleDeg / 180.0);
+
+	return AgngleRad;
+}
+
+double TLocalPathPlan::Rad2Deg(double AngleRad){
+	double AngleDeg;
+
+	AngleDeg = 180.0 * (AngleRad / M_PI);
+
+	return AngleDeg;
 }

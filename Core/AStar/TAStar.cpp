@@ -4,7 +4,7 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-#define ACHIVERANGEERR 20
+#define ACHIVERANGEERR 15
 #define TRUNINGWEIGHT 5
 
 TAStar::TAStar()

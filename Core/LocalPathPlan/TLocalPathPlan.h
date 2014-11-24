@@ -47,7 +47,7 @@ namespace SKS_VC2013 {
 
 		TCoordinate VFF_Algorithm( TCoordinate OrigTarget );
 
-		TCoordinate VHF_Algorithm( TCoordinate OrigTarget);
+		TCoordinate VFH_Algorithm( TCoordinate OrigTarget);
 
 		TCoordinate VFH_CostFunction(TCoordinate Goal);
 
@@ -83,10 +83,12 @@ namespace SKS_VC2013 {
 
 		//Parameter for VFH
 		int WindowRange; //number of scan line
-
 		double DetecedRange;
 		double ThresholdDis;
 		double WindowErr;
+
+		double ObsScale;
+		double AngScale;
 		
 		typedef struct{
 			double StartAng;
@@ -98,8 +100,11 @@ namespace SKS_VC2013 {
 		}Window_Info;
 		
 		Window_Info WindowMerge(Window_Info Window_L, Window_Info Window_R);
-		//PWindow_Info WindowMerge(PWindow_Info Window_L, PWindow_Info Window_R);
-
+		double DisWeightNomalize(double Distance);
+		double AngWeightNomalize(double Angle, TCoordinate Goal);
+		double WindowSmallestAng(Window_Info Win, TCoordinate Goal);
+		double Deg2Rad(double AngleDeg);
+		double Rad2Deg(double AngleRad);
 		Window_Info TmpWindow;
 		Window_Info BestGap;
 		vector <Window_Info> SmallScanWindow;

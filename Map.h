@@ -529,10 +529,7 @@ private: void scanning(){
 						 
 						if(mBMP->GetPixel(map_x,map_y).R == 0 & mBMP->GetPixel(map_x,map_y).G == 0 & mBMP->GetPixel(map_x,map_y).B == 0) break;
 					}
-					
-					if(this->Laser_box->Checked)
-						mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
-					 
+
 					//Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
 					
 					
@@ -540,20 +537,27 @@ private: void scanning(){
 					D_Database->LaserInfo.Angle = 180 * (tar /  M_PI);
 					D_Database->Sim_Laser.push_back(D_Database->LaserInfo);
 
+					if(this->Laser_box->Checked)
+						mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
+		
+// 						char filename[]="test.txt";
+// 						fstream fp;
+// 						fp.open(filename, ios::out);//開啟檔案
+// 
+// 						for(int i=0;i<D_Database->Sim_Laser.size();i++){
+// 							fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
+// 						}
+// 						fp.close();//關閉檔案
+
+					
+
 // 					D_Database->Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
 // 					D_Database->Sim_Laser[i].Angle = tar;
 // 					i++;
 					tar = tar + (D_Database->LaserScanSpace*PI/180);
 				 }
 
-// 				char filename[]="test.txt";
-// 				fstream fp;
-// 				fp.open(filename, ios::out);//開啟檔案
-// 				  	  		 
-// 				for(int i=0;i<D_Database->Sim_Laser.size();i++){
-// 				  	  	fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
-// 				  	}
-// 				  	fp.close();//關閉檔案
+
 
 
 
@@ -579,6 +583,15 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 			 drawRobot();
 			 scanning();
 			 DrawTurnPoint();
+
+			 if(this->Laser_box->Checked){
+				 for(int i=0;i<D_Database->Sim_Laser.size();i++){
+					 SimLaserShow->Items->Add(i);
+					 SimLaserShow->Items->Add(D_Database->Sim_Laser[i].Angle);
+					 SimLaserShow->Items->Add( D_Database->Sim_Laser[i].Distance);
+
+				 }
+			 }
 			 Sim_X->Text = "X：" + System::Convert::ToString((int)R_Robot->X);
 			 Sim_Y->Text = "Y：" +System::Convert::ToString((int)R_Robot->Y);
 			 Sim_Sita->Text = "Sita：" +System::Convert::ToString((int)R_Robot->Radian);

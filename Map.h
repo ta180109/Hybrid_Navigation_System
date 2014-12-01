@@ -171,7 +171,7 @@ namespace SKS_VC2013 {
 			this->Spa_CB->Name = L"Spa_CB";
 			this->Spa_CB->Size = System::Drawing::Size(42, 20);
 			this->Spa_CB->TabIndex = 8;
-			this->Spa_CB->Text = L"5";
+			this->Spa_CB->Text = L"3";
 			this->Spa_CB->SelectedIndexChanged += gcnew System::EventHandler(this, &Map::Spa_CB_SelectedIndexChanged);
 			// 
 			// Ang_CB
@@ -181,7 +181,7 @@ namespace SKS_VC2013 {
 			this->Ang_CB->Name = L"Ang_CB";
 			this->Ang_CB->Size = System::Drawing::Size(41, 20);
 			this->Ang_CB->TabIndex = 11;
-			this->Ang_CB->Text = L"250";
+			this->Ang_CB->Text = L"240";
 			this->Ang_CB->SelectedIndexChanged += gcnew System::EventHandler(this, &Map::Ang_CB_SelectedIndexChanged);
 			// 
 			// Laser_box
@@ -344,7 +344,7 @@ private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
 
 				 int num;
 				 for(num=0;num<=270;num++) Ang_CB->Items->Add(num);
-				 for(num=10;num<=20;num++) Spa_CB->Items->Add(num);
+				 for(num=0;num<=20;num++) Spa_CB->Items->Add(num);
 				 D_Database->LaserScanRange = System::Convert::ToInt32(Ang_CB->Text);
 				 D_Database->LaserScanSpace = System::Convert::ToInt32(Spa_CB->Text);
 
@@ -360,6 +360,7 @@ private: System::Void Map_Load(System::Object^  sender, System::EventArgs^  e) {
 				 
 				 drawRobot();
 				 scanning();
+
 				 timer1->Start();
 			 }
 ///////////////////////機器人繪製區///////////////////////////////////////
@@ -400,7 +401,7 @@ public: void drawRobot(){
 				 
 // 				 if(Laser_box->Checked)
 // 					 scanning();
-
+				 DrawTurnPoint();
 				 drawMap->Image = mBMP;
 			 }
 // 		void writeSimulator(){
@@ -511,55 +512,38 @@ private: void scanning(){
 				double tar;
 				double f_tar;
 				Pen^ orangePen = gcnew Pen(Color::OrangeRed, 1);
-				int i=0;
-				f_tar = (D_Robot->Angle + D_Database->LaserScanRange / 2) * PI / 180;
-				tar = (D_Robot->Angle - D_Database->LaserScanRange / 2) * PI / 180;
-				
-				while(tar<=f_tar){
-					map_x = D_Robot->X + (D_Robot->R/2)*cos(tar);
-					map_y = D_Robot->Y - (D_Robot->R/2)*sin(tar);
+
+				f_tar = (D_Robot->Angle + D_Database->LaserScanRange / 2);
+				tar = (D_Robot->Angle - D_Database->LaserScanRange / 2);
+
+				while(tar <= f_tar){
+					double Tar_tmp = tar * PI /180.0;
+
+					map_x = D_Robot->X + (D_Robot->R/2)*cos(Tar_tmp);
+					map_y = D_Robot->Y - (D_Robot->R/2)*sin(Tar_tmp);
+					
 					fmap_x = map_x;
 					fmap_y = map_y;
 
 					while(fmap_x <= Map_Width){
-						map_x = map_x + Ra*cos(tar);
-						map_y = map_y - Ra*sin(tar);
+						map_x = map_x + Ra*cos(Tar_tmp);
+						map_y = map_y - Ra*sin(Tar_tmp);
 						if(map_x>Map_Width-1) map_x=Map_Width-1;
 						if(map_y>Map_Height-1) map_y=Map_Height-1;
 						 
 						if(mBMP->GetPixel(map_x,map_y).R == 0 & mBMP->GetPixel(map_x,map_y).G == 0 & mBMP->GetPixel(map_x,map_y).B == 0) break;
 					}
-
-					//Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
-					
 					
 					D_Database->LaserInfo.Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
-					D_Database->LaserInfo.Angle = 180 * (tar /  M_PI);
+					D_Database->LaserInfo.Angle = 180.0 * (Tar_tmp / M_PI);
 					D_Database->Sim_Laser.push_back(D_Database->LaserInfo);
 
 					if(this->Laser_box->Checked)
 						mGraphic->DrawLine(orangePen , (int)fmap_x , (int)fmap_y , (int)map_x , (int)map_y);
-		
-// 						char filename[]="test.txt";
-// 						fstream fp;
-// 						fp.open(filename, ios::out);//開啟檔案
-// 
-// 						for(int i=0;i<D_Database->Sim_Laser.size();i++){
-// 							fp<< D_Database->Sim_Laser[i].Angle <<"  :  "<< D_Database->Sim_Laser[i].Distance<<endl;
-// 						}
-// 						fp.close();//關閉檔案
 
-					
+					tar = tar + (D_Database->LaserScanSpace);
 
-// 					D_Database->Sim_Laser[i].Distance = sqrt(pow(map_y-fmap_y,2)+pow(map_x-fmap_x,2));
-// 					D_Database->Sim_Laser[i].Angle = tar;
-// 					i++;
-					tar = tar + (D_Database->LaserScanSpace*PI/180);
 				 }
-
-
-
-
 
 				 drawMap->Image = mBMP;
 			 }
@@ -582,7 +566,7 @@ private: int Obst(int x , int y){
 private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			 drawRobot();
 			 scanning();
-			 DrawTurnPoint();
+			 /*DrawTurnPoint();*/
 
 			 if(this->Laser_box->Checked){
 				 for(int i=0;i<D_Database->Sim_Laser.size();i++){

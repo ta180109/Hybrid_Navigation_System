@@ -88,6 +88,7 @@ namespace SKS_VC2013
 		bool tmpFlag;
 		bool GetTurnPoint;
 		bool InPointRange;
+		bool FaceTurnPoint;
 
 		TCoordinate NextTurnPoint;
 		int TurnPointIndex;

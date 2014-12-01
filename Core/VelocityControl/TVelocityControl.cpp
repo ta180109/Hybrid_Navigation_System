@@ -1,15 +1,15 @@
 #include "../../Database.h"
 #include "TVelocityControl.h"
-
+//#define Def_OMNIDIRECTION_SYSTEM
 
 #define DistanceMax 100
 #define DistanceMin 10 
 #define SpeedMax 200
 #define	SpeedMin 30 
-#define	ThetaMax 1.047197552 
-#define	ThetaMin 0.05 
-#define	OmegaMax 21
-#define	OmegaMin 9
+#define	ThetaMax 0.52333333 //30deg 
+#define	ThetaMin 0.05       //3deg
+#define	OmegaMax 5
+#define	OmegaMin 1
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -116,32 +116,32 @@ void TVelocityControl::VelocityTransform( double dTargetDis, double dTargetCutAn
 
      D_Database->x = Speed * Vector.y;
      D_Database->y = Speed * Vector.x;
-
     //---------------------------------------------------
 
     double Omega;
 
-    if( Theta == 0 )
+    if( Theta == 0 ){
 
         Omega = 0;
+		D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
 
-    else if( fabs(Theta) > ThetaMax )
+	}else if( fabs(Theta) > ThetaMax ){
 
         Omega = OmegaMax;
+		D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
 
-    else if( fabs(Theta) < ThetaMin )
+	}else if( fabs(Theta) < ThetaMin ){
 
         Omega = OmegaMin;
+		D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
 
-    else
+	}else{
 
         Omega = S_Function( OmegaMax, OmegaMin,
 
                             ThetaMax, ThetaMin, fabs(Theta) );
-
-    D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
-
-
+		D_Database->PathRotation = (Theta < 0) ? -Omega : Omega;
+	}
 }
 
 //---------------------------------------------------------------------------

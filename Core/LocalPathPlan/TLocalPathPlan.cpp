@@ -40,13 +40,13 @@ void TLocalPathPlan::LocalPathPlan_Initialize(void)
 	Stone = new TCoordinate[D_Database->LaserScanNumber];
 
 	//Parameter for VFH
-	WindowRange = 3;
+	WindowRange = 3.0;
 	DetecedRange = 70.0;
 	ThresholdDis = 30.0;
-	WindowErr = 3.0;
+	WindowErr = 5.0;
 
-	ObsScale = 0.7;
-	AngScale = 0.4;
+	ObsScale = 0.8;
+	AngScale = 0.2;
 
 }
 void TLocalPathPlan::LocalPathPlan_Main(void)
@@ -62,11 +62,15 @@ void TLocalPathPlan::LocalPathPlan_Main(void)
 			D_Database->LocalPlanVector = VFH_Algorithm( D_Database->GlobaPlanlVector);
 		#endif
 		
+		D_Database->LocalPlanVector = D_Database->LocalPlanVector >> D_Database->RobotDir;
+
 		D_Database->MotionDistance = D_Database->LocalPlanVector.Length();
 
 		D_Database->MotionAngle    = D_Database->LocalPlanVector.Angle();
 
 	}else{
+		D_Database->LocalPlanVector = D_Database->LocalPlanVector >> D_Database->RobotDir;
+
 		D_Database->LocalPlanVector = D_Database->GlobaPlanlVector;
 
 		D_Database->MotionDistance = D_Database->LocalPlanVector.Length();
@@ -206,14 +210,13 @@ TCoordinate TLocalPathPlan::VFH_Algorithm( TCoordinate Goal ) {
 			TmpWindow.EndAng = D_Database->LaserData[i+2].Angle;
 			TmpWindow.MiddleAng = (TmpWindow.StartAng + TmpWindow.EndAng) / 2.0;
 			TmpWindow.GapSize = fabs(TmpWindow.EndAng - TmpWindow.StartAng);
+			TmpWindow.MergeTime = 0;
 
 			SmallScanWindow.push_back(TmpWindow);
-
 			AvgDis = 0.0;
 	}
 
 	//merge similar window
- 	
 	ChooseScanWindow.clear();
 	int WindowIndex = 0;
 	TmpWindow = SmallScanWindow[0];
@@ -240,18 +243,16 @@ TCoordinate TLocalPathPlan::VFH_CostFunction(TCoordinate Goal){
 	fstream fp;
 	fp.open(filename, ios::out);//¶}±ÒÀÉ®×
 	
-	
-// 	for(int i = 0; i<ChooseScanWindow.size(); i++){
-// 		fp<<"Distance"<<ChooseScanWindow[i].AverageDis<<endl;
-// 		fp<<"StartAmgle"<<ChooseScanWindow[i].StartAng<<endl;
-// 		fp<<"EndAmgle"<<ChooseScanWindow[i].EndAng<<endl;
-// 		fp<<"           "<<endl;
-// 	}
-// 
-// 	fp<<"------------------------"<<endl;
+	for(int i = 0; i<ChooseScanWindow.size(); i++){
+		fp<<"Distance"<<ChooseScanWindow[i].AverageDis<<endl;
+		fp<<"StartAngle"<<ChooseScanWindow[i].StartAng<<endl;
+		fp<<"EndAngle"<<ChooseScanWindow[i].EndAng<<endl;
+		fp<<"GpaSize"<<ChooseScanWindow[i].GapSize<<endl;
+		fp<<"           "<<endl;
+	}
 
-	double ScaleA = 0.6;
-	double ScaleB = 0.4;
+	fp<<"------------------------"<<endl;
+
 	TCoordinate FixedGoal = Goal;
 	double AvoidAngle;
 	double ObsEvaluate;
@@ -261,6 +262,7 @@ TCoordinate TLocalPathPlan::VFH_CostFunction(TCoordinate Goal){
 
 	for(int i = 0; i < ChooseScanWindow.size(); i++){
 		ChooseScanWindow[i].MiddleAng = (ChooseScanWindow[i].StartAng + ChooseScanWindow[i].EndAng) / 2.0;
+		ChooseScanWindow[i].MergeTime = ChooseScanWindow[i].GapSize / (2.0 * D_Database->LaserScanSpace);
 
 		ObsEvaluate = DisWeightNomalize(ChooseScanWindow[i].AverageDis);
 		MinAngle = WindowSmallestAng(ChooseScanWindow[i], Goal);
@@ -270,10 +272,16 @@ TCoordinate TLocalPathPlan::VFH_CostFunction(TCoordinate Goal){
 		 
 		if(ChooseScanWindow[i].GapWeight > TmpWeight){
 			TmpWeight = ChooseScanWindow[i].GapWeight;
-			AvoidAngle = (0.3*MinAngle + 0.7*ChooseScanWindow[i].MiddleAng);
+			AvoidAngle = (0.7*MinAngle + 0.3*ChooseScanWindow[i].MiddleAng);
+			//AvoidAngle = MinAngle;
 		}
 			
 		fp<<"Distance"<<ChooseScanWindow[i].AverageDis<<endl;
+		fp<<"StartAngle"<<ChooseScanWindow[i].StartAng<<endl;
+		fp<<"EndAngle"<<ChooseScanWindow[i].EndAng<<endl;
+		fp<<"MergeTime"<<ChooseScanWindow[i].MergeTime<<endl;
+		fp<<"GpaSize"<<ChooseScanWindow[i].GapSize<<endl;
+
 		fp<<"ObsEvaluate"<<ObsEvaluate<<endl;
 		fp<<"GoalAngle"<<Rad2Deg(Goal.Angle())<<endl;
 		fp<<"MinAngle"<<MinAngle<<endl;
@@ -328,7 +336,6 @@ TLocalPathPlan::Window_Info TLocalPathPlan::WindowMerge(Window_Info Window_L, Wi
 	TmpWindow.EndAng = Window_R.EndAng;
 	TmpWindow.MiddleAng = (TmpWindow.StartAng + TmpWindow.EndAng) / 2.0;
 	TmpWindow.GapSize = fabs(TmpWindow.EndAng - TmpWindow.StartAng);
-	
 	return TmpWindow;
 }
 
@@ -355,22 +362,88 @@ double TLocalPathPlan::WindowSmallestAng(Window_Info Win, TCoordinate Goal){
 	#define MIN_3(a,b,c) a > b ?(b > c ?c : b):(a > c ?c:a)
 	
 	double GoalAng = (Goal.Angle() / M_PI) * 180.0;
+	double Adj_StartAng;
+	double Adj_EndAng;
+	double Adj_Middle;
 
-	double Goal2AngL = fabs(GoalAng - Win.StartAng);
-	double Goal2AngM = fabs(GoalAng - Win.MiddleAng);
-	double Goal2AngR = fabs(GoalAng - Win.EndAng);
+	if(Win.MergeTime > 7){
+		Adj_StartAng = Win.StartAng + 10*D_Database->LaserScanSpace;
+		Adj_EndAng = Win.EndAng - 10*D_Database->LaserScanSpace;
+		Adj_Middle = (Adj_StartAng + Adj_EndAng) / 2.0;
+
+		double Goal2AngL = fabs(GoalAng - Adj_StartAng);
+		double Goal2AngM = fabs(GoalAng - Adj_Middle);
+		double Goal2AngR = fabs(GoalAng - Adj_EndAng);
+
+		double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
+
+		if(Tmp == Goal2AngL)
+			return Adj_StartAng;
+		else if(Tmp == Goal2AngM)
+			return Adj_Middle;
+		else if(Tmp == Goal2AngR)
+			return Adj_EndAng;
+		else
+			return Adj_Middle;
+
+	}else if(Win.MergeTime > 5 && Win.MergeTime < 7){
+		Adj_StartAng = Win.StartAng + 6*D_Database->LaserScanSpace;
+		Adj_EndAng = Win.EndAng - 6*D_Database->LaserScanSpace;
+		Adj_Middle = (Adj_StartAng + Adj_EndAng) / 2.0;
+
+		double Goal2AngL = fabs(GoalAng - Adj_StartAng);
+		double Goal2AngM = fabs(GoalAng - Adj_Middle);
+		double Goal2AngR = fabs(GoalAng - Adj_EndAng);
+		 	
+		double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
+		 
+		if(Tmp == Goal2AngL)
+		 	return Adj_StartAng;
+		else if(Tmp == Goal2AngM)
+		 	return Adj_Middle;
+		else if(Tmp == Goal2AngR)
+		 	return Adj_EndAng;
+		else
+		 	return Adj_Middle;
+
+	}else if(Win.MergeTime > 3 && Win.MergeTime<5){
+		Adj_StartAng = Win.StartAng + 2*D_Database->LaserScanSpace;
+		Adj_EndAng = Win.EndAng - 2*D_Database->LaserScanSpace;
+		Adj_Middle = (Adj_StartAng + Adj_EndAng) / 2.0;
+
+		double Goal2AngL = fabs(GoalAng - Adj_StartAng);
+		double Goal2AngM = fabs(GoalAng - Adj_Middle);
+		double Goal2AngR = fabs(GoalAng - Adj_EndAng);
+
+		double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
+
+		if(Tmp == Goal2AngL)
+			return Adj_StartAng;
+		else if(Tmp == Goal2AngM)
+			return Adj_Middle;
+		else if(Tmp == Goal2AngR)
+			return Adj_EndAng;
+		else
+			return Adj_Middle;
 	
-	double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
-
-	if(Tmp == Goal2AngL){
-		return Win.StartAng;
-	}else if(Tmp == Goal2AngM){
-		return Win.MiddleAng;
-	}else if(Tmp == Goal2AngR){
-		return Win.EndAng;
+	
 	}else{
-		return Win.MiddleAng;
+		double Goal2AngL = fabs(GoalAng - Win.StartAng);
+		double Goal2AngM = fabs(GoalAng - Win.MiddleAng);
+		double Goal2AngR = fabs(GoalAng - Win.EndAng);
+
+		double Tmp = MIN_3(Goal2AngL,Goal2AngM,Goal2AngR);
+
+		if(Tmp == Goal2AngL)
+			return Win.StartAng;
+		else if(Tmp == Goal2AngM)
+			return Win.MiddleAng;
+		else if(Tmp == Goal2AngR)
+			return Win.EndAng;
+		else
+			return Win.MiddleAng;
 	}
+
 }
 
 double TLocalPathPlan::Deg2Rad(double AngleDeg){

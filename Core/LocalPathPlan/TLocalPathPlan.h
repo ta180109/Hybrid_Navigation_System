@@ -82,7 +82,7 @@ namespace SKS_VC2013 {
 		TCoordinate *Stone;
 
 		//Parameter for VFH
-		int WindowRange; //number of scan line
+		double WindowRange; //number of scan line
 		double DetecedRange;
 		double ThresholdDis;
 		double WindowErr;
@@ -97,6 +97,7 @@ namespace SKS_VC2013 {
 			double MiddleAng;
 			double AverageDis;
 			double GapWeight;
+			int MergeTime;
 		}Window_Info;
 		
 		Window_Info WindowMerge(Window_Info Window_L, Window_Info Window_R);

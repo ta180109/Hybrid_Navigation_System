@@ -24,8 +24,10 @@ void TNavigationSystem::NavigationSystem_Initialize(void)
 
 void TNavigationSystem::NavigationSystem_Main(void)
 {
+
 	AStar->AStar_Main();
 	LocalPathPlan->LocalPathPlan_Main();
 	VelocityControl->Velocity_Main();
 	Motion->Motion_Main();
+
 }

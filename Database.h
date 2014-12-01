@@ -178,8 +178,6 @@ class Database{
 		 TCoordinate RobotPos;
 		 double RobotDir;
 
-		 double Direction;
-
 		 TCoordinate StartPosition;
 		 TCoordinate EndPosition;
 		 
@@ -232,6 +230,7 @@ class Database{
 		//for velocity control
 		 float FixSpeed;                                 // Speed Power 1~100 %
 		 double MotionDistance;
+		 double Direction;
 		 double MotionAngle;
 		 TCoordinate PathMotion;
 		 float PathRotation;

@@ -1,6 +1,7 @@
 #include "TAStar.h"
 #include <algorithm>
-
+#define _USE_MATH_DEFINES
+#include <math.h>
 using namespace SKS_VC2013;
 using namespace std;
 
@@ -14,6 +15,7 @@ TAStar::TAStar()
 	D_Database->AStarEnable = false;
 	tmpFlag = true;
 	GetTurnPoint = true;
+	FaceTurnPoint = true;
 }
 TAStar::~TAStar()
 {
@@ -95,7 +97,7 @@ void TAStar::Behavior_AstarPath( void )
 	Length = D_Database->GlobaPlanlVector.Length();
 
 	if(Length < ACHIVERANGEERR){ //如果到達轉折點
-		InPointRange = true;
+		InPointRange = true;	
 	}else{
 		InPointRange = false;
 	}
@@ -105,11 +107,31 @@ void TAStar::Behavior_AstarPath( void )
 		if( (TurnPointIndex <= D_Database->TurnPoint.size()-1) && GetTurnPoint){
 			NextTurnPoint  = D_Database->TurnPoint[TurnPointIndex]; 
 			GetTurnPoint = false;
+			FaceTurnPoint = true;
 		}
 	}else{
 		GetTurnPoint = true;
 	}
 	
+	if(FaceTurnPoint){
+		
+		double AngleRangeError = M_PI * (8.0 / 180.0);
+		double MinTurnSpeed = M_PI * (100.0 / 180.0);
+	
+		float AngleError = NormalizeAngle(D_Database->GlobaPlanlVector.Angle() - D_Database->RobotDir);
+	
+		if( fabs(AngleError) > AngleRangeError ){
+			D_Database->w = ( AngleError > 0 ) ? MinTurnSpeed  : -MinTurnSpeed;
+			D_Database->w *= -1;
+			FaceTurnPoint = true;
+		}else{
+			D_Database->w = 0;
+			FaceTurnPoint = false;
+		}	
+	}else{
+		D_Database->w = 0;
+	}
+
 /*
 	int Length = 0;
 	int Size = AstarTool::GetInstance()->SmoothPath.size();
@@ -369,8 +391,8 @@ void TAStar::FindTurnPoint(){
 			PosMiddle = SmoothPath[i-1];
 			PosLast = SmoothPath[i];
 
-			GradientFirst = (PosMiddle.y - PosFirst.y) / (PosMiddle.x - PosFirst.x) + DBL_MIN_10_EXP ;
-			GradientLast = (PosLast.y - PosMiddle.y) / (PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP;
+			GradientFirst = (PosMiddle.y - PosFirst.y) / ((PosMiddle.x - PosFirst.x) + DBL_MIN_10_EXP) ;
+			GradientLast = (PosLast.y - PosMiddle.y) / ((PosLast.x - PosMiddle.x) + DBL_MIN_10_EXP);
 
 			if (GradientFirst != GradientLast)
 				D_Database->TurnPoint.insert( D_Database->TurnPoint.end(), PosMiddle);

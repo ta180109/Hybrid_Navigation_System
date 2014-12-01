@@ -515,9 +515,9 @@ namespace SKS_VC2013 {
 
 //! First Load Code.
 private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {				 		 		
-			D_Robot->X=30;
-			D_Robot->Y=Map_Height-265;
-			D_Robot->R=45;	
+			D_Robot->X=35;
+			D_Robot->Y=Map_Height-260;
+			D_Robot->R=40;	
 			
 			
 			drawPB->Width  = Radar_Width;
@@ -812,7 +812,8 @@ public:	void Write_Robot(){
 
 				D_Order->X = -D_Database->x;
 				D_Order->Y = D_Database->y;
-				//D_Order->Radian = D_Database->PathRotation;
+				D_Order->Radian = D_Database->w;
+
 				if (mMap != nullptr)																																							
 					mMap->drawRobot();
 			}
@@ -1040,7 +1041,7 @@ private: System::Void LocalizationTimer_Tick(System::Object^  sender, System::Ev
 			 if(Auto_check->Checked){
 				 D_Database->RobotPos.x = (int)D_Robot->X;
 				 D_Database->RobotPos.y = Map_Height-(int)D_Robot->Y;
-				 D_Database->RobotDir   = D_Robot->Angle;
+				 D_Database->RobotDir   = PI * (D_Robot->Angle/ 180.0);
 
 			}else{
 				D_Database->RobotPos.x = D_Database->LocalizatoinRobotPos.x;

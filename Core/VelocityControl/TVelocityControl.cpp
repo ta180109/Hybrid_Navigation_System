@@ -4,8 +4,8 @@
 
 #define DistanceMax 100
 #define DistanceMin 10 
-#define SpeedMax 200
-#define	SpeedMin 30 
+#define SpeedMax 130
+#define	SpeedMin 25 
 #define	ThetaMax 0.52333333 //30deg 
 #define	ThetaMin 0.05       //3deg
 #define	OmegaMax 5

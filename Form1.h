@@ -741,12 +741,24 @@ void Read_Object(){
 			D_Furniture->M_BedRM.door.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
 			D_Furniture->M_BedRM.door.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
 			D_Furniture->M_BedRM.door.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
-		}else if(element->Name =="Trashcan"){
+		}else if(element->Name =="Trashcan" || element->Name =="Trashcan2" || element->Name =="Trashcan3"){
 			D_Furniture->M_Trashcan.x = System::Convert::ToDouble(element->GetAttribute("x"));
 			D_Furniture->M_Trashcan.y = System::Convert::ToDouble(element->GetAttribute("y"));
 			D_Furniture->M_Trashcan.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
 			D_Furniture->M_Trashcan.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
 			D_Furniture->M_Trashcan.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+
+			D_Furniture->M_Trashcan2.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Trashcan2.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Trashcan2.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Trashcan2.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Trashcan2.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
+
+			D_Furniture->M_Trashcan3.x = System::Convert::ToDouble(element->GetAttribute("x"));
+			D_Furniture->M_Trashcan3.y = System::Convert::ToDouble(element->GetAttribute("y"));
+			D_Furniture->M_Trashcan3.Width = System::Convert::ToDouble(element->GetAttribute("Width"));
+			D_Furniture->M_Trashcan3.Height = System::Convert::ToDouble(element->GetAttribute("Height"));
+			D_Furniture->M_Trashcan3.Angle = System::Convert::ToDouble(element->GetAttribute("Angle"));
 		}else if(element->Name =="ChargeArea"){
 			D_Furniture->M_ChargeArea.x = System::Convert::ToDouble(element->GetAttribute("x"));
 			D_Furniture->M_ChargeArea.y = System::Convert::ToDouble(element->GetAttribute("y"));

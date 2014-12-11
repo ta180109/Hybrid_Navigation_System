@@ -100,7 +100,8 @@ namespace SKS_VC2013 {
 
 		Bitmap^ mBMP_Map;
 		Graphics^ mGraphic_Map;
-	
+	private: System::Windows::Forms::Button^  button1;
+
 
 
 		System::ComponentModel::Container ^components;
@@ -125,6 +126,7 @@ namespace SKS_VC2013 {
 			this->BT_Search = (gcnew System::Windows::Forms::Button());
 			this->Map_Expansion = (gcnew System::Windows::Forms::Button());
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->Map_Ed))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -266,12 +268,23 @@ namespace SKS_VC2013 {
 			this->listBox1->Size = System::Drawing::Size(473, 568);
 			this->listBox1->TabIndex = 13;
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(608, -2);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 14;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MapEditer::button1_Click);
+			// 
 			// MapEditer
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->ClientSize = System::Drawing::Size(1104, 626);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->Map_Expansion);
 			this->Controls->Add(this->BT_Search);
@@ -625,7 +638,7 @@ private: System::Void MapEditer_Load(System::Object^  sender, System::EventArgs^
 		int road_x;
 		int road_y;
 
-		SolidBrush^ RedBrush = gcnew SolidBrush( Color::FromArgb( 255,0,0 ) );
+		SolidBrush^ RedBrush = gcnew SolidBrush( Color::FromArgb( 0,128,128 ) );
 		int draw_w = 9;
 		TCoordinate TmpPos;
 
@@ -781,6 +794,11 @@ private: System::Void BT_End_Click(System::Object^  sender, System::EventArgs^  
 						Map_Node[f_x][f_y].firther_x = ch_x;
 						Map_Node[f_x][f_y].firther_y = ch_y;
 						Map_Node[f_x][f_y].h = (((f_x>end_node_x)?f_x-end_node_x :end_node_x-f_x) + ((f_y>end_node_y)?f_y-end_node_y :end_node_y-f_y))*10;
+// 						int tmpx = end_node_x-f_x;
+// 						int tmpy = end_node_y-f_y;
+// 						Map_Node[f_x][f_y].h = sqrt(pow((double)tmpx,2)+pow((double)tmpy,2))*10;
+
+
 						Map_Node[f_x][f_y].g = Map_Node[ch_x][ch_y].g + cost;
 						Map_Node[f_x][f_y].f = Map_Node[f_x][f_y].g + Map_Node[f_x][f_y].h + Map_Node[f_x][f_y].Weight;
 
@@ -834,49 +852,59 @@ private: System::Void BT_End_Click(System::Object^  sender, System::EventArgs^  
 	}
 		 
 private: System::Void BT_Search_Click(System::Object^  sender, System::EventArgs^  e) {
-// 			 Vint OpenNode;
-// 			
-// 			 for(int x=0;x<60;x++){
-// 				 for (int y=0;y<60;y++)
-// 				 {
-// 					 Map_Node[x][y].x = x;
-// 					 Map_Node[x][y].y = y;
-// 					 Map_Node[x][y].f=0;
-// 					 Map_Node[x][y].g=0;
-// 					 Map_Node[x][y].h=0;
-// 					 Map_Node[x][y].clild_node=0;
-// 					 Map_Node[x][y].close_node=0;
-// 					 Map_Node[x][y].firther_x=0;
-// 					 Map_Node[x][y].firther_y=0;
-// 				 }
-// 			 }
-// 			 st_node_x = start_x/10;
-// 			 st_node_y = (600-start_y)/10;
-// 			 end_node_x = end_x/10;
-// 			 end_node_y = (600-end_y)/10;
-// 			 Map_Node[st_node_x][st_node_y].g = 0;
-// 
-// 			 a_star(OpenNode,st_node_x,st_node_y);
-// 
-// 			 int ch_x;
-// 			 int ch_y;
-// 			 while (true){
-// 				 if(OpenNode.empty()) break;
-// 				 ch_x = OpenNode[OpenNode.size()-1].x;
-// 				 ch_y = OpenNode[OpenNode.size()-1].y;
-// 				 if(ch_x == end_node_x && ch_y==end_node_y){
-// 					 draw_road(ch_x,ch_y);
-// 					 break;
-// 				 }
-// 				 OpenNode.pop_back();
-// 				 a_star(OpenNode,ch_x,ch_y);
-// 			 }
-			 DrawPath();
+			 Vint OpenNode;
+			start_x = D_Database->RobotPos.x;
+			start_y = D_Database->RobotPos.y;
+
+			end_x = D_Database->EndPosition.x;
+			end_y = D_Database->EndPosition.y;
+
+			 for(int x=0;x<60;x++){
+				 for (int y=0;y<60;y++)
+				 {
+					 Map_Node[x][y].x = x;
+					 Map_Node[x][y].y = y;
+					 Map_Node[x][y].f=0;
+					 Map_Node[x][y].g=0;
+					 Map_Node[x][y].h=0;
+					 Map_Node[x][y].clild_node=0;
+					 Map_Node[x][y].close_node=0;
+					 Map_Node[x][y].firther_x=0;
+					 Map_Node[x][y].firther_y=0;
+				 }
+			 }
+			 st_node_x = start_x/10;
+			 //st_node_y = (600-start_y)/10;
+			 st_node_y = (start_y)/10;
+			 end_node_x = end_x/10;
+			 //end_node_y = (600-end_y)/10;
+			 end_node_y = (end_y)/10;
+			 Map_Node[st_node_x][st_node_y].g = 0;
+
+			 a_star(OpenNode,st_node_x,st_node_y);
+
+			 int ch_x;
+			 int ch_y;
+			 while (true){
+				 if(OpenNode.empty()) break;
+				 ch_x = OpenNode[OpenNode.size()-1].x;
+				 ch_y = OpenNode[OpenNode.size()-1].y;
+				 if(ch_x == end_node_x && ch_y==end_node_y){
+					 draw_road(ch_x,ch_y);
+					 break;
+				 }
+				 OpenNode.pop_back();
+				 a_star(OpenNode,ch_x,ch_y);
+			 }
+			 
 		 }
 private: System::Void Map_Expansion_Click(System::Object^  sender, System::EventArgs^  e) {
 			 drawExpansion(gray_num);
 			 if(gray_num<2)gray_num++;
 			 else gray_num=0;
+		 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+			 DrawPath();
 		 }
 };
 }

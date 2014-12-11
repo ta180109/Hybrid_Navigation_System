@@ -5,8 +5,8 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-#define ACHIVERANGEERR 15
-#define TRUNINGWEIGHT 5
+#define ACHIVERANGEERR 5
+#define TRUNINGWEIGHT 1
 
 TAStar::TAStar()
 {
@@ -225,7 +225,11 @@ void TAStar::AStar_Search( TCoordinate Start , TCoordinate Goal )
 	//---- initial the list information
 	Map[StartNode.x][StartNode.y].Father = StartNode;
 	Map[StartNode.x][StartNode.y].G = 0;
-	Map[StartNode.x][StartNode.y].H = NodeResolution*(( GoalNode - StartNode ).Length());
+//	Map[StartNode.x][StartNode.y].H = NodeResolution*(( GoalNode - StartNode ).Length());
+
+	
+	Map[StartNode.x][StartNode.y].H = NodeResolution*( fabs(GoalNode.x - StartNode.x) + fabs(GoalNode.y - StartNode.y) );
+
 	Map[StartNode.x][StartNode.y].F = Map[StartNode.x][StartNode.y].G + Map[StartNode.x][StartNode.y].H;
 
 	OpenList.push_back(Nodelist(StartNode.x,StartNode.y,Map[StartNode.x][StartNode.y].Weight));
@@ -302,20 +306,22 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 					if( Map[ TmpPos.x ][ TmpPos.y ].G > Map[Current.x][Current.y].G + TmpWeight )
 					{
 						Map[TmpPos.x][TmpPos.y].Father = Current;
-						Map[TmpPos.x][TmpPos.y].G = TRUNINGWEIGHT * Map[Current.x][Current.y].G + TmpWeight;
+						Map[TmpPos.x][TmpPos.y].G =  Map[Current.x][Current.y].G + TmpWeight;
 						Map[TmpPos.x][TmpPos.y].F = Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
 
 						vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));
 						OpenList.insert(it, Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F));
-											}
+					}
 				}
 				else if( Map[TmpPos.x][TmpPos.y].Status != CurrentStatus-Def_Closed )
 				{
 					Map[TmpPos.x][TmpPos.y].Status = CurrentStatus-Def_Open;
 					Map[TmpPos.x][TmpPos.y].Father = Current;
 					Map[TmpPos.x][TmpPos.y].G = Map[Current.x][Current.y].G + TmpWeight;
-					Map[TmpPos.x][TmpPos.y].H = NodeResolution*((GoalNode - TmpPos).Length());
-					Map[TmpPos.x][TmpPos.y].F = TRUNINGWEIGHT * Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
+					//Map[TmpPos.x][TmpPos.y].H = NodeResolution*((GoalNode - TmpPos).Length());
+
+					Map[TmpPos.x][TmpPos.y].H = NodeResolution*( fabs(GoalNode.x - TmpPos.x) + fabs(GoalNode.y - TmpPos.y) );
+					Map[TmpPos.x][TmpPos.y].F = Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
 
 					vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));
 					OpenList.insert(it, Nodelist(TmpPos.x,TmpPos.y ,Map[TmpPos.x][TmpPos.y].F));

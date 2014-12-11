@@ -241,9 +241,9 @@ namespace SKS_VC2013 {
 			// Furniture_Box
 			// 
 			this->Furniture_Box->FormattingEnabled = true;
-			this->Furniture_Box->Items->AddRange(gcnew cli::array< System::Object^  >(13) {L"None", L"LivingRM_Sofa", L"LivingRM_Table", 
+			this->Furniture_Box->Items->AddRange(gcnew cli::array< System::Object^  >(15) {L"None", L"LivingRM_Sofa", L"LivingRM_Table", 
 				L"LivingRM_Cabinet", L"DiningRM_Table", L"DiningRM_Chair", L"Library_Desk", L"Library_Chair", L"Library_Cabinet", L"BedRM_Bed", 
-				L"Trashcan", L"ChargeArea", L"EndArea"});
+				L"Trashcan",L"Trashcan2",L"Trashcan3", L"ChargeArea", L"EndArea"});
 			this->Furniture_Box->Location = System::Drawing::Point(53, 18);
 			this->Furniture_Box->Name = L"Furniture_Box";
 			this->Furniture_Box->Size = System::Drawing::Size(116, 20);
@@ -442,6 +442,8 @@ void Read_Object(){
 		//drawObject(D_Furniture->M_ChargeArea,11);
 		//drawObject(D_Furniture->M_EndArea,12);
 		drawObject(D_Furniture->M_Trashcan,13);
+		drawObject(D_Furniture->M_Trashcan2,14);
+		drawObject(D_Furniture->M_Trashcan3,15);
 		mBMP_base = mBMP;
 	}
 void drawObject(Furniture_site object,int num){
@@ -463,9 +465,14 @@ void drawObject(Furniture_site object,int num){
 		temp = (object.Width>object.Height)? object.Height : object.Width;
 		if(num == 11)	mGraphic->DrawLine(yellowPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
 		else if(num == 12)	mGraphic->DrawLine(redPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
-		else if(num == 13){
+		else if( num == 13 ||num == 14||num == 15){
 			SolidBrush^ TrashcanBrush = gcnew SolidBrush( Color::Black);
-			mGraphic->FillPie(TrashcanBrush,(int)object.x ,(int)object.y ,(int)object.Width ,(int)object.Height,(int) 0,(int) 360 );
+			SolidBrush^ TrashcanBrush2 = gcnew SolidBrush( Color::Red);
+
+			mGraphic->FillPie(TrashcanBrush,(int)object.x ,(int)object.y, (int)object.Width ,(int)object.Height,(int) 0,(int) 360 );
+			
+			mGraphic->FillPie(TrashcanBrush2,(int)object.x+3 ,(int)object.y+3, 24 ,24,(int) 0,(int) 360 );
+
 		}else{
 			mGraphic->DrawLine(blcakPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
 			_w = (((int)object.Angle%90 )==0) ?object.Width :object.Width+2;
@@ -618,10 +625,14 @@ void TouchObject(System::Windows::Forms::MouseEventArgs^  e){
 			ChangeObject(D_Furniture->M_BedRM.Bed,e);
 		}else if (Furniture_Box->SelectedText == "Trashcan"){
 				ChangeObject(D_Furniture->M_Trashcan,e);
-// 			}else if (Furniture_Box->SelectedText == "ChargeArea"){
-// 				ChangeObject(D_Furniture->M_ChargeArea,e);
-// 			}else if (Furniture_Box->SelectedText == "EndArea"){
-// 				ChangeObject(D_Furniture->M_EndArea,e);
+		}else if (Furniture_Box->SelectedText == "Trashcan2"){
+			ChangeObject(D_Furniture->M_Trashcan2,e);
+		}else if (Furniture_Box->SelectedText == "Trashcan3"){
+			ChangeObject(D_Furniture->M_Trashcan3,e);
+ 			}else if (Furniture_Box->SelectedText == "ChargeArea"){
+ 				ChangeObject(D_Furniture->M_ChargeArea,e);
+ 			}else if (Furniture_Box->SelectedText == "EndArea"){
+ 				ChangeObject(D_Furniture->M_EndArea,e);
 		}
 	}
 void ChangeObject(Furniture_site &object , System::Windows::Forms::MouseEventArgs^  e){

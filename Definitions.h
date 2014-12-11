@@ -56,7 +56,7 @@
 **                                      New Functions: VCS_GetHomingState, VCS_WaitForHomingAttained, VCS_GetVelocityIsAveraged, VCS_GetCurrentIsAveraged
 **                                      Bugfix command VCS_SendNmtService
 **                  4.9.2.0 (22.03.13): Function ExportParameter: Parameters renamed
-**                  4.9.3.0 (25.07.13): Internal version
+**            `      4.9.3.0 (25.07.13): Internal version
 **                  4.9.4.0 (01.10.13): Bugfix command VCS_GetDriverInfo
 **                  4.9.5.0 (17.12.13): VCS_ExportChannelDataToFile: Check path exists
 **

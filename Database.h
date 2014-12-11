@@ -131,7 +131,7 @@ class data8
 			Furniture_site door;
 		}M_BedRM;
 
-		Furniture_site M_Trashcan;
+		Furniture_site M_Trashcan,M_Trashcan2,M_Trashcan3;
 		Furniture_site M_ChargeArea;
 		Furniture_site M_EndArea;
 };

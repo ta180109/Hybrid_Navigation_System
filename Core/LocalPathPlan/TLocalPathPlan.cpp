@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-//#define METHODSWITCH
+#define METHODSWITCH
 #define AVOIDANCERANGE 50
 #define DANGERRANGE 5
 
@@ -31,11 +31,11 @@ void TLocalPathPlan::LocalPathPlan_Initialize(void)
 	ScanScale = D_Database->LaserScanSpace * M_PI / 180.0;
 	
 	//Parameter for VFF
-	SafeDistance = 60; 
-	SafeArc_D= 50.0;
-	SafeArc_A = 50.0 * M_PI / 180.0;
+	SafeDistance = 70; 
+	SafeArc_D= 70.0;
+	SafeArc_A = 70.0 * M_PI / 180.0;
 	AvoidConfig1 = 1.2;
-	AvoidForce = 130.0 * M_PI / 180.0;
+	AvoidForce = 80.0 * M_PI / 180.0;
 	FixDirect= 0; 
 	Stone = new TCoordinate[D_Database->LaserScanNumber];
 

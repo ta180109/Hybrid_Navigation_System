@@ -19,6 +19,7 @@ TNavigationSystem::~TNavigationSystem()
 
 void TNavigationSystem::NavigationSystem_Initialize(void)
 {
+	D_Database->AvoidEnableFlag = true;
 	D_Database->LaserData = D_Database->Sim_Laser;
 }
 

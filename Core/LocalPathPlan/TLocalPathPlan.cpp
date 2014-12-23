@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-#define METHODSWITCH
+//#define METHODSWITCH
 #define AVOIDANCERANGE 50
 #define DANGERRANGE 5
 
@@ -25,7 +25,6 @@ TLocalPathPlan::~TLocalPathPlan()
 void TLocalPathPlan::LocalPathPlan_Initialize(void)
 {
  	Lock_Avoid = 0;
-	D_Database->AvoidEnableFlag = true;
 	D_Database->LaserScanStartAng = -(D_Database->LaserScanRange / 2);
 	ScanStartAngle = D_Database->LaserScanStartAng * M_PI / 180.0;
 	ScanScale = D_Database->LaserScanSpace * M_PI / 180.0;
@@ -35,7 +34,7 @@ void TLocalPathPlan::LocalPathPlan_Initialize(void)
 	SafeArc_D= 70.0;
 	SafeArc_A = 70.0 * M_PI / 180.0;
 	AvoidConfig1 = 1.2;
-	AvoidForce = 80.0 * M_PI / 180.0;
+	AvoidForce = 130.0 * M_PI / 180.0;
 	FixDirect= 0; 
 	Stone = new TCoordinate[D_Database->LaserScanNumber];
 
@@ -69,9 +68,10 @@ void TLocalPathPlan::LocalPathPlan_Main(void)
 		D_Database->MotionAngle    = D_Database->LocalPlanVector.Angle();
 
 	}else{
-		D_Database->LocalPlanVector = D_Database->LocalPlanVector >> D_Database->RobotDir;
 
 		D_Database->LocalPlanVector = D_Database->GlobaPlanlVector;
+		
+		D_Database->LocalPlanVector = D_Database->LocalPlanVector >> D_Database->RobotDir;
 
 		D_Database->MotionDistance = D_Database->LocalPlanVector.Length();
 
@@ -268,8 +268,9 @@ TCoordinate TLocalPathPlan::VFH_CostFunction(TCoordinate Goal){
 		MinAngle = WindowSmallestAng(ChooseScanWindow[i], Goal);
 		AngEvalute = AngWeightNomalize(MinAngle, Goal);
 
-		ChooseScanWindow[i].GapWeight =  ObsScale * ObsEvaluate + AngScale * AngEvalute;
-		 
+		//ChooseScanWindow[i].GapWeight =  ObsScale * ObsEvaluate + AngScale * AngEvalute;
+		ChooseScanWindow[i].GapWeight =  ObsEvaluate *  AngEvalute;
+
 		if(ChooseScanWindow[i].GapWeight > TmpWeight){
 			TmpWeight = ChooseScanWindow[i].GapWeight;
 			AvoidAngle = (0.7*MinAngle + 0.3*ChooseScanWindow[i].MiddleAng);

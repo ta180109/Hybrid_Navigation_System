@@ -176,7 +176,12 @@ class Database{
 		 double FI;
 
 		 TCoordinate RobotPos;
+		 TCoordinate LastRobotPos;
 		 double RobotDir;
+
+		 double MovingDistance;
+		 vector <TCoordinate> MovedPath;
+		 bool tmpFlag;
 
 		 TCoordinate StartPosition;
 		 TCoordinate EndPosition;

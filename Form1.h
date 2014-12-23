@@ -515,10 +515,15 @@ namespace SKS_VC2013 {
 
 //! First Load Code.
 private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {				 		 		
-			D_Robot->X=35;
-			D_Robot->Y=Map_Height-260;
+			D_Database->StartPosition.x = 35;
+			D_Database->StartPosition.y = 260;
+			 
+			D_Robot->X=D_Database->StartPosition.x;
+			D_Robot->Y=Map_Height - D_Database->StartPosition.y;
 			D_Robot->R=40;	
 			
+			D_Database->MovingDistance = 0;
+			D_Database->tmpFlag = true;
 			
 			drawPB->Width  = Radar_Width;
 			drawPB->Height = Radar_Height;
@@ -537,6 +542,8 @@ private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)
 
 			NewNavigationSystem = new TNavigationSystem();
 			LocalizationTimer->Start();
+
+
 }
 
 //! Connection Set.
@@ -1083,14 +1090,19 @@ private: System::Void AlgorithmTimer_Tick(System::Object^  sender, System::Event
 			 if(Auto_check){
  				Write_Robot();
 				Read_Robot();	
-
-//  				MSG_list->Items->Add( "Robot_x : " + (int)D_Database->x + "\r\n");
-//  				MSG_list->Items->Add( "Robot_y : " + (int)D_Database->y + "\r\n");
  				MSG_list->SelectedIndex = MSG_list->Items->Count-1;   //¸òÀH¨÷¶b©¹¤U
 			}else{
 		
+			}
+			
+			 if(D_Database->tmpFlag){
+				 D_Database->LastRobotPos = D_Database->RobotPos;
+				 D_Database->tmpFlag = false;
 			 }
-
+			D_Database->MovingDistance = D_Database->MovingDistance + (D_Database->RobotPos - D_Database->LastRobotPos ).Length();
+			D_Database->MovedPath.push_back(D_Database->RobotPos);
+			D_Database->LastRobotPos = D_Database->RobotPos;
+			MSG_list->Items->Add(D_Database->MovingDistance);
 		 }
 
 };

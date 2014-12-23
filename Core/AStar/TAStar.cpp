@@ -5,8 +5,8 @@
 using namespace SKS_VC2013;
 using namespace std;
 
-#define ACHIVERANGEERR 5
-#define TRUNINGWEIGHT 1
+#define ACHIVERANGEERR 8
+#define TRUNINGWEIGHT 100
 
 TAStar::TAStar()
 {
@@ -118,10 +118,11 @@ void TAStar::Behavior_AstarPath( void )
 		double AngleRangeError = M_PI * (8.0 / 180.0);
 		double MinTurnSpeed = M_PI * (100.0 / 180.0);
 	
-		float AngleError = NormalizeAngle(D_Database->GlobaPlanlVector.Angle() - D_Database->RobotDir);
+		TCoordinate TmpVector = NextTurnPoint - D_Database->RobotPos;
+		float AngleError = NormalizeAngle(TmpVector.Angle() - D_Database->RobotDir);
 	
-		if( fabs(AngleError) > AngleRangeError ){
-			D_Database->w = ( AngleError > 0 ) ? MinTurnSpeed  : -MinTurnSpeed;
+		if( (fabs(AngleError) > AngleRangeError) || ( (fabs(D_Database->GlobaPlanlVector.Angle()) < 0.000001) && ( fabs(D_Database->RobotDir) < 0.000001)) ){
+			D_Database->w = ( AngleError > 0 ) ? MinTurnSpeed  : - MinTurnSpeed;
 			D_Database->w *= -1;
 			FaceTurnPoint = true;
 		}else{
@@ -130,6 +131,7 @@ void TAStar::Behavior_AstarPath( void )
 		}	
 	}else{
 		D_Database->w = 0;
+		FaceTurnPoint = false;
 	}
 
 /*
@@ -318,9 +320,9 @@ void TAStar::SearchNeighbor_8Connect( TCoordinate Current )
 					Map[TmpPos.x][TmpPos.y].Status = CurrentStatus-Def_Open;
 					Map[TmpPos.x][TmpPos.y].Father = Current;
 					Map[TmpPos.x][TmpPos.y].G = Map[Current.x][Current.y].G + TmpWeight;
-					//Map[TmpPos.x][TmpPos.y].H = NodeResolution*((GoalNode - TmpPos).Length());
+					Map[TmpPos.x][TmpPos.y].H = NodeResolution*((GoalNode - TmpPos).Length());
 
-					Map[TmpPos.x][TmpPos.y].H = NodeResolution*( fabs(GoalNode.x - TmpPos.x) + fabs(GoalNode.y - TmpPos.y) );
+					//Map[TmpPos.x][TmpPos.y].H = NodeResolution*( fabs(GoalNode.x - TmpPos.x) + fabs(GoalNode.y - TmpPos.y) );
 					Map[TmpPos.x][TmpPos.y].F = Map[TmpPos.x][TmpPos.y].G + Map[TmpPos.x][TmpPos.y].H;
 
 					vector<Nodelist>::iterator it = find_if(OpenList.begin(),OpenList.end(),NodelistFinder(Map[TmpPos.x][TmpPos.y].F));

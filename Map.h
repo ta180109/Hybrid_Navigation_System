@@ -402,6 +402,7 @@ public: void drawRobot(){
 // 				 if(Laser_box->Checked)
 // 					 scanning();
 				 DrawTurnPoint();
+				 DrawMovedPath();
 				 drawMap->Image = mBMP;
 			 }
 // 		void writeSimulator(){
@@ -465,14 +466,21 @@ void drawObject(Furniture_site object,int num){
 		temp = (object.Width>object.Height)? object.Height : object.Width;
 		if(num == 11)	mGraphic->DrawLine(yellowPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
 		else if(num == 12)	mGraphic->DrawLine(redPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
-		else if( num == 13 ||num == 14||num == 15){
+		else if( num == 13 ||num == 14){
 			SolidBrush^ TrashcanBrush = gcnew SolidBrush( Color::Black);
 			SolidBrush^ TrashcanBrush2 = gcnew SolidBrush( Color::Red);
 
 			mGraphic->FillPie(TrashcanBrush,(int)object.x ,(int)object.y, (int)object.Width ,(int)object.Height,(int) 0,(int) 360 );
 			
 			mGraphic->FillPie(TrashcanBrush2,(int)object.x+3 ,(int)object.y+3, 24 ,24,(int) 0,(int) 360 );
+			
+		}else if(num == 15){
+			Pen^ BlackPen = gcnew Pen( Color::Black,object.Width+1 );
+			Pen^ RedPen = gcnew Pen( Color::Red,object.Width-9);
 
+			mGraphic->DrawLine(BlackPen , (int)(a_x ) , (int)(a_y ) , (int)(b_x ) , (int)(b_y));
+			mGraphic->DrawLine(RedPen , (int)(a_x) , (int)(a_y+2 ) , (int)(b_x) , (int)(b_y-2));
+		
 		}else{
 			mGraphic->DrawLine(blcakPen , (int)a_x , (int)a_y , (int)b_x , (int)b_y);
 			_w = (((int)object.Angle%90 )==0) ?object.Width :object.Width+2;
@@ -499,8 +507,8 @@ void DrawTurnPoint(){
 		for(int i = 0;i < D_Database->TurnPoint.size(); i++){
 			mGraphic->FillPie(TurnpointColor,(int)D_Database->TurnPoint[i].x-5 , (Map_Height - (int)D_Database->TurnPoint[i].y)-5 ,10 ,10,(int) 0,(int) 360 );
 			if(i==0){
-				Tmp.x = 30;
-				Tmp.y = Map_Height-270;
+				Tmp.x = D_Database->StartPosition.x;
+				Tmp.y = Map_Height - D_Database->StartPosition.y;
 			}else{
 				Tmp.x = (int)D_Database->TurnPoint[i-1].x;
 				Tmp.y = Map_Height-(int)D_Database->TurnPoint[i-1].y;
@@ -510,7 +518,16 @@ void DrawTurnPoint(){
 		drawMap->Image = mBMP;
 	}
 
-
+void DrawMovedPath(){
+	SolidBrush^ TurnpointColor = gcnew SolidBrush( Color::Green );
+	TCoordinate Tmp;
+	for(int i = 0;i < D_Database->MovedPath.size(); i++){
+			Tmp.x = (int)D_Database->MovedPath[i].x;
+			Tmp.y = Map_Height-(int)D_Database->MovedPath[i].y;
+			mGraphic->FillPie(TurnpointColor,(int)D_Database->MovedPath[i].x , (Map_Height - (int)D_Database->MovedPath[i].y) ,4 ,4,(int) 0,(int) 360 );
+	}
+	drawMap->Image = mBMP;
+}
 private: void scanning(){
 				D_Database->Sim_Laser.clear();
 				double fmap_x,fmap_y;
@@ -574,7 +591,7 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 			 drawRobot();
 			 scanning();
 			 /*DrawTurnPoint();*/
-
+			 
 			 if(this->Laser_box->Checked){
 				 for(int i=0;i<D_Database->Sim_Laser.size();i++){
 					 SimLaserShow->Items->Add(i);

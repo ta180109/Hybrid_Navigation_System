@@ -793,10 +793,10 @@ private: System::Void BT_End_Click(System::Object^  sender, System::EventArgs^  
 						Map_Node[f_x][f_y].clild_node = 1;
 						Map_Node[f_x][f_y].firther_x = ch_x;
 						Map_Node[f_x][f_y].firther_y = ch_y;
-						Map_Node[f_x][f_y].h = (((f_x>end_node_x)?f_x-end_node_x :end_node_x-f_x) + ((f_y>end_node_y)?f_y-end_node_y :end_node_y-f_y))*10;
-// 						int tmpx = end_node_x-f_x;
-// 						int tmpy = end_node_y-f_y;
-// 						Map_Node[f_x][f_y].h = sqrt(pow((double)tmpx,2)+pow((double)tmpy,2))*10;
+//						Map_Node[f_x][f_y].h = (((f_x>end_node_x)?f_x-end_node_x :end_node_x-f_x) + ((f_y>end_node_y)?f_y-end_node_y :end_node_y-f_y))*10;
+						int tmpx = end_node_x-f_x;
+						int tmpy = end_node_y-f_y;
+						Map_Node[f_x][f_y].h = sqrt(pow((double)tmpx,2)+pow((double)tmpy,2))*10;
 
 
 						Map_Node[f_x][f_y].g = Map_Node[ch_x][ch_y].g + cost;
@@ -895,8 +895,7 @@ private: System::Void BT_Search_Click(System::Object^  sender, System::EventArgs
 				 }
 				 OpenNode.pop_back();
 				 a_star(OpenNode,ch_x,ch_y);
-			 }
-			 
+			 } 
 		 }
 private: System::Void Map_Expansion_Click(System::Object^  sender, System::EventArgs^  e) {
 			 drawExpansion(gray_num);
